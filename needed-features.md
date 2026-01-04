@@ -1,8 +1,8 @@
 handle the following:
 
--- in nextJS
+-- in SaaS App
 
--- in tanstack start
+-- in admin APP
 
 -- in apps
 
