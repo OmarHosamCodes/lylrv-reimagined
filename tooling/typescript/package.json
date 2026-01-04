@@ -1,0 +1,7 @@
+{
+  "name": "@lylrv/tsconfig",
+  "private": true,
+  "files": [
+    "*.json"
+  ]
+}
