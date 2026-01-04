@@ -7,17 +7,17 @@ await jiti.import("./src/env");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  /** Enables hot reloading for local packages without a build step */
-  transpilePackages: [
-    "@lylrv/api",
-    "@lylrv/auth",
-    "@lylrv/db",
-    "@lylrv/ui",
-    "@lylrv/validators",
-  ],
+	/** Enables hot reloading for local packages without a build step */
+	transpilePackages: [
+		"@lylrv/api",
+		"@lylrv/auth",
+		"@lylrv/db",
+		"@lylrv/ui",
+		"@lylrv/validators",
+	],
 
-  /** We already do linting and typechecking as separate tasks in CI */
-  typescript: { ignoreBuildErrors: true },
+	/** We already do linting and typechecking as separate tasks in CI */
+	typescript: { ignoreBuildErrors: true },
 };
 
 export default config;

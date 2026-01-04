@@ -1,40 +1,39 @@
+import { db } from "@lylrv/db/client";
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { oAuthProxy } from "better-auth/plugins";
 
-import { db } from "@lylrv/db/client";
-
 export function initAuth<
-  TExtraPlugins extends BetterAuthPlugin[] = [],
+	TExtraPlugins extends BetterAuthPlugin[] = [],
 >(options: {
-  baseUrl: string;
-  productionUrl: string;
-  secret: string | undefined;
-  extraPlugins?: TExtraPlugins;
+	baseUrl: string;
+	productionUrl: string;
+	secret: string | undefined;
+	extraPlugins?: TExtraPlugins;
 }) {
-  const config = {
-    database: drizzleAdapter(db, {
-      provider: "pg",
-    }),
-    baseURL: options.baseUrl,
-    secret: options.secret,
-    plugins: [
-      oAuthProxy({
-        productionURL: options.productionUrl,
-      }),
-      ...(options.extraPlugins ?? []),
-    ],
+	const config = {
+		database: drizzleAdapter(db, {
+			provider: "pg",
+		}),
+		baseURL: options.baseUrl,
+		secret: options.secret,
+		plugins: [
+			oAuthProxy({
+				productionURL: options.productionUrl,
+			}),
+			...(options.extraPlugins ?? []),
+		],
 
-    trustedOrigins: [],
-    onAPIError: {
-      onError(error, ctx) {
-        console.error("BETTER AUTH API ERROR", error, ctx);
-      },
-    },
-  } satisfies BetterAuthOptions;
+		trustedOrigins: [],
+		onAPIError: {
+			onError(error, ctx) {
+				console.error("BETTER AUTH API ERROR", error, ctx);
+			},
+		},
+	} satisfies BetterAuthOptions;
 
-  return betterAuth(config);
+	return betterAuth(config);
 }
 
 export type Auth = ReturnType<typeof initAuth>;

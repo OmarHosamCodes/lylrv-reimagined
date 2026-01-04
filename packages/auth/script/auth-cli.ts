@@ -19,7 +19,7 @@ import { initAuth } from "../src/index";
  * @warning Use the main auth configuration from "../src/index.ts" for your application.
  */
 export const auth = initAuth({
-  baseUrl: "http://localhost:3000",
-  productionUrl: "http://localhost:3000",
-  secret: "secret",
+	baseUrl: "http://localhost:3000",
+	productionUrl: "http://localhost:3000",
+	secret: "secret",
 });
