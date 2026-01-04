@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Widget-specific base styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Reset for Shadow DOM isolation */
+:host {
+    all: initial;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

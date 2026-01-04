@@ -366,6 +366,30 @@ export const supportTickets = pgTable("support_tickets", {
 	check("support_tickets_satisfaction_rating_check", sql`(satisfaction_rating >= 1) AND (satisfaction_rating <= 5)`),
 ]);
 
+export const widgetSettings = pgTable("widget_settings", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	clientId: uuid("client_id").notNull(),
+	isEnabled: boolean("is_enabled").default(true),
+	activeWidgets: jsonb("active_widgets").$type<{
+		loyalty: boolean;
+		reviews: boolean;
+		productReviews: boolean;
+	}>().default({ loyalty: false, reviews: false, productReviews: false }),
+	appearance: jsonb().$type<{
+		primaryColor: string;
+		position: "left" | "right";
+	}>().default({ primaryColor: "#000000", position: "right" }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow(),
+}, (table) => [
+	foreignKey({
+		columns: [table.clientId],
+		foreignColumns: [clients.id],
+		name: "widget_settings_client_id_fkey"
+	}).onDelete("cascade"),
+	unique("widget_settings_client_id_key").on(table.clientId),
+]);
+
 
 export const sessionRelations = relations(session, ({ one }) => ({
 	user: one(user, {
@@ -402,6 +426,7 @@ export const clientsRelations = relations(clients, ({ one, many }) => ({
 	questions: many(questions),
 	auditLogs: many(auditLogs),
 	supportTickets: many(supportTickets),
+	widgetSettings: one(widgetSettings),
 }));
 
 export const clientConfigRelations = relations(clientConfig, ({ one }) => ({
@@ -506,3 +531,17 @@ export const supportTicketsRelations = relations(supportTickets, ({ one }) => ({
 		references: [clients.id]
 	}),
 }));
+
+export const widgetSettingsRelations = relations(widgetSettings, ({ one }) => ({
+	client: one(clients, {
+		fields: [widgetSettings.clientId],
+		references: [clients.id]
+	}),
+}));
+
+// Stub schema for legacy posts component (no Post table exists)
+import { z } from "zod";
+export const CreatePostSchema = z.object({
+	title: z.string().min(1),
+	content: z.string().min(1),
+});

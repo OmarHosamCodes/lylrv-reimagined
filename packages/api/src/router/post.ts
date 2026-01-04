@@ -1,33 +1,35 @@
-import { desc, eq } from "@lylrv/db";
-import { CreatePostSchema, Post } from "@lylrv/db/schema";
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { protectedProcedure, publicProcedure } from "../trpc";
 
+// Post type for legacy template component
+export interface Post {
+	id: string;
+	title: string;
+	content: string;
+}
+
+// TODO: Post table needs to be added to schema
+// This is a stub router for now
 export const postRouter = {
-	all: publicProcedure.query(({ ctx }) => {
-		return ctx.db.query.Post.findMany({
-			orderBy: desc(Post.id),
-			limit: 10,
-		});
+	all: publicProcedure.query((): Post[] => {
+		return [];
 	}),
 
 	byId: publicProcedure
 		.input(z.object({ id: z.string() }))
-		.query(({ ctx, input }) => {
-			return ctx.db.query.Post.findFirst({
-				where: eq(Post.id, input.id),
-			});
+		.query((): Post | null => {
+			return null;
 		}),
 
 	create: protectedProcedure
-		.input(CreatePostSchema)
-		.mutation(({ ctx, input }) => {
-			return ctx.db.insert(Post).values(input);
+		.input(z.object({ title: z.string(), content: z.string() }))
+		.mutation((): Post | null => {
+			return null;
 		}),
 
-	delete: protectedProcedure.input(z.string()).mutation(({ ctx, input }) => {
-		return ctx.db.delete(Post).where(eq(Post.id, input));
+	delete: protectedProcedure.input(z.string()).mutation(() => {
+		return null;
 	}),
 } satisfies TRPCRouterRecord;
