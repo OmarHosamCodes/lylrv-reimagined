@@ -29,7 +29,7 @@ function useLocalizations(config: WidgetConfig) {
 	return useMemo(() => {
 		const locale = config.clientConfig?.language?.local || "en";
 		const localizations = config.clientConfig?.localizations || {};
-		return localizations[locale] || localizations["en"] || {};
+		return localizations[locale] || localizations.en || {};
 	}, [config]);
 }
 
@@ -47,8 +47,8 @@ function getRedeemValues(variables: ConfigVariable[] | undefined): number[] {
 	if (!value) return [100, 200, 500, 1000];
 	return value
 		.split(",")
-		.map((v) => parseInt(v.trim()))
-		.filter((v) => !isNaN(v));
+		.map((v) => parseInt(v.trim(), 10))
+		.filter((v) => !Number.isNaN(v));
 }
 
 function LoyaltyApp({ config, apiBaseUrl }: LoyaltyAppProps) {
@@ -74,6 +74,7 @@ function LoyaltyApp({ config, apiBaseUrl }: LoyaltyAppProps) {
 	const redeemValues = getRedeemValues(config.clientConfig?.variables);
 	const minRedeemValue = parseInt(
 		getVariable(config.clientConfig?.variables, "min_redeem_value") || "100",
+		10,
 	);
 	const referralGainValue =
 		getVariable(config.clientConfig?.variables, "referral_gain_value") || "120";

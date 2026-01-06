@@ -31,7 +31,7 @@ function useLocalizations(config: WidgetConfig) {
 	return useMemo(() => {
 		const locale = config.clientConfig?.language?.local || "en";
 		const localizations = config.clientConfig?.localizations || {};
-		return localizations[locale] || localizations["en"] || {};
+		return localizations[locale] || localizations.en || {};
 	}, [config]);
 }
 

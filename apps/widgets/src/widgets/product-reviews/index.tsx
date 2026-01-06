@@ -30,7 +30,7 @@ function useLocalizations(config: WidgetConfig) {
 	return useMemo(() => {
 		const locale = config.clientConfig?.language?.local || "en";
 		const localizations = config.clientConfig?.localizations || {};
-		return localizations[locale] || localizations["en"] || {};
+		return localizations[locale] || localizations.en || {};
 	}, [config]);
 }
 
@@ -97,7 +97,7 @@ function RatingBar({
 }
 
 function ProductReviewsApp({ config, apiBaseUrl }: ProductReviewsAppProps) {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, _setIsOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState<"reviews" | "questions" | "write">(
 		"reviews",
 	);
@@ -116,7 +116,7 @@ function ProductReviewsApp({ config, apiBaseUrl }: ProductReviewsAppProps) {
 	const theme = config.clientConfig?.theme;
 	const primaryColor =
 		theme?.buttonBackgroundColor || config.styles.primaryColor;
-	const textColor = theme?.buttonTextColor || "#ffffff";
+	const _textColor = theme?.buttonTextColor || "#ffffff";
 	const isRTL = config.clientConfig?.language?.direction === "rtl";
 	const isLoggedIn = config.user?.isLoggedIn || false;
 	const productId = config.context?.product?.id;

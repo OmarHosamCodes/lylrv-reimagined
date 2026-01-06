@@ -1,1 +1,250 @@
-[{"id":"6f5912cf-6686-4fe5-95a4-fb5d850e374f","client_id":"899d501e-70d3-4f8a-98e4-23f1eeae994c","integration_type":"woocommerce","store_url":"https://pureness-shea.com/","is_active":true,"theme":{"color":"#004c4c","mainButtonIcon":"gift","buttonTextColor":"#ffffff","secondaryButtonIcon":"star","buttonBackgroundColor":"#004c4c"},"language":{"local":"ar","direction":"rtl"},"page_sections":[{"title":"عمل الأكونت","action":"","actionTitle":"20","description":"بمجرد ما تعمل أكونت بتكسب 20 نقطة"},{"title":"قول لأصحابك","action":"","actionTitle":"120","description":"كل واحد من أصحابك هيشتري عن طريقك (بحد أدني 600ج) هتكسب 120 نقطة و هو هياخد خصم 120ج على أول أوردر"},{"title":"أي أورد بأكتر من 999 ج هتكسب 50 نقطة","action":"","actionTitle":"50","description":"تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم"},{"title":"كل 3 أوردر هتكسب 50 نقطة","action":"","actionTitle":"50","description":"تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم.  (الحد الأدنى للأوردر الواحد 600 ج)"},{"title":"اعمل ريڤيو محايد","action":"","actionTitle":"100","description":"كل مرة هتشتري مننا و بعدها تعمل ريڤيو (بالعيوب أو المميزات) هتكسب 50 نقطة. ولو كان معاه صورة بالنتيجة هيبقوا 100 نقطة"}],"localizations":{"ar":{"points":"نقطة","redeem":"استبدل النقط","sign_in":"تسجيل الدخول","currency":"جنيه","discount":"خصم","join_now":"ابدأ دلوقتي","view_all":"عرض الكل","need_help":"محتاجة مساعدة؟","all_images":"كل الصور","coupon_code":"كود الكوبون","add_question":"أضيفي سؤال","go_to_coupon":"","on_any_order":"على أي طلب","spent_points":"النقاط المستهلكة","total_points":"إجمالي النقاط","write_review":"اكتبي تقييم","activity_date":"تاريخ النشاط","become_member":"اشترك دلوقتي","redeem_points":"استبدل النقاط","total_reviews":"إجمالي التقييمات","you_will_gain":"هتكسبى","referral_title":"استفيد بخصم مستمر","activity_points":"نقاط النشاط","activity_reason":"سبب النشاط","copy_coupon_code":"انسخي كود الكوبون","earn_more_points":"اكسب نقاط أكتر","activate_referral":"فعل ال code","add_question_body":"اسألي سؤالك هنا","reviews_tab_title":"التقييمات","add_product_review":"أضيفي تقييم للمنتج","add_website_review":"أضيفي تقييم للموقع","copy_referral_code":"انسخي كود الإحالة","redeem_rules_title":"خلي بالك:","send_referral_code":"اعمل Copy للكود وابعته","point_system_header":"برنامج النقاط من Pureness","questions_tab_title":"الأسئلة","redeem_confirmation":"تأكيد الاستبدال","redeem_points_title":"استبدل {redeemValue} نقطة","share_referral_code":"شاركي كود الإحالة","referral_paragraph_1":"مع كل مرة هتقول فيها لحد من أصحابك ويشتروا","referral_paragraph_2":"هتستفيد بخصومات ليك وليهم","reviewed_product_name":"اسم المنتج","reviews_system_header":"التقييمات","unlock_exciting_perks":"استفيد بمميزات أكتر","your_friend_will_gain":"صاحبتك هتكسب","earn_points_page_title":"اكسب نقاط","or_share_referral_code":"أو شاركي اللينك ده","add_product_review_body":"شاركي رأيك عن المنتج","add_question_page_title":"أضيفي سؤال","add_website_review_body":"شاركي رأيك عن موقعنا","already_have_an_account":"عندك حساب بالفعل؟","or_share__referral_code":"أو اللينك ده","add_product_review_title":"عنوان تقييم المنتج","redeem_points_page_title":"خصم {redeemValue} {currency} على أي أوردر","redeem_rules_description":"لو قررت تأجل استخدام الكود دلوقتي (هترجع تلاقيه تاني في السجل \"فوق على الشمال\") بحد أقصى 14 يوم.","with_minimum_purchase_of":"مع حد أدنى للشراء","add_product_review_images":"أضيفي صور للمنتج","redeem_points_description":"لو دوست استبدال النقط هيظهرلك كود للخصم تستخدمه في الشراء","add_product_review_product":"المنتج","main_floating_button_title":"برنامج النقاط","add_product_review_page_title":"أضيفي تقييم للمنتج","add_website_review_page_title":"أضيفي تقييم للموقع","secondary_floating_button_title":"المراجعات","redeem_points_page_title_after_redeem":"تم استبدال {redeemValue} نقطة = {redeemValue} {redeemValue}"},"en":{"points":"Points","redeem":"Redeem","sign_in":"Sign In","currency":"Currency","discount":"Discount","join_now":"Join Now","view_all":"View All","need_help":"Need help?","all_images":"All Images","coupon_code":"Coupon Code","add_question":"Add Question","go_to_coupon":"","on_any_order":"On Any Order","spent_points":"Spent Points","total_points":"Total Points","write_review":"Write a Review","activity_date":"Activity Date","become_member":"Become a Member","redeem_points":"Redeem Points","total_reviews":"Total Reviews","you_will_gain":"You will gain","referral_title":"Get a discount","activity_points":"Activity Points","activity_reason":"Activity Reason","copy_coupon_code":"Copy Coupon Code","earn_more_points":"Earn More Points","activate_referral":"","add_question_body":"Ask your question here","reviews_tab_title":"Reviews","add_product_review":"Add Product Review","add_website_review":"Add Website Review","copy_referral_code":"Copy Referral Code","redeem_rules_title":"Redemption Rules","send_referral_code":"Send Referral Code","point_system_header":"Pureness Points Program","questions_tab_title":"Questions","redeem_confirmation":"Redeem Confirmation","redeem_points_title":"Redeem {redeemValue} {currency}","share_referral_code":"Share Referral Code","referral_paragraph_1":"You will earn","referral_paragraph_2":"Your friend will earn","reviewed_product_name":"Product Name","reviews_system_header":"Reviews","unlock_exciting_perks":"Unlock Exciting Perks","your_friend_will_gain":"Your friend will gain","earn_points_page_title":"Earn Points","or_share_referral_code":"Or share this referral code","add_product_review_body":"Share your thoughts about the product","add_question_page_title":"Add a Question","add_website_review_body":"Share your thoughts about our website","already_have_an_account":"Already have an account?","or_share__referral_code":"Or share this link","add_product_review_title":"Product Review Title","redeem_points_page_title":"Redeem {redeemValue} {currency}","redeem_rules_description":"Learn how to redeem your points","with_minimum_purchase_of":"With Minimum Purchase Of","add_product_review_images":"Add Product Images","redeem_points_description":"Redeem your points for exciting rewards. You can redeem {redeemValue} {currency} with a minimum purchase of {minRedeemValue} {currency}","add_product_review_product":"Product","main_floating_button_title":"Points Program","add_product_review_page_title":"Add Product Review","add_website_review_page_title":"Add Website Review","secondary_floating_button_title":"Reviews","redeem_points_page_title_after_redeem":""}},"conditions":[{"status":"completed","maxAmount":9999,"minAmount":999,"pointsGained":50},{"status":"refunded","maxAmount":9999,"minAmount":999,"pointsGained":-50},{"status":"completed","maxAmount":999,"minAmount":0,"pointsGained":0}],"variables":[{"name":"redeem_values","value":"100,200,500,1000"},{"name":"min_redeem_value","value":"100"},{"name":"referral_gain_value","value":"120"},{"name":"coupon_roles_whitelist","value":"administrator,editor,author,contributor,subscriber,shop_manager,customer"}],"interactions":[{"trigger":"register","pointsGained":20},{"trigger":"reviewVid","pointsGained":50},{"trigger":"question","pointsGained":30},{"trigger":"referral","pointsGained":120},{"trigger":"websiteReview","pointsGained":30},{"trigger":"review","pointsGained":50},{"trigger":"reviewImgs","pointsGained":100}],"earn_sections":[{"title":"عمل الأكونت","earnAmount":"20","description":"بمجرد ما تعمل أكونت بتكسب 20 نقطة"},{"title":"قول لأصحابك","earnAmount":"120","description":"كل واحد من أصحابك هيشتري عن طريقك (بحد أدني 600ج) هتكسب 120 نقطة و هو هياخد خصم 120ج على أول أوردر"},{"title":"أي أورد بأكتر من 999 ج هتكسب 50 نقطة","earnAmount":"50","description":"تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم"},{"title":"كل 3 أوردر هتكسب 50 نقطة","earnAmount":"50","description":"تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم.  (الحد الأدنى للأوردر الواحد 600 ج)"},{"title":"اعمل ريڤيو محايد","earnAmount":"100","description":"كل مرة هتشتري مننا و بعدها تعمل ريڤيو (بالعيوب أو المميزات) هتكسب 50 نقطة. ولو كان معاه صورة بالنتيجة هيبقوا 100 نقطة"}],"created_at":"2026-01-04 13:04:18.537374+00","updated_at":"2026-01-04 13:04:18.537374+00"}]
+[
+	{
+		"id": "6f5912cf-6686-4fe5-95a4-fb5d850e374f",
+		"client_id": "899d501e-70d3-4f8a-98e4-23f1eeae994c",
+		"integration_type": "woocommerce",
+		"store_url": "https://pureness-shea.com/",
+		"is_active": true,
+		"theme": {
+			"color": "#004c4c",
+			"mainButtonIcon": "gift",
+			"buttonTextColor": "#ffffff",
+			"secondaryButtonIcon": "star",
+			"buttonBackgroundColor": "#004c4c"
+		},
+		"language": { "local": "ar", "direction": "rtl" },
+		"page_sections": [
+			{
+				"title": "عمل الأكونت",
+				"action": "",
+				"actionTitle": "20",
+				"description": "بمجرد ما تعمل أكونت بتكسب 20 نقطة"
+			},
+			{
+				"title": "قول لأصحابك",
+				"action": "",
+				"actionTitle": "120",
+				"description": "كل واحد من أصحابك هيشتري عن طريقك (بحد أدني 600ج) هتكسب 120 نقطة و هو هياخد خصم 120ج على أول أوردر"
+			},
+			{
+				"title": "أي أورد بأكتر من 999 ج هتكسب 50 نقطة",
+				"action": "",
+				"actionTitle": "50",
+				"description": "تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم"
+			},
+			{
+				"title": "كل 3 أوردر هتكسب 50 نقطة",
+				"action": "",
+				"actionTitle": "50",
+				"description": "تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم.  (الحد الأدنى للأوردر الواحد 600 ج)"
+			},
+			{
+				"title": "اعمل ريڤيو محايد",
+				"action": "",
+				"actionTitle": "100",
+				"description": "كل مرة هتشتري مننا و بعدها تعمل ريڤيو (بالعيوب أو المميزات) هتكسب 50 نقطة. ولو كان معاه صورة بالنتيجة هيبقوا 100 نقطة"
+			}
+		],
+		"localizations": {
+			"ar": {
+				"points": "نقطة",
+				"redeem": "استبدل النقط",
+				"sign_in": "تسجيل الدخول",
+				"currency": "جنيه",
+				"discount": "خصم",
+				"join_now": "ابدأ دلوقتي",
+				"view_all": "عرض الكل",
+				"need_help": "محتاجة مساعدة؟",
+				"all_images": "كل الصور",
+				"coupon_code": "كود الكوبون",
+				"add_question": "أضيفي سؤال",
+				"go_to_coupon": "",
+				"on_any_order": "على أي طلب",
+				"spent_points": "النقاط المستهلكة",
+				"total_points": "إجمالي النقاط",
+				"write_review": "اكتبي تقييم",
+				"activity_date": "تاريخ النشاط",
+				"become_member": "اشترك دلوقتي",
+				"redeem_points": "استبدل النقاط",
+				"total_reviews": "إجمالي التقييمات",
+				"you_will_gain": "هتكسبى",
+				"referral_title": "استفيد بخصم مستمر",
+				"activity_points": "نقاط النشاط",
+				"activity_reason": "سبب النشاط",
+				"copy_coupon_code": "انسخي كود الكوبون",
+				"earn_more_points": "اكسب نقاط أكتر",
+				"activate_referral": "فعل ال code",
+				"add_question_body": "اسألي سؤالك هنا",
+				"reviews_tab_title": "التقييمات",
+				"add_product_review": "أضيفي تقييم للمنتج",
+				"add_website_review": "أضيفي تقييم للموقع",
+				"copy_referral_code": "انسخي كود الإحالة",
+				"redeem_rules_title": "خلي بالك:",
+				"send_referral_code": "اعمل Copy للكود وابعته",
+				"point_system_header": "برنامج النقاط من Pureness",
+				"questions_tab_title": "الأسئلة",
+				"redeem_confirmation": "تأكيد الاستبدال",
+				"redeem_points_title": "استبدل {redeemValue} نقطة",
+				"share_referral_code": "شاركي كود الإحالة",
+				"referral_paragraph_1": "مع كل مرة هتقول فيها لحد من أصحابك ويشتروا",
+				"referral_paragraph_2": "هتستفيد بخصومات ليك وليهم",
+				"reviewed_product_name": "اسم المنتج",
+				"reviews_system_header": "التقييمات",
+				"unlock_exciting_perks": "استفيد بمميزات أكتر",
+				"your_friend_will_gain": "صاحبتك هتكسب",
+				"earn_points_page_title": "اكسب نقاط",
+				"or_share_referral_code": "أو شاركي اللينك ده",
+				"add_product_review_body": "شاركي رأيك عن المنتج",
+				"add_question_page_title": "أضيفي سؤال",
+				"add_website_review_body": "شاركي رأيك عن موقعنا",
+				"already_have_an_account": "عندك حساب بالفعل؟",
+				"or_share__referral_code": "أو اللينك ده",
+				"add_product_review_title": "عنوان تقييم المنتج",
+				"redeem_points_page_title": "خصم {redeemValue} {currency} على أي أوردر",
+				"redeem_rules_description": "لو قررت تأجل استخدام الكود دلوقتي (هترجع تلاقيه تاني في السجل \"فوق على الشمال\") بحد أقصى 14 يوم.",
+				"with_minimum_purchase_of": "مع حد أدنى للشراء",
+				"add_product_review_images": "أضيفي صور للمنتج",
+				"redeem_points_description": "لو دوست استبدال النقط هيظهرلك كود للخصم تستخدمه في الشراء",
+				"add_product_review_product": "المنتج",
+				"main_floating_button_title": "برنامج النقاط",
+				"add_product_review_page_title": "أضيفي تقييم للمنتج",
+				"add_website_review_page_title": "أضيفي تقييم للموقع",
+				"secondary_floating_button_title": "المراجعات",
+				"redeem_points_page_title_after_redeem": "تم استبدال {redeemValue} نقطة = {redeemValue} {redeemValue}"
+			},
+			"en": {
+				"points": "Points",
+				"redeem": "Redeem",
+				"sign_in": "Sign In",
+				"currency": "Currency",
+				"discount": "Discount",
+				"join_now": "Join Now",
+				"view_all": "View All",
+				"need_help": "Need help?",
+				"all_images": "All Images",
+				"coupon_code": "Coupon Code",
+				"add_question": "Add Question",
+				"go_to_coupon": "",
+				"on_any_order": "On Any Order",
+				"spent_points": "Spent Points",
+				"total_points": "Total Points",
+				"write_review": "Write a Review",
+				"activity_date": "Activity Date",
+				"become_member": "Become a Member",
+				"redeem_points": "Redeem Points",
+				"total_reviews": "Total Reviews",
+				"you_will_gain": "You will gain",
+				"referral_title": "Get a discount",
+				"activity_points": "Activity Points",
+				"activity_reason": "Activity Reason",
+				"copy_coupon_code": "Copy Coupon Code",
+				"earn_more_points": "Earn More Points",
+				"activate_referral": "",
+				"add_question_body": "Ask your question here",
+				"reviews_tab_title": "Reviews",
+				"add_product_review": "Add Product Review",
+				"add_website_review": "Add Website Review",
+				"copy_referral_code": "Copy Referral Code",
+				"redeem_rules_title": "Redemption Rules",
+				"send_referral_code": "Send Referral Code",
+				"point_system_header": "Pureness Points Program",
+				"questions_tab_title": "Questions",
+				"redeem_confirmation": "Redeem Confirmation",
+				"redeem_points_title": "Redeem {redeemValue} {currency}",
+				"share_referral_code": "Share Referral Code",
+				"referral_paragraph_1": "You will earn",
+				"referral_paragraph_2": "Your friend will earn",
+				"reviewed_product_name": "Product Name",
+				"reviews_system_header": "Reviews",
+				"unlock_exciting_perks": "Unlock Exciting Perks",
+				"your_friend_will_gain": "Your friend will gain",
+				"earn_points_page_title": "Earn Points",
+				"or_share_referral_code": "Or share this referral code",
+				"add_product_review_body": "Share your thoughts about the product",
+				"add_question_page_title": "Add a Question",
+				"add_website_review_body": "Share your thoughts about our website",
+				"already_have_an_account": "Already have an account?",
+				"or_share__referral_code": "Or share this link",
+				"add_product_review_title": "Product Review Title",
+				"redeem_points_page_title": "Redeem {redeemValue} {currency}",
+				"redeem_rules_description": "Learn how to redeem your points",
+				"with_minimum_purchase_of": "With Minimum Purchase Of",
+				"add_product_review_images": "Add Product Images",
+				"redeem_points_description": "Redeem your points for exciting rewards. You can redeem {redeemValue} {currency} with a minimum purchase of {minRedeemValue} {currency}",
+				"add_product_review_product": "Product",
+				"main_floating_button_title": "Points Program",
+				"add_product_review_page_title": "Add Product Review",
+				"add_website_review_page_title": "Add Website Review",
+				"secondary_floating_button_title": "Reviews",
+				"redeem_points_page_title_after_redeem": ""
+			}
+		},
+		"conditions": [
+			{
+				"status": "completed",
+				"maxAmount": 9999,
+				"minAmount": 999,
+				"pointsGained": 50
+			},
+			{
+				"status": "refunded",
+				"maxAmount": 9999,
+				"minAmount": 999,
+				"pointsGained": -50
+			},
+			{
+				"status": "completed",
+				"maxAmount": 999,
+				"minAmount": 0,
+				"pointsGained": 0
+			}
+		],
+		"variables": [
+			{ "name": "redeem_values", "value": "100,200,500,1000" },
+			{ "name": "min_redeem_value", "value": "100" },
+			{ "name": "referral_gain_value", "value": "120" },
+			{
+				"name": "coupon_roles_whitelist",
+				"value": "administrator,editor,author,contributor,subscriber,shop_manager,customer"
+			}
+		],
+		"interactions": [
+			{ "trigger": "register", "pointsGained": 20 },
+			{ "trigger": "reviewVid", "pointsGained": 50 },
+			{ "trigger": "question", "pointsGained": 30 },
+			{ "trigger": "referral", "pointsGained": 120 },
+			{ "trigger": "websiteReview", "pointsGained": 30 },
+			{ "trigger": "review", "pointsGained": 50 },
+			{ "trigger": "reviewImgs", "pointsGained": 100 }
+		],
+		"earn_sections": [
+			{
+				"title": "عمل الأكونت",
+				"earnAmount": "20",
+				"description": "بمجرد ما تعمل أكونت بتكسب 20 نقطة"
+			},
+			{
+				"title": "قول لأصحابك",
+				"earnAmount": "120",
+				"description": "كل واحد من أصحابك هيشتري عن طريقك (بحد أدني 600ج) هتكسب 120 نقطة و هو هياخد خصم 120ج على أول أوردر"
+			},
+			{
+				"title": "أي أورد بأكتر من 999 ج هتكسب 50 نقطة",
+				"earnAmount": "50",
+				"description": "تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم"
+			},
+			{
+				"title": "كل 3 أوردر هتكسب 50 نقطة",
+				"earnAmount": "50",
+				"description": "تقدر تستخدم النقط في أي وقت خلال ٩٠ يوم.  (الحد الأدنى للأوردر الواحد 600 ج)"
+			},
+			{
+				"title": "اعمل ريڤيو محايد",
+				"earnAmount": "100",
+				"description": "كل مرة هتشتري مننا و بعدها تعمل ريڤيو (بالعيوب أو المميزات) هتكسب 50 نقطة. ولو كان معاه صورة بالنتيجة هيبقوا 100 نقطة"
+			}
+		],
+		"created_at": "2026-01-04 13:04:18.537374+00",
+		"updated_at": "2026-01-04 13:04:18.537374+00"
+	}
+]
