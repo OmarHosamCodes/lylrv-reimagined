@@ -37,6 +37,7 @@
 	"devDependencies": {
 		"@lylrv/tsconfig": "workspace:*",
 		"@types/node": "catalog:",
+		"@types/pg": "^8.16.0",
 		"drizzle-kit": "^0.31.5",
 		"typescript": "catalog:"
 	}

@@ -10,27 +10,20 @@
  * <script src="https://your-domain.com/widgets/loader.bundle.js?shop=myshop.com" async></script>
  */
 
-interface WidgetConfig {
-    enabled: boolean;
-    widgets: string[];
-    styles: {
-        primaryColor: string;
-        position: "left" | "right";
-    };
-    clientId?: string;
-}
-
-interface WidgetModule {
-    mount: (container: HTMLElement, config: WidgetConfig) => void;
-}
+import type {
+    UserDetails,
+    WidgetConfig,
+    WidgetContext,
+    WidgetModule,
+} from "./types";
 
 (() => {
     const win = window as Window & {
         __LYLRV_LOADED__?: boolean;
         __LYLRV_CONFIG__?: WidgetConfig;
         LYLRV_WP_DATA?: {
-            user?: WidgetConfig["user"];
-            context?: WidgetConfig["context"];
+            user?: UserDetails;
+            context?: WidgetContext;
         };
         LylrvWidgets?: Record<string, WidgetModule>;
     };
@@ -38,7 +31,6 @@ interface WidgetModule {
     // Prevent double-loading
     if (win.__LYLRV_LOADED__) return;
     win.__LYLRV_LOADED__ = true;
-
 
     // Get the script tag to extract params
     const currentScript = document.currentScript as HTMLScriptElement;
@@ -154,7 +146,6 @@ interface WidgetModule {
             }
         }
     }
-
 
     // Wait for DOM to be ready
     if (document.readyState === "loading") {
