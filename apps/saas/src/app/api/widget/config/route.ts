@@ -1,6 +1,6 @@
 import { eq } from "@lylrv/db";
 import { db } from "@lylrv/db/client";
-import { clients } from "@lylrv/db/schema";
+import { clients, widgetSettings } from "@lylrv/db/schema";
 import type { NextRequest } from "next/server";
 
 /**
@@ -36,11 +36,9 @@ export const GET = async (req: NextRequest) => {
 
     try {
         // Find client by createSource (shop identifier)
+        // Find client by createSource (shop identifier)
         const client = await db.query.clients.findFirst({
             where: eq(clients.createSource, shop),
-            with: {
-                widgetSettings: true,
-            },
         });
 
         if (!client) {
@@ -52,7 +50,9 @@ export const GET = async (req: NextRequest) => {
             return response;
         }
 
-        const settings = client.widgetSettings;
+        const settings = await db.query.widgetSettings.findFirst({
+            where: eq(widgetSettings.clientId, client.id),
+        });
 
         // Return default config if no settings exist
         if (!settings) {

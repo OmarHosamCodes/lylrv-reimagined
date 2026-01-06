@@ -1,11 +1,11 @@
 /**
  * Lylrv Widget Loader
- * 
+ *
  * This script is embedded on client websites and handles:
  * 1. Fetching widget configuration from the API
  * 2. Dynamically loading enabled widget bundles
  * 3. Initializing widgets with Shadow DOM isolation
- * 
+ *
  * Usage:
  * <script src="https://your-domain.com/widgets/loader.bundle.js?shop=myshop.com" async></script>
  */
@@ -24,16 +24,21 @@ interface WidgetModule {
     mount: (container: HTMLElement, config: WidgetConfig) => void;
 }
 
-(function () {
+(() => {
     const win = window as Window & {
         __LYLRV_LOADED__?: boolean;
         __LYLRV_CONFIG__?: WidgetConfig;
+        LYLRV_WP_DATA?: {
+            user?: WidgetConfig["user"];
+            context?: WidgetConfig["context"];
+        };
         LylrvWidgets?: Record<string, WidgetModule>;
     };
 
     // Prevent double-loading
     if (win.__LYLRV_LOADED__) return;
     win.__LYLRV_LOADED__ = true;
+
 
     // Get the script tag to extract params
     const currentScript = document.currentScript as HTMLScriptElement;
@@ -56,7 +61,7 @@ interface WidgetModule {
     async function loadConfig(): Promise<WidgetConfig | null> {
         try {
             const response = await fetch(
-                `${apiBaseUrl}/api/widget/config?shop=${encodeURIComponent(shop!)}`
+                `${apiBaseUrl}/api/widget/config?shop=${encodeURIComponent(shop!)}`,
             );
             if (!response.ok) {
                 console.error("[Lylrv] Failed to load config:", response.status);
@@ -69,7 +74,9 @@ interface WidgetModule {
         }
     }
 
-    async function loadWidgetBundle(widgetName: string): Promise<WidgetModule | null> {
+    async function loadWidgetBundle(
+        widgetName: string,
+    ): Promise<WidgetModule | null> {
         try {
             // Use dynamic import for ES modules
             const widgetUrl = `${apiBaseUrl}/widgets/${widgetName}.bundle.js`;
@@ -79,7 +86,9 @@ interface WidgetModule {
                 return module as WidgetModule;
             }
 
-            console.error(`[Lylrv] Widget ${widgetName} does not export a mount function`);
+            console.error(
+                `[Lylrv] Widget ${widgetName} does not export a mount function`,
+            );
             return null;
         } catch (error) {
             console.error(`[Lylrv] Error loading widget ${widgetName}:`, error);
@@ -87,7 +96,19 @@ interface WidgetModule {
         }
     }
 
-    function createWidgetContainer(widgetName: string, position: "left" | "right"): HTMLElement {
+    function createWidgetContainer(
+        widgetName: string,
+        position: "left" | "right",
+    ): HTMLElement {
+        // Check for existing container (for inline embedding)
+        const existingContainer = document.getElementById(
+            `lylrv-${widgetName}-container`,
+        );
+        if (existingContainer) {
+            return existingContainer;
+        }
+
+        // Create fixed position container (for floating widgets)
         const container = document.createElement("div");
         container.id = `lylrv-${widgetName}-container`;
         container.style.cssText = `
@@ -108,6 +129,13 @@ interface WidgetModule {
             return;
         }
 
+        // Merge injected WordPress data
+        if (win.LYLRV_WP_DATA) {
+            console.log("[Lylrv] Found WP Data:", win.LYLRV_WP_DATA);
+            config.user = win.LYLRV_WP_DATA.user;
+            config.context = win.LYLRV_WP_DATA.context;
+        }
+
         win.__LYLRV_CONFIG__ = config;
 
         // Load and mount each enabled widget
@@ -115,7 +143,10 @@ interface WidgetModule {
             try {
                 const widgetModule = await loadWidgetBundle(widgetName);
                 if (widgetModule) {
-                    const container = createWidgetContainer(widgetName, config.styles.position);
+                    const container = createWidgetContainer(
+                        widgetName,
+                        config.styles.position,
+                    );
                     widgetModule.mount(container, config);
                 }
             } catch (error) {
@@ -123,6 +154,7 @@ interface WidgetModule {
             }
         }
     }
+
 
     // Wait for DOM to be ready
     if (document.readyState === "loading") {

@@ -12,11 +12,24 @@ interface WidgetConfig {
         position: "left" | "right";
     };
     clientId?: string;
+    // Injected context
+    user?: UserDetails;
+    context?: WidgetContext;
+}
+
+export interface UserDetails {
+    isLoggedIn: boolean;
+    email?: string | null;
+    name?: string | null;
+}
+
+export interface WidgetContext {
+    product?: {
+        id: number;
+        hasPurchased: boolean;
+    } | null;
 }
 
 interface WidgetModule {
     mount: (container: HTMLElement, config: WidgetConfig) => void;
 }
-
-export { };
-

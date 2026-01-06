@@ -2,10 +2,13 @@
 
 ## Architecture Overview
 
-This is a **T3 Turbo monorepo** using pnpm workspaces with Turborepo. The `@lylrv` scope prefix is used for all internal packages.
+This is a **T3 Turbo monorepo** for a SaaS platform with embeddable widgets, using pnpm workspaces with Turborepo. The `@lylrv` scope prefix is used for all internal packages.
 
 ### Workspace Structure
-- **`apps/`**: Applications (Next.js `saas`, TanStack Start `admin`)
+- **`apps/`**: Applications
+  - `saas` - Next.js 16 main SaaS application
+  - `admin` - TanStack Start admin dashboard
+  - `widgets` - Embeddable widgets (Vite-built React components)
 - **`packages/`**: Shared logic (`api`, `auth`, `db`, `ui`, `validators`)
 - **`tooling/`**: Build tooling (`tailwind`, `typescript` configs)
 
@@ -17,6 +20,7 @@ This is a **T3 Turbo monorepo** using pnpm workspaces with Turborepo. The `@lylr
 - **UI**: shadcn/ui components in `@lylrv/ui`
 - **Styling**: Tailwind CSS v4 with shared theme in `tooling/tailwind/theme.css`
 - **Linting/Formatting**: Biome (not ESLint/Prettier)
+- **Widgets**: Vite-bundled React widgets for external embedding
 
 ## Critical Patterns
 
@@ -29,10 +33,12 @@ export const postRouter = {
 } satisfies TRPCRouterRecord;
 ```
 
+Current routers in `packages/api/src/root.ts`: `auth`, `post`, `widget`
+
 ### Auth Per-App Initialization
 Each app initializes auth with app-specific plugins in `src/auth/server.ts`:
-- Next.js uses `nextCookies()` plugin
-- TanStack Start uses `reactStartCookies()` plugin
+- Next.js (`saas`) uses `nextCookies()` plugin
+- TanStack Start (`admin`) uses `reactStartCookies()` plugin
 - Both use shared `initAuth()` from `@lylrv/auth`
 
 ### Environment Variables
@@ -50,11 +56,14 @@ Each app initializes auth with app-specific plugins in `src/auth/server.ts`:
 ```bash
 pnpm dev              # Run all apps in watch mode
 pnpm dev:next         # Run only Next.js app with dependencies
+pnpm dev:widgets      # Run widgets in watch mode
+pnpm build:widgets    # Build widgets only
 pnpm db:push          # Push Drizzle schema to database
 pnpm db:studio        # Open Drizzle Studio
 pnpm auth:generate    # Regenerate Better Auth schema after auth config changes
 pnpm check:write      # Biome lint + format with auto-fix
 pnpm ui-add           # Add shadcn/ui component to @lylrv/ui
+pnpm typecheck        # Run TypeScript type checking
 ```
 
 ## Adding New Features
