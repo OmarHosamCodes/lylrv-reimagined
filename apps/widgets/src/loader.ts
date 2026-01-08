@@ -103,7 +103,7 @@ import type {
 
 	function createWidgetContainer(
 		widgetName: string,
-		position: "left" | "right",
+		_position: "left" | "right",
 	): HTMLElement {
 		// Check for existing container (for inline embedding)
 		const existingContainer = document.getElementById(
@@ -113,9 +113,7 @@ import type {
 			return existingContainer;
 		}
 
-
 		throw new Error("Inline embedding only - no dynamic container creation");
-
 	}
 
 	async function init() {

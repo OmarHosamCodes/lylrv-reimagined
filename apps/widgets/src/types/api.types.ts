@@ -3,7 +3,7 @@ import type { Review, ReviewsMeta } from "./reviews.types";
 import type { WidgetConfig } from "./widget.types";
 
 // API Response Types
-export interface WidgetConfigResponse extends WidgetConfig { }
+export interface WidgetConfigResponse extends WidgetConfig {}
 
 export interface CustomerResponse {
 	exists: boolean;

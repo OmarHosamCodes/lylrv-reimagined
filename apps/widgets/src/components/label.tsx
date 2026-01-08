@@ -1,6 +1,6 @@
 import { cn } from "./utils";
 
-interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> { }
+interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
 /**
  * Label component for form fields

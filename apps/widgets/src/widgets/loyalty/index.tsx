@@ -92,7 +92,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 	];
 
 	return (
-		<div className="fixed bottom-4 right-4 z-[9999]">
+		<div className="fixed bottom-4 left-4 z-9999">
 			<FloatingButton
 				onClick={handleToggle}
 				icon={<LoyaltyIcon className="h-7 w-7" />}
@@ -355,10 +355,11 @@ function RedeemTab({
 							type="button"
 							onClick={() => canRedeem && onSelect(value)}
 							disabled={!canRedeem}
-							className={`rounded-lg border p-3 text-center transition-colors ${canRedeem
-								? "hover:border-primary"
-								: "cursor-not-allowed opacity-50"
-								} ${isSelected ? "border-primary ring-2 ring-primary/20" : "border-border"}`}
+							className={`rounded-lg border p-3 text-center transition-colors ${
+								canRedeem
+									? "hover:border-primary"
+									: "cursor-not-allowed opacity-50"
+							} ${isSelected ? "border-primary ring-2 ring-primary/20" : "border-border"}`}
 						>
 							<p
 								className={`text-lg font-bold ${canRedeem ? "text-primary" : "text-muted-foreground"}`}

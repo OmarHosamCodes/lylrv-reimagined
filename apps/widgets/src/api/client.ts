@@ -8,7 +8,7 @@ import type {
  * API Client for widget data fetching
  */
 export class WidgetApiClient {
-	constructor(private baseUrl: string) { }
+	constructor(private baseUrl: string) {}
 
 	async getConfig(shop: string): Promise<WidgetConfigResponse | null> {
 		try {

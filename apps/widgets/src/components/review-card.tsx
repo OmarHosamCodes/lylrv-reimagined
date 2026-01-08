@@ -18,7 +18,9 @@ export function ReviewCard({
 	className,
 }: ReviewCardProps) {
 	return (
-		<div className={cn("rounded-lg border border-border bg-card p-4", className)}>
+		<div
+			className={cn("rounded-lg border border-border bg-card p-4", className)}
+		>
 			{/* Header: Rating + Verified Badge */}
 			<div className="mb-2 flex items-start justify-between">
 				<div>

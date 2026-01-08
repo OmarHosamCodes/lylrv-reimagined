@@ -1,7 +1,7 @@
 import { cn } from "./utils";
 
 export interface InputProps
-	extends React.InputHTMLAttributes<HTMLInputElement> { }
+	extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 /**
  * Input component for widgets
@@ -23,7 +23,7 @@ export function Input({ className, type, ...props }: InputProps) {
 }
 
 export interface TextareaProps
-	extends React.TextareaHTMLAttributes<HTMLTextAreaElement> { }
+	extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
 /**
  * Textarea component for widgets

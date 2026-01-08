@@ -10,8 +10,7 @@ export const DEFAULT_MIN_REDEEM = 100;
 // API query keys for React Query
 export const QUERY_KEYS = {
 	config: (shop: string) => ["widget-config", shop] as const,
-	customer: (shop: string, email: string) =>
-		["customer", shop, email] as const,
+	customer: (shop: string, email: string) => ["customer", shop, email] as const,
 	reviews: (shop: string, type: string, productId?: number) =>
 		["reviews", shop, type, productId] as const,
 } as const;

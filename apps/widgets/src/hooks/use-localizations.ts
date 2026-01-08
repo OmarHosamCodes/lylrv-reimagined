@@ -17,7 +17,10 @@ export function useLocalizations(config: WidgetConfig): Localizations {
 			DEFAULT_LOCALIZATIONS.en ||
 			{}
 		);
-	}, [config.clientConfig?.language?.local, config.clientConfig?.localizations]);
+	}, [
+		config.clientConfig?.language?.local,
+		config.clientConfig?.localizations,
+	]);
 }
 
 /**

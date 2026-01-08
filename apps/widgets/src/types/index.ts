@@ -5,19 +5,18 @@ export type {
 	CustomerResponse,
 	ReviewsRequest,
 	ReviewsResponse,
-	WidgetConfigResponse
+	WidgetConfigResponse,
 } from "./api.types";
 export type {
 	ActiveCoupon,
 	CustomerData,
 	LoyaltyTab,
-	PointsActivity
+	PointsActivity,
 } from "./loyalty.types";
 export type {
 	Review,
 	ReviewFormData,
 	ReviewsMeta,
-	ReviewsTab
+	ReviewsTab,
 } from "./reviews.types";
 export * from "./widget.types";
-

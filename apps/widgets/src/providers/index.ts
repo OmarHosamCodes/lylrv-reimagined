@@ -1,2 +1,1 @@
-export { WidgetProvider, useWidgetContext } from "./widget-provider";
-
+export { useWidgetContext, WidgetProvider } from "./widget-provider";
