@@ -166,8 +166,8 @@ function lylrv_add_module_type($tag, $handle, $src) {
 add_filter('script_loader_tag', 'lylrv_add_module_type', 10, 3);
 
 /**
- * Auto-inject loyalty and reviews widget containers in the footer.
- * These are floating widgets that appear fixed on the page.
+ * Auto-inject floating widgets in the footer.
+ * Includes product-reviews widget container on WooCommerce product pages.
  */
 function lylrv_inject_floating_widgets() {
     $shop_domain = get_option('lylrv_shop_domain');
@@ -179,23 +179,14 @@ function lylrv_inject_floating_widgets() {
     // The loader will mount into these if the widgets are enabled in the config
     echo '<div id="lylrv-loyalty-container"></div>';
     echo '<div id="lylrv-reviews-container"></div>';
+    
+    // Inject product reviews container on WooCommerce product pages
+    if (class_exists('WooCommerce') && is_product()) {
+        echo '<div id="lylrv-productReviews-container"></div>';
+    }
 }
 add_action('wp_footer', 'lylrv_inject_floating_widgets');
 
-/**
- * Auto-inject product-reviews widget on WooCommerce product pages.
- * Placed after the product summary section.
- */
-function lylrv_inject_product_reviews_widget() {
-    $shop_domain = get_option('lylrv_shop_domain');
-    if (empty($shop_domain)) {
-        return;
-    }
-    
-    echo '<div id="lylrv-productReviews-container" style="margin-top: 2rem; margin-bottom: 2rem;"></div>';
-}
-// Hook into WooCommerce product page - after product summary
-add_action('woocommerce_after_single_product_summary', 'lylrv_inject_product_reviews_widget', 15);
 
 /**
  * Shortcode to embed widgets inline

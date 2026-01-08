@@ -113,18 +113,9 @@ import type {
 			return existingContainer;
 		}
 
-		// Create fixed position container (for floating widgets)
-		const container = document.createElement("div");
-		container.id = `lylrv-${widgetName}-container`;
-		container.style.cssText = `
-			position: fixed;
-			bottom: 20px;
-			${position}: 20px;
-			z-index: 999999;
-			font-family: system-ui, -apple-system, sans-serif;
-		`;
-		document.body.appendChild(container);
-		return container;
+
+		throw new Error("Inline embedding only - no dynamic container creation");
+
 	}
 
 	async function init() {
