@@ -280,12 +280,21 @@ importers:
 
   apps/widgets:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.64.2
+        version: 5.90.8(react@19.1.4)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
       react:
         specifier: catalog:react19
         version: 19.1.4
       react-dom:
         specifier: catalog:react19
         version: 19.1.4(react@19.1.4)
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.3.1
     devDependencies:
       '@lylrv/tailwind-config':
         specifier: workspace:*

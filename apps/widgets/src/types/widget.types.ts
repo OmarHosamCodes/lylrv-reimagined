@@ -69,6 +69,7 @@ export interface WidgetConfig {
 		primaryColor: string;
 		position: "left" | "right";
 	};
+	shop?: string;
 	clientId?: string;
 	clientConfig?: WidgetClientConfig | null;
 	// Injected context from WordPress
@@ -80,16 +81,22 @@ export interface WidgetModule {
 	mount: (container: HTMLElement, config: WidgetConfig) => void;
 }
 
-interface LylrvWindow extends Window {
-	__LYLRV_LOADED__?: boolean;
-	__LYLRV_CONFIG__?: WidgetConfig;
-	LylrvWidgets?: Record<string, WidgetModule>;
-	LYLRV_WP_DATA?: {
-		user?: UserDetails;
-		context?: WidgetContext;
-	};
+// Widget Theme derived from config
+export interface WidgetTheme {
+	primaryColor: string;
+	textColor: string;
+	position: "left" | "right";
+	isRTL: boolean;
 }
 
 declare global {
-	interface Window extends LylrvWindow {}
+	interface Window {
+		__LYLRV_LOADED__?: boolean;
+		__LYLRV_CONFIG__?: WidgetConfig;
+		LylrvWidgets?: Record<string, WidgetModule>;
+		LYLRV_WP_DATA?: {
+			user?: UserDetails;
+			context?: WidgetContext;
+		};
+	}
 }

@@ -144,6 +144,7 @@ export const GET = async (req: NextRequest) => {
 					"#000000",
 				position: appearance?.position ?? "right",
 			},
+			shop: client.createSource,
 			clientId: client.id,
 			clientConfig: widgetClientConfig,
 		});

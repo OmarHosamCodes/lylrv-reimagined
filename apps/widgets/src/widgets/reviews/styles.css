@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@lylrv/tailwind-config/theme" layer(theme);
 
 /* Widget-specific base styles */
 *,
