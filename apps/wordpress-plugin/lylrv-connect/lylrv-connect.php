@@ -148,6 +148,56 @@ function lylrv_connect_script() {
 add_action('wp_enqueue_scripts', 'lylrv_connect_script');
 
 /**
+ * Add type="module" attribute to the loader script tag.
+ * ES modules require type="module" to use dynamic import() for loading widget bundles.
+ */
+function lylrv_add_module_type($tag, $handle, $src) {
+    if ($handle !== 'lylrv-widget-loader') {
+        return $tag;
+    }
+    
+    // Replace the script tag to add type="module"
+    // Note: wp_localize_script creates an inline script before the module.
+    // We only need to modify the main script tag that has the src attribute.
+    $tag = str_replace(' src=', ' type="module" src=', $tag);
+    
+    return $tag;
+}
+add_filter('script_loader_tag', 'lylrv_add_module_type', 10, 3);
+
+/**
+ * Auto-inject loyalty and reviews widget containers in the footer.
+ * These are floating widgets that appear fixed on the page.
+ */
+function lylrv_inject_floating_widgets() {
+    $shop_domain = get_option('lylrv_shop_domain');
+    if (empty($shop_domain)) {
+        return;
+    }
+    
+    // Inject containers for floating widgets (loyalty and reviews)
+    // The loader will mount into these if the widgets are enabled in the config
+    echo '<div id="lylrv-loyalty-container"></div>';
+    echo '<div id="lylrv-reviews-container"></div>';
+}
+add_action('wp_footer', 'lylrv_inject_floating_widgets');
+
+/**
+ * Auto-inject product-reviews widget on WooCommerce product pages.
+ * Placed after the product summary section.
+ */
+function lylrv_inject_product_reviews_widget() {
+    $shop_domain = get_option('lylrv_shop_domain');
+    if (empty($shop_domain)) {
+        return;
+    }
+    
+    echo '<div id="lylrv-productReviews-container" style="margin-top: 2rem; margin-bottom: 2rem;"></div>';
+}
+// Hook into WooCommerce product page - after product summary
+add_action('woocommerce_after_single_product_summary', 'lylrv_inject_product_reviews_widget', 15);
+
+/**
  * Shortcode to embed widgets inline
  * Usage: [lylrv_widget name="product-reviews"]
  */

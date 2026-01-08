@@ -86,7 +86,7 @@ export const GET = async (req: NextRequest) => {
 			};
 			if (widgets.loyalty) activeWidgets.push("loyalty");
 			if (widgets.reviews) activeWidgets.push("reviews");
-			if (widgets.productReviews) activeWidgets.push("product-reviews");
+			if (widgets.productReviews) activeWidgets.push("productReviews");
 		}
 
 		const appearance = settings.appearance as {
@@ -97,41 +97,41 @@ export const GET = async (req: NextRequest) => {
 		// Build clientConfig for widgets
 		const widgetClientConfig = config
 			? {
-					theme: config.theme as {
-						color: string;
-						mainButtonIcon: string;
-						buttonTextColor: string;
-						secondaryButtonIcon: string;
-						buttonBackgroundColor: string;
-					},
-					language: config.language as {
-						local: string;
-						direction: "ltr" | "rtl";
-					},
-					localizations: config.localizations as Record<
-						string,
-						Record<string, string>
-					>,
-					earnSections: config.earnSections as Array<{
-						title: string;
-						earnAmount: string;
-						description: string;
-					}>,
-					variables: config.variables as Array<{
-						name: string;
-						value: string;
-					}>,
-					interactions: config.interactions as Array<{
-						trigger: string;
-						pointsGained: number;
-					}>,
-					conditions: config.conditions as Array<{
-						status: string;
-						maxAmount: number;
-						minAmount: number;
-						pointsGained: number;
-					}>,
-				}
+				theme: config.theme as {
+					color: string;
+					mainButtonIcon: string;
+					buttonTextColor: string;
+					secondaryButtonIcon: string;
+					buttonBackgroundColor: string;
+				},
+				language: config.language as {
+					local: string;
+					direction: "ltr" | "rtl";
+				},
+				localizations: config.localizations as Record<
+					string,
+					Record<string, string>
+				>,
+				earnSections: config.earnSections as Array<{
+					title: string;
+					earnAmount: string;
+					description: string;
+				}>,
+				variables: config.variables as Array<{
+					name: string;
+					value: string;
+				}>,
+				interactions: config.interactions as Array<{
+					trigger: string;
+					pointsGained: number;
+				}>,
+				conditions: config.conditions as Array<{
+					status: string;
+					maxAmount: number;
+					minAmount: number;
+					pointsGained: number;
+				}>,
+			}
 			: null;
 
 		const response = Response.json({

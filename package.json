@@ -2,7 +2,6 @@
 	"name": "create-t3-turbo",
 	"private": true,
 	"engines": {
-		"node": "^22.21.0",
 		"pnpm": "^10.19.0"
 	},
 	"packageManager": "pnpm@10.19.0",
@@ -29,9 +28,9 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.11",
-		"@turbo/gen": "^2.5.8",
+		"@turbo/gen": "^2.7.3",
 		"dotenv-cli": "^10.0.0",
-		"turbo": "^2.5.8",
+		"turbo": "^2.7.3",
 		"typescript": "catalog:"
 	}
 }

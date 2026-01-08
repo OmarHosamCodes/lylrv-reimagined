@@ -33,13 +33,26 @@ import type {
 	win.__LYLRV_LOADED__ = true;
 
 	// Get the script tag to extract params
-	const currentScript = document.currentScript as HTMLScriptElement;
-	if (!currentScript) {
+	// Note: document.currentScript is null for ES modules, so we find the script by URL pattern
+	let scriptElement: HTMLScriptElement | null =
+		document.currentScript as HTMLScriptElement;
+
+	if (!scriptElement) {
+		// For ES modules, find the script tag by looking for our loader URL
+		const scripts = document.querySelectorAll(
+			'script[src*="loader.bundle.js"]',
+		);
+		if (scripts.length > 0) {
+			scriptElement = scripts[0] as HTMLScriptElement;
+		}
+	}
+
+	if (!scriptElement) {
 		console.error("[Lylrv] Could not find script tag");
 		return;
 	}
 
-	const scriptUrl = new URL(currentScript.src);
+	const scriptUrl = new URL(scriptElement.src);
 	const shop = scriptUrl.searchParams.get("shop");
 
 	if (!shop) {

@@ -24,6 +24,7 @@
 		"push": "pnpm with-env drizzle-kit push",
 		"pull": "pnpm with-env drizzle-kit pull",
 		"studio": "pnpm with-env drizzle-kit studio",
+		"seed:widgets": "pnpm with-env tsx script/seed-widget-settings.ts",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
 		"with-env": "dotenv -e ../../.env --"
 	},
@@ -31,7 +32,6 @@
 		"drizzle-orm": "^0.44.7",
 		"drizzle-zod": "^0.8.3",
 		"pg": "^8.16.3",
-		"postgres": "^3.4.8",
 		"zod": "catalog:"
 	},
 	"devDependencies": {
@@ -39,6 +39,7 @@
 		"@types/node": "catalog:",
 		"@types/pg": "^8.16.0",
 		"drizzle-kit": "^0.31.5",
+		"tsx": "^4.21.0",
 		"typescript": "catalog:"
 	}
 }
