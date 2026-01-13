@@ -40,7 +40,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 	const userName = config.user?.name;
 	const earnSections = config.clientConfig?.earnSections || [];
 	const variables = config.clientConfig?.variables;
-	const themeColor = config.clientConfig?.theme?.mainColor || "#6366f1";
+	const themeColor = config.clientConfig?.theme?.color || "#6366f1";
 
 	const redeemValues = parseNumberList(
 		variables,
@@ -571,7 +571,7 @@ function RedeemTab({
 									? "hover:border-primary cursor-pointer"
 									: "opacity-50 cursor-not-allowed saturate-0",
 								isSelected &&
-									"border-primary ring-2 ring-primary/20 bg-primary/5",
+								"border-primary ring-2 ring-primary/20 bg-primary/5",
 							)}
 							onClick={() => canRedeem && onSelect(value)}
 						>
