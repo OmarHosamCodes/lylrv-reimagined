@@ -1,3 +1,4 @@
+import { cn } from "@lylrv/ui";
 import { createRoot } from "react-dom/client";
 import {
 	Button,
@@ -23,7 +24,7 @@ import {
 } from "../../hooks";
 import { WidgetProvider } from "../../providers";
 import type { WidgetConfig } from "../../types";
-import type { ReviewsTab } from "../../types/reviews.types";
+import type { ReviewsTabs } from "../../types/reviews.types";
 import styles from "./styles.css?inline";
 
 interface ReviewsWidgetProps {
@@ -57,12 +58,12 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 	});
 
 	const tabs = [
-		{ id: "reviews" as ReviewsTab, label: t.reviews_tab_title || "Reviews" },
-		{ id: "write" as ReviewsTab, label: t.write_review || "Write Review" },
+		{ id: "reviews" as ReviewsTabs, label: t.reviews_tab_title || "Reviews" },
+		{ id: "write" as ReviewsTabs, label: t.write_review || "Write Review" },
 	];
 
 	return (
-		<div className="fixed bottom-4 right-20 z-[9999]">
+		<div className="fixed bottom-4 right-20 z-9999">
 			{/* Floating Button with Star Icon and Review Count Badge */}
 			<FloatingButton
 				onClick={handleToggle}
@@ -71,7 +72,18 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 				badge={meta?.total}
 			/>
 
-			<Panel isOpen={isOpen} position={theme.position} isRTL={theme.isRTL}>
+			<Panel
+				isOpen={isOpen}
+				position={theme.position}
+				isRTL={theme.isRTL}
+				className={cn(
+					"z-10002 flex flex-col gap-4",
+					"w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
+					"p-0 box-border overflow-hidden",
+					"bg-background border-none shadow-lg rounded-none sm:rounded-lg",
+					"duration-1000 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+				)}
+			>
 				<PanelHeader>
 					<h2 className="text-lg font-semibold">
 						{t.reviews_system_header || "Customer Reviews"}
@@ -94,7 +106,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 				<TabNavigation
 					tabs={tabs}
 					activeTab={activeTab}
-					onTabChange={(id) => setActiveTab(id as ReviewsTab)}
+					onTabChange={(id) => setActiveTab(id as ReviewsTabs)}
 				/>
 
 				<PanelContent>

@@ -1,3 +1,4 @@
+import { cn } from "@lylrv/ui";
 import { createRoot } from "react-dom/client";
 import {
 	Button,
@@ -92,14 +93,25 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 	];
 
 	return (
-		<div className="fixed bottom-4 left-4 z-9999">
+		<div className="fixed bottom-4 left-4 z-9999 border-4 border-red-500">
 			<FloatingButton
 				onClick={handleToggle}
 				icon={<LoyaltyIcon className="h-7 w-7" />}
 				label={t.main_floating_button_title || "Loyalty Points"}
 			/>
 
-			<Panel isOpen={isOpen} position={theme.position} isRTL={theme.isRTL}>
+			<Panel
+				isOpen={isOpen}
+				position={theme.position}
+				isRTL={theme.isRTL}
+				className={cn(
+					"z-10002 flex flex-col gap-4",
+					"w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
+					"p-0 box-border overflow-hidden",
+					"bg-background border-none shadow-lg rounded-none sm:rounded-lg",
+					"duration-1000 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+				)}
+			>
 				<PanelHeader>
 					<h2 className="text-lg font-semibold">
 						{t.point_system_header || "Loyalty Points"}

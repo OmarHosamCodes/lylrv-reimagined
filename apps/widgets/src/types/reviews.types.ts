@@ -23,4 +23,4 @@ export interface ReviewFormData {
 	images: File[];
 }
 
-export type ReviewsTab = "reviews" | "questions" | "write";
+export type ReviewsTabs = "reviews" | "questions" | "write";
