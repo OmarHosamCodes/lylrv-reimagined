@@ -1,6 +1,7 @@
 import { cn } from "@lylrv/ui";
 import { createRoot } from "react-dom/client";
 import {
+	AverageRatingDisplay,
 	Button,
 	FloatingButton,
 	Input,
@@ -71,30 +72,17 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 				isOpen={isOpen}
 				onClose={handleToggle}
 				className={cn(
-					"z-10002 flex flex-col gap-4",
+					"z-10002 flex flex-col",
 					"w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
 					"p-0 box-border overflow-hidden",
 					"bg-background border-none shadow-lg rounded-none sm:rounded-lg",
-					"duration-1000 data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+					"duration-300",
 				)}
 			>
 				<PanelHeader>
 					<h2 className="text-lg font-semibold">
 						{t.reviews_system_header || "Customer Reviews"}
 					</h2>
-					{meta && (
-						<div className="mt-2 flex items-center justify-center gap-2">
-							<span className="text-2xl font-bold">
-								{meta.averageRating.toFixed(1)}
-							</span>
-							<div className="text-left">
-								<StarRating rating={Math.round(meta.averageRating)} size="md" />
-								<p className="text-xs opacity-90">
-									{meta.total} {t.total_reviews || "reviews"}
-								</p>
-							</div>
-						</div>
-					)}
 				</PanelHeader>
 
 				<TabNavigation
@@ -103,7 +91,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 					onTabChange={(id) => setActiveTab(id as ReviewsTabs)}
 				/>
 
-				<PanelContent>
+				<PanelContent className="flex-1 overflow-y-auto">
 					{isLoading ? (
 						<LoadingState />
 					) : activeTab === "reviews" ? (
@@ -125,7 +113,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 				<PanelFooter>
 					<button
 						type="button"
-						className="text-xs text-muted-foreground hover:text-foreground"
+						className="text-xs text-muted-foreground hover:text-foreground transition-colors"
 					>
 						{t.need_help || "Need help?"}
 					</button>
@@ -157,29 +145,48 @@ interface ReviewsTabProps {
 function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
 	return (
 		<div className="space-y-4">
+			{/* Rating Summary Section: Average + Distribution side by side */}
 			{meta && (
-				<RatingDistribution
-					distribution={meta.ratingDistribution}
-					total={meta.total}
-				/>
+				<section className="flex flex-row items-center justify-center gap-6 py-2 max-sm:flex-col max-sm:gap-4">
+					{/* Average Rating Display */}
+					<AverageRatingDisplay
+						avgRating={meta.averageRating}
+						className="flex-shrink-0"
+					/>
+					{/* Rating Distribution Bars */}
+					<RatingDistribution
+						distribution={meta.ratingDistribution}
+						total={meta.total}
+						className="flex-1 max-w-[200px] max-sm:max-w-full max-sm:w-full"
+					/>
+				</section>
 			)}
 
-			<div className="space-y-3 border-t border-border pt-3">
+			{/* Review Count */}
+			{meta && (
+				<p className="text-center text-sm text-muted-foreground">
+					{meta.total} {t.total_reviews || "reviews"}
+				</p>
+			)}
+
+			{/* Reviews List */}
+			<div className="space-y-3 border-t border-border pt-4">
 				{reviews.length > 0 ? (
 					reviews.map((review) => (
 						<ReviewCard key={review.id} review={review} />
 					))
 				) : (
-					<p className="py-4 text-center text-sm text-muted-foreground">
-						No reviews yet. Be the first to review!
+					<p className="py-8 text-center text-sm text-muted-foreground">
+						{t.no_reviews || "No reviews yet. Be the first to review!"}
 					</p>
 				)}
 			</div>
 
+			{/* View All Button */}
 			{reviews.length > 0 && (
 				<button
 					type="button"
-					className="w-full text-center text-sm font-medium text-primary"
+					className="w-full text-center text-sm font-medium text-primary hover:text-primary/80 transition-colors py-2"
 				>
 					{t.view_all || "View All"} →
 				</button>
@@ -211,7 +218,7 @@ function WriteReviewTab({
 }: WriteReviewTabProps) {
 	if (!isLoggedIn) {
 		return (
-			<div className="py-4 text-center">
+			<div className="py-8 text-center">
 				<p className="mb-4 text-sm text-muted-foreground">
 					{t.sign_in || "Sign in"} to write a review
 				</p>
@@ -224,7 +231,7 @@ function WriteReviewTab({
 		<div className="space-y-4">
 			<div>
 				<Label>{t.add_website_review || "Rate your experience"}</Label>
-				<div className="mt-1">
+				<div className="mt-2">
 					<StarRating
 						rating={formData.rating}
 						size="lg"
