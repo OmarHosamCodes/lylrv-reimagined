@@ -14,8 +14,8 @@ import { CameraIcon, QuestionIcon } from "../../components/icons";
 import { useProductReviewsWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
 import type { WidgetConfig } from "../../types";
-import type { ReviewsTab } from "../../types/reviews.types";
-import styles from "./styles.css?inline";
+import type { ReviewsTabs } from "../../types/reviews.types";
+import stylesText from "./styles.css?inline";
 
 interface ProductReviewsWidgetProps {
 	config: WidgetConfig;
@@ -64,11 +64,11 @@ function ProductReviewsWidget({
 
 	const tabs = [
 		{
-			id: "reviews" as ReviewsTab,
+			id: "reviews" as ReviewsTabs,
 			label: `${t.reviews_tab_title || "Reviews"} ${meta ? `(${meta.total})` : ""}`,
 		},
 		{
-			id: "questions" as ReviewsTab,
+			id: "questions" as ReviewsTabs,
 			label: t.questions_tab_title || "Questions",
 		},
 	];
@@ -109,7 +109,7 @@ function ProductReviewsWidget({
 			<TabNavigation
 				tabs={tabs}
 				activeTab={activeTab}
-				onTabChange={(id) => setActiveTab(id as ReviewsTab | "questions")}
+				onTabChange={(id) => setActiveTab(id as ReviewsTabs | "questions")}
 			/>
 
 			{/* Content */}
@@ -396,9 +396,9 @@ export function mount(container: HTMLElement, config: WidgetConfig) {
 		? new URL(scriptElement.src).origin
 		: window.location.origin;
 
-	const styleElement = document.createElement("style");
-	styleElement.textContent = styles;
-	shadowRoot.appendChild(styleElement);
+	const stylesheet = new CSSStyleSheet();
+	stylesheet.replaceSync(stylesText);
+	shadowRoot.adoptedStyleSheets = [stylesheet];
 
 	const mountPoint = document.createElement("div");
 	mountPoint.className = "w-full";

@@ -21,7 +21,7 @@ import { useLocalizations, useReviewsWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
 import type { WidgetConfig } from "../../types";
 import type { ReviewsTabs } from "../../types/reviews.types";
-import styles from "./styles.css?inline";
+import stylesText from "./styles.css?inline";
 
 interface ReviewsWidgetProps {
 	config: WidgetConfig;
@@ -275,9 +275,9 @@ export function mount(container: HTMLElement, config: WidgetConfig) {
 		? new URL(scriptElement.src).origin
 		: window.location.origin;
 
-	const styleElement = document.createElement("style");
-	styleElement.textContent = styles;
-	shadowRoot.appendChild(styleElement);
+	const stylesheet = new CSSStyleSheet();
+	stylesheet.replaceSync(stylesText);
+	shadowRoot.adoptedStyleSheets = [stylesheet];
 
 	const mountPoint = document.createElement("div");
 	shadowRoot.appendChild(mountPoint);
