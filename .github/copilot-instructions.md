@@ -86,3 +86,7 @@ Run `pnpm ui-add` and select component, or add manually to `packages/ui/src/` an
 - **Formatting**: Tabs for indentation, double quotes (Biome config)
 - **Types**: Export types from package entry points; use `RouterInputs`/`RouterOutputs` for tRPC inference
 - **Zod**: Using Zod v4 (`zod/v4` import path)
+
+## Multi-Agent Support
+
+For broader agent guidance (VS Code Copilot, Cursor, and Google's Antigent), see [.github/agent-instructions.md](agent-instructions.md). These instructions standardize planning, patching, validation, and repository conventions across agents.
