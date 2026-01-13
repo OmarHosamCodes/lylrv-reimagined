@@ -1,32 +1,31 @@
-import { cn } from "@lylrv/ui";
-import { createRoot } from "react-dom/client";
 import {
-	Button,
 	FloatingButton,
 	LoadingState,
+	LoyaltyIcon,
 	Panel,
 	PanelContent,
 	PanelFooter,
+	PointIcon,
 	TabNavigation,
-} from "../../components";
+} from "@/components";
+import { DEFAULT_MIN_REDEEM, DEFAULT_REDEEM_VALUES } from "@/constants";
+import { useLocalizations, useLoyaltyWidget } from "@/hooks";
+import { WidgetProvider } from "@/providers";
+import stylesText from "@/styles.css?inline";
+import type { LoyaltyTab, WidgetConfig } from "@/types";
+import { formatPoints, getVariable, parseNumberList } from "@/utils";
+import { cn } from "@lylrv/ui";
+import { Button } from "@lylrv/ui/button";
 import {
 	ArrowRightIcon,
 	ChevronLeftIcon,
-	CloseIcon,
 	GiftIcon,
-	HistoryIcon,
-	HomeIcon,
-	LoyaltyIcon,
-	PointIcon,
+	History,
+	Home,
 	SparkleIcon,
-} from "../../components/icons";
-import { DEFAULT_MIN_REDEEM, DEFAULT_REDEEM_VALUES } from "../../constants";
-import { useLocalizations, useLoyaltyWidget } from "../../hooks";
-import { WidgetProvider } from "../../providers";
-import stylesText from "../../styles.css?inline";
-import type { WidgetConfig } from "../../types";
-import type { LoyaltyTab } from "../../types/loyalty.types";
-import { formatPoints, getVariable, parseNumberList } from "../../utils";
+	X,
+} from "lucide-react";
+import { createRoot } from "react-dom/client";
 
 interface LoyaltyWidgetProps {
 	config: WidgetConfig;
@@ -84,13 +83,13 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 	});
 
 	const tabs = [
-		{ id: "home" as LoyaltyTab, label: <HomeIcon className="h-4 w-4" /> },
+		{ id: "home" as LoyaltyTab, label: <Home className="h-4 w-4" /> },
 		{
 			id: "earn" as LoyaltyTab,
 			label: t.earn_more_points?.split(" ")[0] || "Earn",
 		},
 		{ id: "redeem" as LoyaltyTab, label: t.redeem || "Redeem" },
-		{ id: "history" as LoyaltyTab, label: <HistoryIcon className="h-4 w-4" /> },
+		{ id: "history" as LoyaltyTab, label: <History className="h-4 w-4" /> },
 	];
 
 	return (
@@ -235,12 +234,12 @@ function ThemedHeader({
 						className="p-1 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
 						aria-label="Close"
 					>
-						<CloseIcon className="h-5 w-5 text-white" />
+						<X className="h-5 w-5 text-white" />
 					</button>
 				</div>
 
 				{/* Content area */}
-				<div className="flex items-center justify-center flex-grow">
+				<div className="flex items-center justify-center grow">
 					{isLoggedIn ? (
 						<div className="flex flex-col items-center justify-center text-center text-sm w-full">
 							<h1 className="text-white/80 text-sm">{headerTitle}</h1>
@@ -435,7 +434,7 @@ function HomeTab({
 
 			{/* Referral section */}
 			{referralCode && (
-				<Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-none">
+				<Card className="bg-linear-to-br from-primary/5 to-primary/10 border-none">
 					<h3 className="text-base font-semibold text-foreground mb-2">
 						{t.referral_title || "Refer a Friend"}
 					</h3>

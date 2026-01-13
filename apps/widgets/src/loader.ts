@@ -15,7 +15,7 @@ import type {
 	WidgetConfig,
 	WidgetContext,
 	WidgetModule,
-} from "./types";
+} from "@/types";
 
 (() => {
 	const win = window as Window & {

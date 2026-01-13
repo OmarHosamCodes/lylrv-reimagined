@@ -1,11 +1,6 @@
-import { cn } from "@lylrv/ui";
-import { createRoot } from "react-dom/client";
 import {
 	AverageRatingDisplay,
-	Button,
 	FloatingButton,
-	Input,
-	Label,
 	LoadingState,
 	Panel,
 	PanelContent,
@@ -15,14 +10,19 @@ import {
 	ReviewCard,
 	StarRating,
 	TabNavigation,
-	Textarea,
-} from "../../components";
-import { StarFilledIcon } from "../../components/icons";
-import { useLocalizations, useReviewsWidget } from "../../hooks";
-import { WidgetProvider } from "../../providers";
-import stylesText from "../../styles.css?inline";
-import type { WidgetConfig } from "../../types";
-import type { ReviewsTabs } from "../../types/reviews.types";
+} from "@/components";
+import { useLocalizations, useReviewsWidget } from "@/hooks";
+import { WidgetProvider } from "@/providers";
+import stylesText from "@/styles.css?inline";
+import type { WidgetConfig } from "@/types";
+import type { ReviewsTabs } from "@/types/reviews.types";
+import { cn } from "@lylrv/ui";
+import { Button } from "@lylrv/ui/button";
+import { Input } from "@lylrv/ui/input";
+import { Label } from "@lylrv/ui/label";
+import { Textarea } from "@lylrv/ui/textarea";
+import { Star } from "lucide-react";
+import { createRoot } from "react-dom/client";
 
 interface ReviewsWidgetProps {
 	config: WidgetConfig;
@@ -63,7 +63,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 			{/* Floating Button with Star Icon and Review Count Badge */}
 			<FloatingButton
 				onClick={handleToggle}
-				icon={<StarFilledIcon className="h-7 w-7" />}
+				icon={<Star className="h-7 w-7" />}
 				label={t.secondary_floating_button_title || "Reviews"}
 				badge={meta?.total}
 			/>
@@ -151,7 +151,7 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
 					{/* Average Rating Display */}
 					<AverageRatingDisplay
 						avgRating={meta.averageRating}
-						className="flex-shrink-0"
+						className="shrink-0"
 					/>
 					{/* Rating Distribution Bars */}
 					<RatingDistribution

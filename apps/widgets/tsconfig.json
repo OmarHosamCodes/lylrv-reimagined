@@ -1,7 +1,11 @@
 {
 	"extends": "@lylrv/tsconfig/base.json",
 	"compilerOptions": {
-		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"lib": [
+			"ES2022",
+			"DOM",
+			"DOM.Iterable"
+		],
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"target": "ES2022",
@@ -10,8 +14,26 @@
 		"noEmit": true,
 		"outDir": "dist",
 		"skipLibCheck": true,
-		"types": ["vite/client"]
+		"types": [
+			"vite/client"
+		],
+		"baseUrl": ".",
+		"paths": {
+			"@widgets/*": [
+				"src/widgets/*"
+			],
+			"@/*": [
+				"src/*"
+			]
+		}
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
-	"exclude": ["node_modules", "dist"]
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"vite.config.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist"
+	],
 }

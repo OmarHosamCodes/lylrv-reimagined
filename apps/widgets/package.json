@@ -12,6 +12,7 @@
 		"@lylrv/ui": "workspace:*",
 		"@tanstack/react-query": "^5.64.2",
 		"class-variance-authority": "^0.7.1",
+		"lucide-react": "^0.562.0",
 		"react": "catalog:react19",
 		"react-dom": "catalog:react19",
 		"tailwind-merge": "^3.3.1"
