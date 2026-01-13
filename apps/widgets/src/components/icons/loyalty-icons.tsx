@@ -78,3 +78,83 @@ export function HomeIcon({ className }: { className?: string }) {
 		</svg>
 	);
 }
+
+/**
+ * Close icon
+ */
+export function CloseIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			className={className}
+		>
+			<path
+				fillRule="evenodd"
+				d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+}
+
+/**
+ * Chevron Left icon
+ */
+export function ChevronLeftIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			className={className}
+		>
+			<path
+				fillRule="evenodd"
+				d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+}
+
+/**
+ * Arrow Right icon
+ */
+export function ArrowRightIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			className={className}
+		>
+			<path
+				fillRule="evenodd"
+				d="M12.97 3.97a.75.75 0 011.06 0l7.5 7.5a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 11-1.06-1.06l6.22-6.22H3a.75.75 0 010-1.5h16.19l-6.22-6.22a.75.75 0 010-1.06z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+}
+
+/**
+ * Point icon (coin with dollar sign)
+ */
+export function PointIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			className={className}
+		>
+			<path
+				fillRule="evenodd"
+				d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM9 7.5A.75.75 0 019.75 6.75h1.5a.75.75 0 01.75.75v2.25h.75a.75.75 0 01.75.75v3a.75.75 0 01-.75.75h-.75v1.5a.75.75 0 01-1.5 0v-1.5h-.75a.75.75 0 01-.75-.75v-3a.75.75 0 01.75-.75h.75V7.5z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	);
+}
