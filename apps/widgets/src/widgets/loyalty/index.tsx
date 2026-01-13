@@ -18,11 +18,7 @@ import {
 	SparkleIcon,
 } from "../../components/icons";
 import { DEFAULT_MIN_REDEEM, DEFAULT_REDEEM_VALUES } from "../../constants";
-import {
-	useLocalizations,
-	useLoyaltyWidget,
-	useWidgetTheme,
-} from "../../hooks";
+import { useLocalizations, useLoyaltyWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
 import type { WidgetConfig } from "../../types";
 import type { LoyaltyTab } from "../../types/loyalty.types";
@@ -36,7 +32,6 @@ interface LoyaltyWidgetProps {
 
 function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 	const t = useLocalizations(config);
-	const theme = useWidgetTheme(config);
 
 	const isLoggedIn = config.user?.isLoggedIn || false;
 	const userEmail = config.user?.email;
@@ -102,8 +97,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 
 			<Panel
 				isOpen={isOpen}
-				position={theme.position}
-				isRTL={theme.isRTL}
+				onClose={handleToggle}
 				className={cn(
 					"z-10002 flex flex-col gap-4",
 					"w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",

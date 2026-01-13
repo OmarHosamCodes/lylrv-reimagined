@@ -17,11 +17,7 @@ import {
 	Textarea,
 } from "../../components";
 import { StarFilledIcon } from "../../components/icons";
-import {
-	useLocalizations,
-	useReviewsWidget,
-	useWidgetTheme,
-} from "../../hooks";
+import { useLocalizations, useReviewsWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
 import type { WidgetConfig } from "../../types";
 import type { ReviewsTabs } from "../../types/reviews.types";
@@ -34,7 +30,6 @@ interface ReviewsWidgetProps {
 
 function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 	const t = useLocalizations(config);
-	const theme = useWidgetTheme(config);
 	const isLoggedIn = config.user?.isLoggedIn || false;
 
 	const {
@@ -74,8 +69,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
 
 			<Panel
 				isOpen={isOpen}
-				position={theme.position}
-				isRTL={theme.isRTL}
+				onClose={handleToggle}
 				className={cn(
 					"z-10002 flex flex-col gap-4",
 					"w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",

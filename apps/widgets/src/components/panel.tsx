@@ -4,43 +4,38 @@ import { cn } from "./utils";
 interface PanelProps {
 	children: ReactNode;
 	isOpen: boolean;
-	position?: "left" | "right";
-	isRTL?: boolean;
+	onClose?: () => void;
 	className?: string;
 }
 
 /**
- * Slide-up panel for widget content
+ * Centered dialog panel with backdrop overlay
  */
-export function Panel({
-	children,
-	isOpen,
-	position = "right",
-	isRTL = false,
-	className,
-}: PanelProps) {
+export function Panel({ children, isOpen, onClose, className }: PanelProps) {
 	if (!isOpen) return null;
 
-	// Determine horizontal position based on RTL and position setting
-	const horizontalStyle = isRTL
-		? position === "right"
-			? { left: 0 }
-			: { right: 0 }
-		: position === "right"
-			? { right: 0 }
-			: { left: 0 };
-
 	return (
-		<div
-			className={cn(
-				"absolute bottom-16 w-80 overflow-hidden rounded-xl shadow-2xl",
-				"bg-card text-card-foreground",
-				"animate-in slide-in-from-bottom-4 fade-in duration-200",
-				className,
-			)}
-			style={horizontalStyle}
-		>
-			{children}
+		<div className="fixed inset-0 z-[10000] flex items-center justify-center">
+			{/* Backdrop overlay */}
+			<div
+				className="fixed inset-0 bg-black/50 animate-in fade-in duration-200"
+				onClick={onClose}
+				onKeyDown={(e) => e.key === "Escape" && onClose?.()}
+				role="button"
+				tabIndex={0}
+				aria-label="Close dialog"
+			/>
+			{/* Dialog content */}
+			<div
+				className={cn(
+					"relative z-10 w-80 overflow-hidden rounded-xl shadow-2xl",
+					"bg-card text-card-foreground",
+					"animate-in slide-in-from-bottom-4 fade-in duration-200",
+					className,
+				)}
+			>
+				{children}
+			</div>
 		</div>
 	);
 }
