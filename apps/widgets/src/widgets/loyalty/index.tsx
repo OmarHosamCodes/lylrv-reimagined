@@ -20,10 +20,10 @@ import {
 import { DEFAULT_MIN_REDEEM, DEFAULT_REDEEM_VALUES } from "../../constants";
 import { useLocalizations, useLoyaltyWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
+import stylesText from "../../styles.css?inline";
 import type { WidgetConfig } from "../../types";
 import type { LoyaltyTab } from "../../types/loyalty.types";
 import { formatPoints, getVariable, parseNumberList } from "../../utils";
-import stylesText from "./styles.css?inline";
 
 interface LoyaltyWidgetProps {
 	config: WidgetConfig;

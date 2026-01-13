@@ -19,9 +19,9 @@ import {
 import { StarFilledIcon } from "../../components/icons";
 import { useLocalizations, useReviewsWidget } from "../../hooks";
 import { WidgetProvider } from "../../providers";
+import stylesText from "../../styles.css?inline";
 import type { WidgetConfig } from "../../types";
 import type { ReviewsTabs } from "../../types/reviews.types";
-import stylesText from "./styles.css?inline";
 
 interface ReviewsWidgetProps {
 	config: WidgetConfig;
