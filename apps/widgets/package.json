@@ -9,6 +9,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@lylrv/ui": "workspace:*",
 		"@tanstack/react-query": "^5.64.2",
 		"class-variance-authority": "^0.7.1",
 		"react": "catalog:react19",

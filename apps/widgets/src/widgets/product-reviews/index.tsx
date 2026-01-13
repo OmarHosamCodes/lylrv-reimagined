@@ -1,14 +1,14 @@
+import { Button } from "@lylrv/ui/button";
+import { Input } from "@lylrv/ui/input";
+import { Label } from "@lylrv/ui/label";
+import { Textarea } from "@lylrv/ui/textarea";
 import { createRoot } from "react-dom/client";
 import {
-	Button,
-	Input,
-	Label,
 	LoadingState,
 	RatingDistribution,
 	ReviewCard,
 	StarRating,
 	TabNavigation,
-	Textarea,
 } from "../../components";
 import { CameraIcon, QuestionIcon } from "../../components/icons";
 import { useProductReviewsWidget } from "../../hooks";

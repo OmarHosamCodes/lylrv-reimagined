@@ -280,6 +280,9 @@ importers:
 
   apps/widgets:
     dependencies:
+      '@lylrv/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@tanstack/react-query':
         specifier: ^5.64.2
         version: 5.90.8(react@19.1.4)
