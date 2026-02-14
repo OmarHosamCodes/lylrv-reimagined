@@ -1,4 +1,6 @@
+import { AnimatePresence, motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { transitions } from "../lib/transitions";
 import { cn } from "./utils";
 
 interface PanelProps {
@@ -9,34 +11,45 @@ interface PanelProps {
 }
 
 /**
- * Centered dialog panel with backdrop overlay
+ * Centered dialog panel with animated backdrop overlay.
+ * Uses spring physics for a premium-feeling open/close.
  */
 export function Panel({ children, isOpen, onClose, className }: PanelProps) {
-	if (!isOpen) return null;
-
 	return (
-		<div className="fixed inset-0 z-[10000] flex items-center justify-center">
-			{/* Backdrop overlay */}
-			<div
-				className="fixed inset-0 bg-black/50 animate-in fade-in duration-200"
-				onClick={onClose}
-				onKeyDown={(e) => e.key === "Escape" && onClose?.()}
-				role="button"
-				tabIndex={0}
-				aria-label="Close dialog"
-			/>
-			{/* Dialog content */}
-			<div
-				className={cn(
-					"relative z-10 w-80 overflow-hidden rounded-xl shadow-2xl",
-					"bg-card text-card-foreground",
-					"animate-in slide-in-from-bottom-4 fade-in duration-200",
-					className,
-				)}
-			>
-				{children}
-			</div>
-		</div>
+		<AnimatePresence mode="wait">
+			{isOpen && (
+				<div className="fixed inset-0 z-[10000] flex items-center justify-center">
+					{/* Backdrop overlay with blur */}
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						transition={transitions.smooth}
+						className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
+						onClick={onClose}
+						onKeyDown={(e) => e.key === "Escape" && onClose?.()}
+						role="button"
+						tabIndex={0}
+						aria-label="Close dialog"
+					/>
+					{/* Dialog content — spring-animated entrance */}
+					<motion.div
+						initial={{ opacity: 0, scale: 0.94, y: 24 }}
+						animate={{ opacity: 1, scale: 1, y: 0 }}
+						exit={{ opacity: 0, scale: 0.96, y: 12 }}
+						transition={transitions.spring}
+						className={cn(
+							"relative z-10 w-80 overflow-hidden rounded-2xl",
+							"bg-card text-card-foreground",
+							"shadow-[0_24px_80px_-12px_rgba(0,0,0,0.25),0_0_0_1px_rgba(0,0,0,0.05)]",
+							className,
+						)}
+					>
+						{children}
+					</motion.div>
+				</div>
+			)}
+		</AnimatePresence>
 	);
 }
 
@@ -78,7 +91,9 @@ interface PanelFooterProps {
 
 export function PanelFooter({ children, className }: PanelFooterProps) {
 	return (
-		<div className={cn("border-t border-border p-2 text-center", className)}>
+		<div
+			className={cn("border-t border-border/50 p-2.5 text-center", className)}
+		>
 			{children}
 		</div>
 	);

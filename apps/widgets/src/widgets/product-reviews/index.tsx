@@ -1,9 +1,11 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { useMemo, useState } from "react";
+import { createRoot } from "react-dom/client";
 import { useProductReviewsWidget } from "@/hooks";
+import { transitions } from "@/lib/transitions";
 import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
 import type { WidgetConfig } from "@/types";
-import { useMemo, useState } from "react";
-import { createRoot } from "react-dom/client";
 import { FormDisplay } from "./components/FormDisplay";
 import { ProductReviewsHeader } from "./components/ProductReviewsHeader";
 import { ProductReviewsTabs } from "./components/ProductReviewsTabs";
@@ -20,7 +22,6 @@ function ProductReviewsWidget({
 }: ProductReviewsWidgetProps) {
 	const productId = config.context?.product?.id;
 
-	// Guard: only render on product pages
 	if (!productId) {
 		return null;
 	}
@@ -49,12 +50,10 @@ function ProductReviewsWidget({
 		apiBaseUrl,
 	});
 
-	// Local state for form display (independent of tabs)
 	const [formMode, setFormMode] = useState<"none" | "review" | "question">(
 		"none",
 	);
 
-	// Derived data for images
 	const allReviewsImages = useMemo(
 		() => getAllReviewsImages(reviews),
 		[reviews],
@@ -74,20 +73,20 @@ function ProductReviewsWidget({
 
 	const handleQuestionSubmit = (body: string) => {
 		console.log("Question submitted:", body);
-		// Note: Question submission logic is not yet available in the hook.
-		// We would call an API here.
 		setFormMode("none");
 	};
 
-	// Close form on review submit
 	const onReviewSubmitWrapper = async () => {
 		await handleSubmit();
 		setFormMode("none");
 	};
 
 	return (
-		<div
-			className="w-full space-y-6 bg-transparent"
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={transitions.slowReveal}
+			className="w-full space-y-8 bg-transparent"
 			style={{ direction: widgetTheme.isRTL ? "rtl" : "ltr" }}
 		>
 			<ProductReviewsHeader
@@ -101,35 +100,46 @@ function ProductReviewsWidget({
 				onToggleQuestionForm={handleToggleQuestionForm}
 			/>
 
-			<FormDisplay
-				showForm={formMode === "none" ? null : formMode}
-				t={t}
-				isLoggedIn={isLoggedIn}
-				hasPurchased={hasPurchased}
-				hasUserAlreadyReviewed={false} // Hook doesn't expose this yet? 'user' in config might have it? Reference hook had it.
-				// Target hook returns hasPurchased, but maybe not hasReviewed. We'll default false or check reviews.
-				reviewPoints={reviewPoints}
-				reviewWithImagesPoints={reviewWithImagesPoints}
-				formData={formData}
-				canSubmit={canSubmit}
-				isSubmitting={isSubmitting}
-				onRatingChange={handleRatingChange}
-				onInputChange={handleInputChange}
-				onAddImages={handleAddImages}
-				onRemoveImage={handleRemoveImage}
-				onSubmitReview={onReviewSubmitWrapper}
-				onCancel={() => setFormMode("none")}
-				onSubmitQuestion={handleQuestionSubmit}
-			/>
+			<AnimatePresence mode="wait">
+				{formMode !== "none" && (
+					<motion.div
+						key={formMode}
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						exit={{ opacity: 0, height: 0 }}
+						transition={transitions.spring}
+					>
+						<FormDisplay
+							showForm={formMode}
+							t={t}
+							isLoggedIn={isLoggedIn}
+							hasPurchased={hasPurchased}
+							hasUserAlreadyReviewed={false}
+							reviewPoints={reviewPoints}
+							reviewWithImagesPoints={reviewWithImagesPoints}
+							formData={formData}
+							canSubmit={canSubmit}
+							isSubmitting={isSubmitting}
+							onRatingChange={handleRatingChange}
+							onInputChange={handleInputChange}
+							onAddImages={handleAddImages}
+							onRemoveImage={handleRemoveImage}
+							onSubmitReview={onReviewSubmitWrapper}
+							onCancel={() => setFormMode("none")}
+							onSubmitQuestion={handleQuestionSubmit}
+						/>
+					</motion.div>
+				)}
+			</AnimatePresence>
 
 			<ProductReviewsTabs
 				reviews={reviews}
-				questions={[]} // Questions data not yet available from hook
+				questions={[]}
 				t={t}
 				onImageClick={setImageViewerOpen}
 				onWriteReview={handleToggleReviewForm}
 			/>
-		</div>
+		</motion.div>
 	);
 }
 

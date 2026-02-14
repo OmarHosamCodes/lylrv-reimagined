@@ -1,6 +1,8 @@
-import { TabNavigation } from "@/components";
-import type { Review } from "@/types";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { TabNavigation } from "@/components";
+import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
+import type { Review } from "@/types";
 import type { Question } from "./QuestionCard";
 import { QuestionsList } from "./QuestionsList";
 import { ReviewsList } from "./ReviewsList";
@@ -43,30 +45,48 @@ export const ProductReviewsTabs = ({
 				onTabChange={setActiveTab}
 			/>
 
-			<div className="mt-4">
-				{activeTab === "reviews" && (
-					<ReviewsList
-						reviews={reviews}
-						t={t}
-						onImageClick={onImageClick}
-						onWriteReview={onWriteReview}
-					/>
-				)}
+			<AnimatePresence mode="wait">
+				<motion.div
+					key={activeTab}
+					initial={{ opacity: 0, y: 8 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ opacity: 0, y: -8 }}
+					transition={transitions.smooth}
+					className="mt-4"
+				>
+					{activeTab === "reviews" && (
+						<ReviewsList
+							reviews={reviews}
+							t={t}
+							onImageClick={onImageClick}
+							onWriteReview={onWriteReview}
+						/>
+					)}
 
-				{activeTab === "questions" && (
-					<>
-						{questionsLoading ? (
-							<div className="space-y-4">
-								<div className="h-20 animate-pulse rounded-md bg-muted" />
-								<div className="h-20 animate-pulse rounded-md bg-muted" />
-								<div className="h-20 animate-pulse rounded-md bg-muted" />
-							</div>
-						) : (
-							<QuestionsList questions={questions} t={t} />
-						)}
-					</>
-				)}
-			</div>
+					{activeTab === "questions" && (
+						<>
+							{questionsLoading ? (
+								<motion.div
+									variants={staggerContainer}
+									initial="hidden"
+									animate="visible"
+									className="space-y-4"
+								>
+									{[1, 2, 3].map((i) => (
+										<motion.div
+											key={i}
+											variants={staggerItem}
+											className="h-20 rounded-xl bg-muted/60 animate-pulse"
+										/>
+									))}
+								</motion.div>
+							) : (
+								<QuestionsList questions={questions} t={t} />
+							)}
+						</>
+					)}
+				</motion.div>
+			</AnimatePresence>
 		</div>
 	);
 };

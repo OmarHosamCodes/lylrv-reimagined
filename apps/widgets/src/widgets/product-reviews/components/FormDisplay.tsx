@@ -1,5 +1,7 @@
-import type { ReviewFormData } from "@/types";
 import { Button } from "@lylrv/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
+import { transitions } from "@/lib/transitions";
+import type { ReviewFormData } from "@/types";
 import { AddQuestion } from "./AddQuestion";
 import { AddReview } from "./AddReview";
 
@@ -47,12 +49,17 @@ export const FormDisplay = ({
 	if (showForm === "question") {
 		if (!isLoggedIn) {
 			return (
-				<div className="rounded-lg border border-border bg-card p-6 text-center">
+				<motion.div
+					initial={{ opacity: 0, scale: 0.96 }}
+					animate={{ opacity: 1, scale: 1 }}
+					transition={transitions.spring}
+					className="rounded-xl border border-border/60 bg-card p-6 text-center"
+				>
 					<p className="mb-4 text-sm text-muted-foreground">
 						{t.sign_in || "Sign in"} to ask a question
 					</p>
 					<Button>{t.sign_in || "Sign In"}</Button>
-				</div>
+				</motion.div>
 			);
 		}
 		return <AddQuestion t={t} onSubmit={onSubmitQuestion} />;
@@ -61,11 +68,16 @@ export const FormDisplay = ({
 	if (showForm === "review") {
 		if (hasUserAlreadyReviewed) {
 			return (
-				<div className="rounded-lg border border-border bg-card p-6 text-center">
+				<motion.div
+					initial={{ opacity: 0, scale: 0.96 }}
+					animate={{ opacity: 1, scale: 1 }}
+					transition={transitions.spring}
+					className="rounded-xl border border-border/60 bg-card p-6 text-center"
+				>
 					<p className="text-sm text-muted-foreground">
 						{t.already_reviewed || "You have already reviewed this product."}
 					</p>
-				</div>
+				</motion.div>
 			);
 		}
 

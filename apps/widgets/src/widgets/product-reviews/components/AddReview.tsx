@@ -1,10 +1,12 @@
-import { StarRating } from "@/components";
-import type { ReviewFormData } from "@/types";
 import { Button } from "@lylrv/ui/button";
 import { Input } from "@lylrv/ui/input";
 import { Label } from "@lylrv/ui/label";
 import { Textarea } from "@lylrv/ui/textarea";
+import { AnimatePresence, motion } from "framer-motion";
 import { CameraIcon } from "lucide-react";
+import { StarRating } from "@/components";
+import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
+import type { ReviewFormData } from "@/types";
 
 interface AddReviewProps {
 	t: Record<string, string>;
@@ -41,43 +43,66 @@ export const AddReview = ({
 }: AddReviewProps) => {
 	if (!isLoggedIn) {
 		return (
-			<div className="rounded-lg border border-border bg-card p-6 text-center">
+			<motion.div
+				initial={{ opacity: 0, scale: 0.96 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={transitions.spring}
+				className="rounded-xl border border-border/60 bg-card p-6 text-center"
+			>
 				<p className="mb-4 text-sm text-muted-foreground">
 					{t.sign_in || "Sign in"} to write a review
 				</p>
 				<Button>{t.sign_in || "Sign In"}</Button>
-			</div>
+			</motion.div>
 		);
 	}
 
 	if (!hasPurchased) {
 		return (
-			<div className="rounded-lg border border-border bg-card p-6 text-center">
+			<motion.div
+				initial={{ opacity: 0, scale: 0.96 }}
+				animate={{ opacity: 1, scale: 1 }}
+				transition={transitions.spring}
+				className="rounded-xl border border-border/60 bg-card p-6 text-center"
+			>
 				<p className="text-sm text-muted-foreground">
 					Only verified purchasers can write reviews.
 				</p>
-			</div>
+			</motion.div>
 		);
 	}
 
 	return (
-		<div className="space-y-4 rounded-lg border border-border bg-card p-4">
-			<h3 className="font-semibold text-foreground">
+		<motion.div
+			variants={staggerContainer}
+			initial="hidden"
+			animate="visible"
+			className="space-y-4 rounded-xl border border-border/60 bg-card p-5"
+		>
+			<motion.h3
+				variants={staggerItem}
+				className="font-semibold text-foreground"
+			>
 				{t.add_product_review_page_title || "Write a Product Review"}
-			</h3>
+			</motion.h3>
 
 			{/* Points earned message */}
-			<div className="rounded-lg bg-primary/10 p-3 text-sm text-primary">
-				⭐ {t.you_will_gain || "You'll earn"}{" "}
-				<strong>
-					{reviewPoints}-{reviewWithImagesPoints}
-				</strong>{" "}
-				{t.points || "points"}!
-			</div>
+			<motion.div
+				variants={staggerItem}
+				className="rounded-lg bg-primary/8 p-3 text-sm text-primary border border-primary/10"
+			>
+				<span className="font-medium">
+					{t.you_will_gain || "You'll earn"}{" "}
+					<strong>
+						{reviewPoints}-{reviewWithImagesPoints}
+					</strong>{" "}
+					{t.points || "points"}!
+				</span>
+			</motion.div>
 
-			<div>
+			<motion.div variants={staggerItem}>
 				<Label>Rating *</Label>
-				<div className="mt-1">
+				<div className="mt-1.5">
 					<StarRating
 						rating={formData.rating}
 						size="lg"
@@ -86,9 +111,9 @@ export const AddReview = ({
 						className="text-yellow-400"
 					/>
 				</div>
-			</div>
+			</motion.div>
 
-			<div>
+			<motion.div variants={staggerItem}>
 				<Label htmlFor="review-title">
 					{t.add_product_review_title || "Review Title"}
 				</Label>
@@ -100,9 +125,9 @@ export const AddReview = ({
 					}
 					placeholder="Summarize your experience"
 				/>
-			</div>
+			</motion.div>
 
-			<div>
+			<motion.div variants={staggerItem}>
 				<Label htmlFor="review-body">
 					{t.add_product_review_body || "Your Review"}
 				</Label>
@@ -115,15 +140,21 @@ export const AddReview = ({
 					rows={4}
 					placeholder="Tell others about your experience with this product..."
 				/>
-			</div>
+			</motion.div>
 
-			<div>
+			<motion.div variants={staggerItem}>
 				<Label>
 					{t.add_product_review_images || "Add Photos"} (+
 					{reviewWithImagesPoints - reviewPoints} pts)
 				</Label>
-				<div className="mt-1 flex flex-wrap items-center gap-2">
-					<label className="flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-border px-4 py-3 text-center transition-colors hover:border-primary hover:bg-accent">
+				<div className="mt-1.5 flex flex-wrap items-center gap-2">
+					<motion.label
+						whileHover={{
+							borderColor: "var(--color-primary)",
+							backgroundColor: "var(--color-accent)",
+						}}
+						className="flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-border px-4 py-3 text-center transition-colors"
+					>
 						<input
 							type="file"
 							accept="image/*"
@@ -133,37 +164,57 @@ export const AddReview = ({
 						/>
 						<CameraIcon className="h-5 w-5 text-muted-foreground" />
 						<span className="text-sm text-muted-foreground">Add Photos</span>
-					</label>
-					{/* formData.images is File[] but we need to create object URLs for preview */}
-					{/* Note: This assumes parent handles cleanup or we do it here. 
-                        Target index.tsx used `imageFiles` state. adapt logic. */}
-					{formData.images.map((file, i) => (
-						<div key={i} className="relative h-14 w-14">
-							<img
-								src={URL.createObjectURL(file)}
-								alt=""
-								className="h-full w-full rounded-lg object-cover"
-							/>
-							<button
-								type="button"
-								onClick={() => onRemoveImage(i)}
-								className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground"
+					</motion.label>
+					<AnimatePresence>
+						{formData.images.map((file, i) => (
+							<motion.div
+								key={i}
+								initial={{ opacity: 0, scale: 0.8 }}
+								animate={{ opacity: 1, scale: 1 }}
+								exit={{ opacity: 0, scale: 0.8 }}
+								transition={transitions.springStiff}
+								className="relative h-14 w-14"
 							>
-								✕
-							</button>
-						</div>
-					))}
+								<img
+									src={URL.createObjectURL(file)}
+									alt=""
+									className="h-full w-full rounded-lg object-cover ring-1 ring-border/40"
+								/>
+								<motion.button
+									type="button"
+									onClick={() => onRemoveImage(i)}
+									whileHover={{ scale: 1.15 }}
+									whileTap={{ scale: 0.9 }}
+									className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground shadow-sm"
+								>
+									x
+								</motion.button>
+							</motion.div>
+						))}
+					</AnimatePresence>
 				</div>
-			</div>
+			</motion.div>
 
-			<div className="flex gap-2">
+			<motion.div variants={staggerItem} className="flex gap-2">
 				<Button variant="outline" onClick={onCancel} className="flex-1">
 					Cancel
 				</Button>
 				<Button onClick={onSubmit} disabled={!canSubmit} className="flex-1">
-					{isSubmitting ? "..." : t.write_review || "Submit Review"}
+					<AnimatePresence mode="wait">
+						<motion.span
+							key={isSubmitting ? "submitting" : "idle"}
+							initial={{ opacity: 0, y: 4 }}
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -4 }}
+							transition={transitions.snappy}
+						>
+							{isSubmitting
+								? "Submitting..."
+								: t.write_review || "Submit Review"}
+						</motion.span>
+					</AnimatePresence>
 				</Button>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 };

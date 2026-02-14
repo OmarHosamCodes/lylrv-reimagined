@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { transitions } from "@/lib/transitions";
 import { showImagesInParent } from "./utils";
 
 interface ReviewImageGalleryProps {
@@ -6,7 +8,7 @@ interface ReviewImageGalleryProps {
 }
 
 /**
- * Component for displaying review images gallery with view all functionality
+ * Review images gallery with hover animations
  */
 export const ReviewImageGallery = ({
 	allReviewsImages,
@@ -21,35 +23,39 @@ export const ReviewImageGallery = ({
 	}
 
 	return (
-		<div className="flex max-h-20 flex-row gap-1 overflow-x-scroll">
+		<div className="flex max-h-20 flex-row gap-1.5 overflow-x-scroll">
 			{allReviewsImages
 				.filter((image) => image.length > 0)
 				.slice(0, 3)
 				.map((image, index) => (
-					/* biome-ignore lint/a11y/useKeyWithClickEvents: simple click handler */
-					<img
+					<motion.button
 						key={index.toString()}
-						src={image}
-						alt={`Review ${index.toString()}`}
-						className="h-20 w-20 cursor-pointer rounded-lg object-cover"
-						loading="lazy"
+						type="button"
 						onClick={handleViewAllImages}
-					/>
+						whileHover={{ scale: 1.05 }}
+						whileTap={{ scale: 0.95 }}
+						transition={transitions.springStiff}
+						className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl ring-1 ring-border/40"
+					>
+						<img
+							src={image}
+							alt={`Review ${index.toString()}`}
+							className="h-full w-full object-cover"
+							loading="lazy"
+						/>
+					</motion.button>
 				))}
 
-			<div
-				className="flex h-20 w-20 cursor-pointer select-none items-center justify-center rounded-lg bg-secondary text-white"
+			<motion.button
+				type="button"
 				onClick={handleViewAllImages}
-				role="button"
-				tabIndex={0}
-				onKeyUp={(e) => {
-					if (e.key === "Enter" || e.key === " ") {
-						handleViewAllImages();
-					}
-				}}
+				whileHover={{ scale: 1.05 }}
+				whileTap={{ scale: 0.95 }}
+				transition={transitions.springStiff}
+				className="flex h-20 w-20 flex-shrink-0 cursor-pointer select-none items-center justify-center rounded-xl bg-secondary text-white text-sm font-medium"
 			>
 				{t.view_all || "View All"}
-			</div>
+			</motion.button>
 		</div>
 	);
 };

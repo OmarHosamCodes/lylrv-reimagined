@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { cn } from "./utils";
 
 interface LoadingSpinnerProps {
@@ -12,16 +13,22 @@ const sizeClasses = {
 };
 
 /**
- * Loading spinner component
+ * Loading spinner with Framer Motion rotation
  */
 export function LoadingSpinner({
 	size = "md",
 	className,
 }: LoadingSpinnerProps) {
 	return (
-		<div
+		<motion.div
+			animate={{ rotate: 360 }}
+			transition={{
+				duration: 0.8,
+				repeat: Number.POSITIVE_INFINITY,
+				ease: "linear",
+			}}
 			className={cn(
-				"animate-spin rounded-full border-muted",
+				"rounded-full border-muted",
 				"border-t-primary",
 				sizeClasses[size],
 				className,
@@ -35,12 +42,17 @@ interface LoadingStateProps {
 }
 
 /**
- * Full loading state with centered spinner
+ * Full loading state with animated spinner entrance
  */
 export function LoadingState({ className }: LoadingStateProps) {
 	return (
-		<div className={cn("flex items-center justify-center py-8", className)}>
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={{ duration: 0.2 }}
+			className={cn("flex items-center justify-center py-8", className)}
+		>
 			<LoadingSpinner />
-		</div>
+		</motion.div>
 	);
 }

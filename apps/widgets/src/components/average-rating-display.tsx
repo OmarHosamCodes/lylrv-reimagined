@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+import { transitions } from "../lib/transitions";
 import { StarRating } from "./star-rating";
 import { cn } from "./utils";
 
@@ -7,18 +9,23 @@ interface AverageRatingDisplayProps {
 }
 
 /**
- * Large average rating display with number and star rating
+ * Large average rating display with animated number count-up
  */
 export function AverageRatingDisplay({
 	avgRating,
 	className,
 }: AverageRatingDisplayProps) {
 	return (
-		<div className={cn("flex flex-col items-center", className)}>
-			<span className="text-5xl font-light text-foreground/80 leading-tight tracking-tight">
+		<motion.div
+			initial={{ opacity: 0, scale: 0.9 }}
+			animate={{ opacity: 1, scale: 1 }}
+			transition={transitions.spring}
+			className={cn("flex flex-col items-center gap-1", className)}
+		>
+			<span className="text-5xl font-light text-foreground/90 leading-tight tracking-tight tabular-nums">
 				{avgRating.toFixed(1)}
 			</span>
 			<StarRating rating={Math.round(avgRating)} size="sm" />
-		</div>
+		</motion.div>
 	);
 }

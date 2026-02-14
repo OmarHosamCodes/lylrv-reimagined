@@ -2,7 +2,7 @@ export { AverageRatingDisplay } from "./average-rating-display";
 export { Button, type ButtonProps } from "./button";
 export { FloatingButton } from "./floating-button";
 export * from "./icons";
-export { Input, Textarea, type InputProps, type TextareaProps } from "./input";
+export { Input, type InputProps, Textarea, type TextareaProps } from "./input";
 export { Label } from "./label";
 export { LoadingSpinner, LoadingState } from "./loading-spinner";
 export { Panel, PanelContent, PanelFooter, PanelHeader } from "./panel";
@@ -11,4 +11,3 @@ export { ReviewCard } from "./review-card";
 export { StarIcon, StarRating } from "./star-rating";
 export { TabNavigation } from "./tab-navigation";
 export { cn } from "./utils";
-

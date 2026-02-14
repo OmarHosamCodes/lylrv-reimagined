@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import type { Review } from "../types/reviews.types";
 import { formatRelativeDate } from "../utils";
 import { StarRating } from "./star-rating";
@@ -10,14 +11,13 @@ interface ReviewCardProps {
 }
 
 /**
- * Card displaying a single review with avatar, author info, and rating
+ * Review card with subtle hover lift and animated image gallery.
  */
 export function ReviewCard({
 	review,
 	onImageClick,
 	className,
 }: ReviewCardProps) {
-	// Format author name (truncate if too long, extract from email if needed)
 	const formattedAuthor = (() => {
 		const authorName = review.author.includes("@")
 			? review.author.split("@")[0]
@@ -27,25 +27,27 @@ export function ReviewCard({
 	})();
 
 	return (
-		<div
+		<motion.div
+			whileHover={{ y: -1 }}
+			transition={{ type: "spring", stiffness: 400, damping: 30 }}
 			className={cn(
-				"rounded-lg border border-border bg-card p-4 transition-all duration-200 hover:shadow-sm hover:bg-muted/30",
+				"rounded-xl border border-border/60 bg-card p-4",
+				"transition-shadow duration-300 hover:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]",
 				className,
 			)}
 		>
 			{/* Header: Avatar + Author Info + Rating */}
 			<div className="relative mb-3 flex items-start justify-between">
-				{/* Left side: Avatar + Author + Date */}
 				<div className="flex items-start gap-3">
-					{/* Avatar */}
+					{/* Avatar with ring */}
 					<img
 						src={`https://avatar.iran.liara.run/username?username=${encodeURIComponent(review.author)}`}
 						alt={`${formattedAuthor}'s avatar`}
-						className="h-10 w-10 flex-shrink-0 rounded-full bg-muted"
+						className="h-10 w-10 flex-shrink-0 rounded-full bg-muted ring-2 ring-border/40"
 					/>
 					<div className="flex flex-col min-w-0">
 						<div className="flex items-center gap-1.5">
-							<span className="font-semibold text-card-foreground truncate">
+							<span className="font-semibold text-card-foreground truncate text-[0.9rem]">
 								{formattedAuthor}
 							</span>
 							{review.verified && (
@@ -66,7 +68,7 @@ export function ReviewCard({
 								</svg>
 							)}
 						</div>
-						<span className="text-xs text-muted-foreground">
+						<span className="text-xs text-muted-foreground mt-0.5">
 							{formatRelativeDate(review.createdAt)}
 						</span>
 					</div>
@@ -81,7 +83,7 @@ export function ReviewCard({
 			{/* Title */}
 			{review.title && (
 				<h3
-					className="mb-1 text-base font-semibold text-card-foreground break-words"
+					className="mb-1.5 text-[0.95rem] font-semibold text-card-foreground break-words leading-snug"
 					title={review.title}
 				>
 					{review.title}
@@ -95,30 +97,32 @@ export function ReviewCard({
 				</p>
 			)}
 
-			{/* Images */}
+			{/* Images with hover scale */}
 			{review.images && review.images.length > 0 && (
 				<div className="mt-3 flex gap-2 overflow-x-auto">
 					{review.images.slice(0, 3).map((img: string, i: number) => (
-						<button
+						<motion.button
 							key={i}
 							type="button"
 							onClick={() => onImageClick?.(img)}
-							className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg border border-border transition-opacity hover:opacity-80"
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-border/60"
 						>
 							<img
 								src={img}
 								alt={`Review ${i + 1}`}
 								className="h-full w-full object-cover"
 							/>
-						</button>
+						</motion.button>
 					))}
 					{review.images.length > 3 && (
-						<span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg border border-border bg-muted text-xs text-muted-foreground">
+						<span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted text-xs font-medium text-muted-foreground">
 							+{review.images.length - 3}
 						</span>
 					)}
 				</div>
 			)}
-		</div>
+		</motion.div>
 	);
 }
