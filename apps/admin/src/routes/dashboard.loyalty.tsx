@@ -1,6 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
+import {
+	DashboardEmptyState,
+	DashboardErrorState,
+	DashboardLoadingState,
+	DashboardMetric,
+	DashboardPageHeader,
+	DashboardSection,
+	formatDate,
+} from "~/component/dashboard-ui";
 import { useTRPC } from "~/lib/trpc";
 import { useActiveClient } from "~/lib/use-active-client";
 
@@ -18,21 +27,52 @@ function LoyaltyPage() {
 		}),
 	);
 
+	if (loyaltyQuery.isLoading) {
+		return <DashboardLoadingState label="loyalty activity" />;
+	}
+
+	if (loyaltyQuery.isError) {
+		return (
+			<DashboardErrorState description="The loyalty activity request failed. Try refreshing this page." />
+		);
+	}
+
+	const client = loyaltyQuery.data?.client ?? null;
 	const rows = loyaltyQuery.data?.rows ?? [];
+	const totalAwarded = rows.reduce(
+		(sum, row) => sum + Number(row.amount ?? 0),
+		0,
+	);
 
 	return (
 		<div className="flex flex-col gap-5">
-			<div>
-				<h1 className="text-2xl font-bold tracking-tight">Loyalty</h1>
-				<p className="mt-1 text-sm text-muted-foreground">
-					Points activities and loyalty transactions from backend activity logs.
-				</p>
+			<DashboardPageHeader
+				title="Loyalty"
+				description="Points activities and loyalty transactions from backend logs."
+				meta={client?.name ?? client?.email ?? "No active client"}
+			/>
+
+			<div className="grid gap-4 sm:grid-cols-3">
+				<DashboardMetric label="Events" value={rows.length.toLocaleString()} />
+				<DashboardMetric
+					label="Points Issued"
+					value={totalAwarded.toLocaleString()}
+				/>
+				<DashboardMetric
+					label="Unique Customers"
+					value={new Set(
+						rows.map((row) => row.email).filter(Boolean),
+					).size.toLocaleString()}
+				/>
 			</div>
 
-			<div className="rounded-xl border bg-card">
-				<div className="divide-y">
-					{rows.length ? (
-						rows.map((row) => (
+			{rows.length ? (
+				<DashboardSection
+					title="Activity timeline"
+					description="Latest 100 loyalty transactions"
+				>
+					<div className="divide-y">
+						{rows.map((row) => (
 							<div
 								key={row.id}
 								className="flex items-center justify-between px-5 py-3"
@@ -40,7 +80,7 @@ function LoyaltyPage() {
 								<div>
 									<p className="text-sm font-medium">{row.reason}</p>
 									<p className="text-xs text-muted-foreground">
-										{row.name ?? row.email} - {row.email}
+										{row.name ?? row.email} · {row.email}
 									</p>
 								</div>
 								<div className="text-right">
@@ -50,22 +90,15 @@ function LoyaltyPage() {
 									</p>
 								</div>
 							</div>
-						))
-					) : (
-						<p className="px-5 py-10 text-center text-sm text-muted-foreground">
-							No loyalty activity found.
-						</p>
-					)}
-				</div>
-			</div>
+						))}
+					</div>
+				</DashboardSection>
+			) : (
+				<DashboardEmptyState
+					title="No loyalty activity found"
+					description="No loyalty transactions are available for this client yet."
+				/>
+			)}
 		</div>
 	);
-}
-
-function formatDate(dateValue: string | null) {
-	if (!dateValue) {
-		return "—";
-	}
-
-	return new Date(dateValue).toLocaleDateString();
 }

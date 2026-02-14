@@ -2,6 +2,7 @@ import {
 	createFileRoute,
 	Link,
 	Outlet,
+	useLocation,
 	useNavigate,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function DashboardLayout() {
 	const { data: session, isPending } = authClient.useSession();
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { clients, activeClientId, setActiveClientId } = useActiveClient();
 
@@ -37,9 +39,15 @@ function DashboardLayout() {
 				.slice(0, 2)
 		: "U";
 
+	const activeClient =
+		clients.find((client) => client.id === activeClientId) ??
+		clients[0] ??
+		null;
+	const pageTitle = getPageTitle(location.pathname);
+
 	return (
-		<div className="flex min-h-screen bg-background">
-			<aside className="fixed inset-y-0 left-0 z-20 flex w-64 flex-col border-r border-sidebar-border bg-sidebar">
+		<div className="bg-grid-dots min-h-screen bg-background">
+			<aside className="fixed inset-y-0 left-0 z-20 flex w-72 flex-col border-r border-sidebar-border bg-sidebar/90 backdrop-blur-xl">
 				<div className="flex h-16 items-center gap-2.5 px-6">
 					<div className="flex size-8 items-center justify-center rounded-lg bg-sidebar-primary">
 						<svg
@@ -66,17 +74,32 @@ function DashboardLayout() {
 					</div>
 				</div>
 
-				<nav className="flex flex-1 flex-col gap-1 px-3 pt-2">
-					<NavItem to="/dashboard" label="Overview" />
-					<NavItem to="/dashboard/customers" label="Customers" />
-					<NavItem to="/dashboard/loyalty" label="Loyalty" />
-					<NavItem to="/dashboard/reviews" label="Reviews" />
-					<NavItem to="/dashboard/referrals" label="Referrals" />
-					<NavItem to="/dashboard/orders" label="Orders" />
-					<NavItem to="/dashboard/settings" label="Settings" />
+				<nav className="flex flex-1 flex-col gap-4 px-3 pt-3">
+					<div>
+						<p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
+							Insights
+						</p>
+						<div className="space-y-1">
+							<NavItem to="/dashboard" label="Overview" />
+							<NavItem to="/dashboard/customers" label="Customers" />
+							<NavItem to="/dashboard/loyalty" label="Loyalty" />
+							<NavItem to="/dashboard/reviews" label="Reviews" />
+						</div>
+					</div>
+
+					<div>
+						<p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
+							Operations
+						</p>
+						<div className="space-y-1">
+							<NavItem to="/dashboard/referrals" label="Referrals" />
+							<NavItem to="/dashboard/orders" label="Orders" />
+							<NavItem to="/dashboard/settings" label="Settings" />
+						</div>
+					</div>
 				</nav>
 
-				<div className="border-t border-sidebar-border p-3">
+				<div className="border-t border-sidebar-border/80 p-3">
 					<div className="flex items-center gap-3 rounded-lg px-3 py-2.5">
 						<div className="flex size-8 items-center justify-center rounded-full bg-sidebar-primary/10 text-xs font-semibold text-sidebar-primary">
 							{userInitials}
@@ -93,26 +116,42 @@ function DashboardLayout() {
 				</div>
 			</aside>
 
-			<main className="ml-64 flex flex-1 flex-col">
-				<header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-border bg-background/85 px-8 backdrop-blur-xl">
-					<div className="text-sm font-medium text-muted-foreground">
-						Client Workspace
+			<main className="ml-72 flex min-h-screen flex-1 flex-col">
+				<header className="sticky top-0 z-10 border-b border-border bg-background/80 px-8 py-4 backdrop-blur-xl">
+					<div className="flex flex-wrap items-center justify-between gap-4">
+						<div>
+							<p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+								Client Workspace
+							</p>
+							<h1 className="font-display mt-1 text-2xl font-bold tracking-tight">
+								{pageTitle}
+							</h1>
+						</div>
+						<div className="flex min-w-0 items-center gap-3">
+							<select
+								className="h-10 min-w-64 rounded-lg border border-input bg-background px-3 text-sm font-medium outline-none ring-primary/20 transition focus:ring-2"
+								value={activeClientId ?? ""}
+								onChange={(event) => setActiveClientId(event.target.value)}
+							>
+								{!clients.length ? (
+									<option value="">No clients yet</option>
+								) : null}
+								{clients.map((client) => (
+									<option key={client.id} value={client.id}>
+										{client.name ?? client.email}
+									</option>
+								))}
+							</select>
+						</div>
 					</div>
-					<div className="flex items-center gap-3">
-						<select
-							className="h-9 min-w-56 rounded-md border border-input bg-background px-3 text-sm outline-none ring-primary/20 transition focus:ring-2"
-							value={activeClientId ?? ""}
-							onChange={(event) => setActiveClientId(event.target.value)}
-						>
-							{!clients.length ? (
-								<option value="">No clients yet</option>
-							) : null}
-							{clients.map((client) => (
-								<option key={client.id} value={client.id}>
-									{client.name ?? client.email}
-								</option>
-							))}
-						</select>
+
+					<div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+						<span className="rounded-md border border-border px-2 py-1">
+							Active client: {activeClient?.name ?? activeClient?.email ?? "—"}
+						</span>
+						<span className="rounded-md border border-border px-2 py-1">
+							{session.user.email}
+						</span>
 					</div>
 				</header>
 
@@ -129,11 +168,28 @@ function NavItem({ to, label }: { to: string; label: string }) {
 		<Link
 			to={to}
 			activeProps={{
-				className: "bg-sidebar-accent text-sidebar-accent-foreground",
+				className:
+					"border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground",
 			}}
-			className="rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+			className="rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
 		>
 			{label}
 		</Link>
 	);
+}
+
+function getPageTitle(pathname: string) {
+	if (pathname === "/dashboard") {
+		return "Overview";
+	}
+
+	if (pathname.startsWith("/dashboard/")) {
+		return pathname
+			.replace("/dashboard/", "")
+			.split("/")
+			.map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+			.join(" ");
+	}
+
+	return "Dashboard";
 }
