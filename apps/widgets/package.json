@@ -15,7 +15,9 @@
 		"lucide-react": "^0.562.0",
 		"react": "catalog:react19",
 		"react-dom": "catalog:react19",
-		"tailwind-merge": "^3.3.1"
+		"tailwind-merge": "^3.3.1",
+		"zod": "catalog:",
+		"zustand": "catalog:"
 	},
 	"devDependencies": {
 		"@lylrv/tailwind-config": "workspace:*",

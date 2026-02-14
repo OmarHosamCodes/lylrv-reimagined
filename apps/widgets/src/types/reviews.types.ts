@@ -24,3 +24,4 @@ export interface ReviewFormData {
 }
 
 export type ReviewsTabs = "reviews" | "questions" | "write";
+export type ReviewsTab = ReviewsTabs;

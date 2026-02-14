@@ -32,7 +32,8 @@
 		"react": "catalog:react19",
 		"react-dom": "catalog:react19",
 		"superjson": "2.2.3",
-		"zod": "catalog:"
+		"zod": "catalog:",
+		"zustand": "catalog:"
 	},
 	"devDependencies": {
 		"@lylrv/tailwind-config": "workspace:*",

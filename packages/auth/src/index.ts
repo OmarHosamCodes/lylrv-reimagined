@@ -2,7 +2,7 @@ import { db } from "@lylrv/db/client";
 import type { BetterAuthOptions, BetterAuthPlugin } from "better-auth";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { emailOTP, oAuthProxy } from "better-auth/plugins";
+import { oAuthProxy } from "better-auth/plugins";
 
 export function initAuth<
   TExtraPlugins extends BetterAuthPlugin[] = [],
@@ -31,7 +31,6 @@ export function initAuth<
       oAuthProxy({
         productionURL: options.productionUrl,
       }),
-      emailOTP(),
       ...(options.extraPlugins ?? []),
     ],
 

@@ -1,3 +1,15 @@
+import { cn } from "@lylrv/ui";
+import { Button } from "@lylrv/ui/button";
+import {
+	ArrowRightIcon,
+	ChevronLeftIcon,
+	GiftIcon,
+	History,
+	Home,
+	SparkleIcon,
+	X,
+} from "lucide-react";
+import { createRoot } from "react-dom/client";
 import {
 	FloatingButton,
 	LoadingState,
@@ -14,18 +26,6 @@ import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
 import type { LoyaltyTab, WidgetConfig } from "@/types";
 import { formatPoints, getVariable, parseNumberList } from "@/utils";
-import { cn } from "@lylrv/ui";
-import { Button } from "@lylrv/ui/button";
-import {
-	ArrowRightIcon,
-	ChevronLeftIcon,
-	GiftIcon,
-	History,
-	Home,
-	SparkleIcon,
-	X,
-} from "lucide-react";
-import { createRoot } from "react-dom/client";
 
 interface LoyaltyWidgetProps {
 	config: WidgetConfig;
@@ -64,7 +64,6 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 		selectedRedeem,
 		isLoading,
 		points,
-		spentPoints,
 		referralCode,
 		recentActivity,
 		handleToggle,
@@ -75,12 +74,14 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 		isRedeeming,
 	} = useLoyaltyWidget({
 		shop: config.shop || "",
-		email: userEmail,
+		email: userEmail ?? undefined,
 		apiBaseUrl,
 		isLoggedIn,
 		userPoints: config.user?.points,
 		userReferralCode: config.user?.referralCode,
 	});
+
+	const spentPoints = 0;
 
 	const tabs = [
 		{ id: "home" as LoyaltyTab, label: <Home className="h-4 w-4" /> },
@@ -184,8 +185,8 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
 // Themed Header Component
 interface ThemedHeaderProps {
 	isLoggedIn: boolean;
-	userName?: string;
-	userEmail?: string;
+	userName?: string | null;
+	userEmail?: string | null;
 	themeColor: string;
 	headerTitle: string;
 	onClose: () => void;
@@ -266,17 +267,23 @@ interface CardProps {
 }
 
 function Card({ children, className, onClick }: CardProps) {
+	if (onClick) {
+		return (
+			<button
+				type="button"
+				className={cn(
+					"bg-card rounded-lg border border-border p-4 transition-all duration-200 cursor-pointer hover:shadow-md hover:border-primary/30 text-left w-full",
+					className,
+				)}
+				onClick={onClick}
+			>
+				{children}
+			</button>
+		);
+	}
 	return (
 		<div
-			className={cn(
-				"bg-card rounded-lg border border-border p-4 transition-all duration-200",
-				onClick && "cursor-pointer hover:shadow-md hover:border-primary/30",
-				className,
-			)}
-			onClick={onClick}
-			onKeyUp={(e) => e.key === "Enter" && onClick?.()}
-			role={onClick ? "button" : undefined}
-			tabIndex={onClick ? 0 : undefined}
+			className={cn("bg-card rounded-lg border border-border p-4", className)}
 		>
 			{children}
 		</div>
@@ -470,7 +477,7 @@ interface EarnTabProps {
 function getColorScheme(amount: number, amounts: number[]): string {
 	const sortedAmounts = [...amounts].sort((a, b) => a - b);
 	const index = sortedAmounts.indexOf(amount);
-	const colors = [
+	const colors: string[] = [
 		"bg-slate-200 text-slate-700",
 		"bg-blue-100 text-blue-700",
 		"bg-green-100 text-green-700",
@@ -479,7 +486,8 @@ function getColorScheme(amount: number, amounts: number[]): string {
 		"bg-red-100 text-red-700",
 		"bg-purple-100 text-purple-700",
 	];
-	return colors[Math.min(index, colors.length - 1)] || colors[0];
+	const color = colors[Math.min(index, colors.length - 1)];
+	return color ?? colors[0] ?? "";
 }
 
 function EarnTab({ t, earnSections }: EarnTabProps) {
@@ -571,7 +579,7 @@ function RedeemTab({
 									? "hover:border-primary cursor-pointer"
 									: "opacity-50 cursor-not-allowed saturate-0",
 								isSelected &&
-								"border-primary ring-2 ring-primary/20 bg-primary/5",
+									"border-primary ring-2 ring-primary/20 bg-primary/5",
 							)}
 							onClick={() => canRedeem && onSelect(value)}
 						>

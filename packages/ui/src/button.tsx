@@ -38,18 +38,23 @@ export function Button({
 	className,
 	variant,
 	size,
+	fullWidth,
 	asChild = false,
 	...props
 }: React.ComponentProps<"button"> &
 	VariantProps<typeof buttonVariants> & {
 		asChild?: boolean;
+		fullWidth?: boolean;
 	}) {
 	const Comp = asChild ? SlotPrimitive.Slot : "button";
 
 	return (
 		<Comp
 			data-slot="button"
-			className={cn(buttonVariants({ variant, size, className }))}
+			className={cn(
+				buttonVariants({ variant, size, className }),
+				fullWidth && "w-full",
+			)}
 			{...props}
 		/>
 	);
