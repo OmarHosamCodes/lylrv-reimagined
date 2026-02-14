@@ -1,10 +1,12 @@
 import { authRouter } from "./router/auth";
+import { dashboardRouter } from "./router/dashboard";
 import { postRouter } from "./router/post";
 import { widgetRouter } from "./router/widget";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
 	auth: authRouter,
+	dashboard: dashboardRouter,
 	post: postRouter,
 	widget: widgetRouter,
 });
