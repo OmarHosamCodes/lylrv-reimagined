@@ -1,7 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { TabNavigation } from "@/components";
-import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
 import type { Review } from "@/types";
 import type { Question } from "./QuestionCard";
 import { QuestionsList } from "./QuestionsList";
@@ -45,45 +43,27 @@ export const ProductReviewsTabs = ({
         onTabChange={setActiveTab}
       />
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={transitions.smooth}
-          className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm mt-2 p-4"
-        >
-          {activeTab === "reviews" && (
-            <ReviewsList
-              reviews={reviews}
-              t={t}
-              onImageClick={onImageClick}
-              onWriteReview={onWriteReview}
-            />
-          )}
+      <div className="mt-2 rounded-lg border bg-card p-4 shadow-sm">
+        {activeTab === "reviews" && (
+          <ReviewsList
+            reviews={reviews}
+            t={t}
+            onImageClick={onImageClick}
+            onWriteReview={onWriteReview}
+          />
+        )}
 
-          {activeTab === "questions" &&
-            (questionsLoading ? (
-              <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                animate="visible"
-                className="space-y-4"
-              >
-                {[1, 2, 3].map((i) => (
-                  <motion.div
-                    key={i}
-                    variants={staggerItem}
-                    className="h-20 rounded-xl bg-muted/60 animate-pulse"
-                  />
-                ))}
-              </motion.div>
-            ) : (
-              <QuestionsList questions={questions} t={t} />
-            ))}
-        </motion.div>
-      </AnimatePresence>
+        {activeTab === "questions" &&
+          (questionsLoading ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-20 animate-pulse rounded-lg bg-muted/50" />
+              ))}
+            </div>
+          ) : (
+            <QuestionsList questions={questions} t={t} />
+          ))}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { Review } from "../types/reviews.types";
 import { formatRelativeDate } from "../utils";
 import { StarRating } from "./star-rating";
@@ -10,9 +9,6 @@ interface ReviewCardProps {
   className?: string;
 }
 
-/**
- * Review card with subtle hover lift and animated image gallery.
- */
 export function ReviewCard({
   review,
   onImageClick,
@@ -27,18 +23,12 @@ export function ReviewCard({
   })();
 
   return (
-    <motion.div
-      whileHover={{ y: -2 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+    <div
       className={cn(
-        // Card shell — replaces .ly-widget-card
-        "relative overflow-hidden rounded-2xl border border-white/60 bg-white/70 p-4",
-        "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
-        "transition-shadow duration-300 hover:shadow-[0_25px_32px_-28px_rgba(0,0,0,0.8)]",
+        "relative overflow-hidden rounded-lg border bg-card p-4 shadow-sm",
         className,
       )}
     >
-      <div className="pointer-events-none absolute -right-8 -top-12 h-24 w-24 rounded-full bg-brand-gold/20 blur-2xl" />
       {/* Header: Avatar + Author Info + Rating */}
       <div className="relative mb-3 flex items-start justify-between">
         <div className="flex items-start gap-3">
@@ -104,28 +94,26 @@ export function ReviewCard({
       {review.images && review.images.length > 0 && (
         <div className="mt-3 flex gap-2 overflow-x-auto">
           {review.images.slice(0, 3).map((img: string, i: number) => (
-            <motion.button
+            <button
               key={i}
               type="button"
               onClick={() => onImageClick?.(img)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm cursor-pointer"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-md border shadow-sm cursor-pointer"
             >
               <img
                 src={img}
                 alt={`Review attachment ${i + 1}`}
                 className="h-full w-full object-cover"
               />
-            </motion.button>
+            </button>
           ))}
           {review.images.length > 3 && (
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-white/65 bg-muted text-xs font-medium text-muted-foreground">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border bg-muted text-xs font-medium text-muted-foreground">
               +{review.images.length - 3}
             </span>
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

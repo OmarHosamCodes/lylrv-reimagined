@@ -1,6 +1,4 @@
-import { motion } from "framer-motion";
 import { Button } from "@/components";
-import { transitions } from "@/lib/transitions";
 import type { ReviewFormData } from "@/types";
 import { AddQuestion } from "./AddQuestion";
 import { AddReview } from "./AddReview";
@@ -49,17 +47,12 @@ export const FormDisplay = ({
   if (showForm === "question") {
     if (!isLoggedIn) {
       return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={transitions.spring}
-          className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm p-6 text-center"
-        >
+        <div className="rounded-lg border bg-card p-6 text-center shadow-sm">
           <p className="mb-4 text-sm text-muted-foreground">
             {t.sign_in || "Sign in"} to ask a question
           </p>
           <Button>{t.sign_in || "Sign In"}</Button>
-        </motion.div>
+        </div>
       );
     }
     return <AddQuestion t={t} onSubmit={onSubmitQuestion} />;
@@ -68,16 +61,11 @@ export const FormDisplay = ({
   if (showForm === "review") {
     if (hasUserAlreadyReviewed) {
       return (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={transitions.spring}
-          className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm p-6 text-center"
-        >
+        <div className="rounded-lg border bg-card p-6 text-center shadow-sm">
           <p className="text-sm text-muted-foreground">
             {t.already_reviewed || "You have already reviewed this product."}
           </p>
-        </motion.div>
+        </div>
       );
     }
 

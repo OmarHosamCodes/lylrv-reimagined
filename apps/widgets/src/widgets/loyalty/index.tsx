@@ -178,14 +178,13 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
           </AnimatePresence>
         </PanelContent>
 
-        <PanelFooter className="bg-white/40">
-          <motion.button
+        <PanelFooter>
+          <button
             type="button"
-            whileHover={{ color: "var(--color-foreground)" }}
-            className="text-xs font-medium text-muted-foreground transition-colors cursor-pointer"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
           >
             {t.need_help || "Need help?"}
-          </motion.button>
+          </button>
         </PanelFooter>
       </Panel>
     </div>
@@ -216,9 +215,7 @@ function ThemedHeader({
   const showBackButton = activeTab !== "home";
 
   return (
-    <header className="relative h-[8.5rem] text-center flex flex-col items-center justify-center w-full rounded-none shrink-0 overflow-hidden border-b border-white/45 bg-linear-to-r from-brand-amber via-brand-gold to-brand-amber text-primary-foreground">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.35),transparent_55%),radial-gradient(circle_at_86%_10%,rgba(255,255,255,0.25),transparent_42%)]" />
-
+    <header className="h-34 w-full shrink-0 border-b bg-muted/40 text-center text-foreground">
       <div className="relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-5 max-sm:px-4">
         <div className="relative flex flex-row items-center justify-between w-full mb-auto">
           <AnimatePresence>
@@ -230,28 +227,23 @@ function ThemedHeader({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -8 }}
                 transition={transitions.snappy}
-                className="p-1.5 rounded-full hover:bg-white/20 transition-colors cursor-pointer"
+                className="p-1.5 rounded-full hover:bg-muted transition-colors cursor-pointer"
                 aria-label="Go back"
               >
-                <ChevronLeftIcon className="h-5 w-5 text-white" />
+                <ChevronLeftIcon className="h-5 w-5" />
               </motion.button>
             )}
           </AnimatePresence>
           {!showBackButton && <div />}
-          <motion.button
+          <button
             type="button"
             onClick={onClose}
             onKeyUp={(e) => e.key === "Escape" && onClose()}
-            whileHover={{
-              scale: 1.1,
-              backgroundColor: "rgba(255,255,255,0.15)",
-            }}
-            whileTap={{ scale: 0.9 }}
-            className="p-1.5 rounded-full transition-colors cursor-pointer"
+            className="p-1.5 rounded-full transition-colors hover:bg-muted cursor-pointer"
             aria-label="Close"
           >
-            <X className="h-5 w-5 text-white" />
-          </motion.button>
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex items-center justify-center grow">
@@ -262,7 +254,7 @@ function ThemedHeader({
               transition={transitions.spring}
               className="flex flex-col items-center justify-center text-center text-sm w-full"
             >
-              <h1 className="text-white/80 text-[11px] tracking-[0.2em] uppercase">
+              <h1 className="text-muted-foreground text-[11px] tracking-[0.2em] uppercase">
                 {headerTitle}
               </h1>
               <p className="font-bold text-xl mt-1.5 tracking-tight">
@@ -295,24 +287,17 @@ interface CardProps {
 
 /** Inline card — pure Tailwind, no stylesheet class */
 function Card({ children, className, onClick }: CardProps) {
-  const cardClasses = cn(
-    "rounded-2xl border border-white/60 bg-white/70 p-4",
-    "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
-    className,
-  );
+  const cardClasses = cn("rounded-lg border bg-card p-4 shadow-sm", className);
 
   if (onClick) {
     return (
-      <motion.button
+      <button
         type="button"
         className={cn(cardClasses, "cursor-pointer text-left w-full")}
         onClick={onClick}
-        whileHover={{ y: -2, boxShadow: "0 25px 30px -28px rgba(0,0,0,0.9)" }}
-        whileTap={{ scale: 0.98 }}
-        transition={transitions.spring}
       >
         {children}
-      </motion.button>
+      </button>
     );
   }
   return <div className={cardClasses}>{children}</div>;
@@ -344,7 +329,7 @@ function UnauthenticatedView({
     >
       {/* Sign in section */}
       <motion.div variants={staggerItem}>
-        <Card className="text-center border-brand-amber/20 bg-brand-amber/10">
+        <Card className="text-center">
           <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
             {t.unlock_exciting_perks || "Unlock exciting perks and rewards!"}
           </p>
@@ -389,7 +374,7 @@ function UnauthenticatedView({
 
       {/* Referral info */}
       <motion.div variants={staggerItem}>
-        <Card className="text-center border-brand-amber/20 bg-linear-to-br from-brand-amber/8 to-brand-gold/12">
+        <Card className="text-center">
           <h3 className="text-base font-semibold text-foreground mb-1.5">
             {t.referral_title || "Refer a Friend"}
           </h3>
@@ -472,7 +457,7 @@ function HomeTab({
       {/* Earn and Redeem navigation cards */}
       <motion.div variants={staggerItem} className="grid grid-cols-2 gap-3">
         <Card
-          className="flex items-center justify-between hover:bg-white/75"
+          className="flex items-center justify-between"
           onClick={() => onNavigate("earn")}
         >
           <div className="flex flex-col items-start gap-2">
@@ -485,7 +470,7 @@ function HomeTab({
           <ArrowRightIcon className="h-4 w-4 text-muted-foreground" />
         </Card>
         <Card
-          className="flex items-center justify-between hover:bg-white/75"
+          className="flex items-center justify-between"
           onClick={() => onNavigate("redeem")}
         >
           <div className="flex flex-col items-start gap-2">
@@ -501,7 +486,7 @@ function HomeTab({
       {/* Referral section */}
       {referralCode && (
         <motion.div variants={staggerItem}>
-          <Card className="border-brand-amber/20 bg-linear-to-br from-brand-amber/8 to-brand-gold/12">
+          <Card>
             <h3 className="text-base font-semibold text-foreground mb-1.5">
               {t.referral_title || "Refer a Friend"}
             </h3>
@@ -587,8 +572,6 @@ function EarnTab({ t, earnSections }: EarnTabProps) {
           <motion.div key={i} variants={staggerItem}>
             <Card className="flex items-start gap-3 max-sm:flex-row">
               <motion.div
-                whileHover={{ scale: 1.08 }}
-                transition={transitions.springStiff}
                 className={cn(
                   "h-12 w-12 max-sm:h-10 max-sm:w-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm",
                   getColorScheme(Number(section.earnAmount), amounts),
@@ -662,7 +645,7 @@ function RedeemTab({
             <motion.div key={value} variants={staggerItem}>
               <Card
                 className={cn(
-                  "flex flex-col items-center p-4 transition-all",
+                  "flex flex-col items-center p-4",
                   canRedeem
                     ? "hover:border-primary cursor-pointer"
                     : "opacity-40 cursor-not-allowed saturate-0",
@@ -765,9 +748,9 @@ function HistoryTab({ t, recentActivity }: HistoryTabProps) {
       </h3>
 
       {recentActivity.length > 0 ? (
-        <div className="rounded-xl border border-white/65 overflow-hidden bg-white/45">
+        <div className="overflow-hidden rounded-lg border bg-card">
           {/* Table header */}
-          <div className="grid grid-cols-4 gap-2 border-b border-white/55 bg-white/55 px-4 py-3 text-xs font-medium text-muted-foreground">
+          <div className="grid grid-cols-4 gap-2 border-b bg-muted/40 px-4 py-3 text-xs font-medium text-muted-foreground">
             <span>{t.activity_reason || "Reason"}</span>
             <span>{t.activity_points || "Points"}</span>
             <span>{t.activity_date || "Date"}</span>

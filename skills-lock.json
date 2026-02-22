@@ -1,10 +1,10 @@
 {
   "version": 1,
   "skills": {
-    "ui-ux-pro-max": {
-      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+    "frontend-design": {
+      "source": "vudovn/antigravity-kit",
       "sourceType": "github",
-      "computedHash": "e688fcd4c5693e14ebd00d48e982dbd2be060fbea89f5f60531e79c704a1bc28"
+      "computedHash": "cde819a3e6d2556ffb3255b0502db9090364427dec4a8d5f432206ac1fa93a44"
     }
   }
 }

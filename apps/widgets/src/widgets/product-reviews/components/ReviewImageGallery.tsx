@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import { transitions } from "@/lib/transitions";
 import { showImagesInParent } from "./utils";
 
 interface ReviewImageGalleryProps {
@@ -7,9 +5,6 @@ interface ReviewImageGalleryProps {
   t: Record<string, string>;
 }
 
-/**
- * Review images gallery with hover animations
- */
 export const ReviewImageGallery = ({
   allReviewsImages,
   t,
@@ -28,14 +23,11 @@ export const ReviewImageGallery = ({
         .filter((image) => image.length > 0)
         .slice(0, 3)
         .map((image, index) => (
-          <motion.button
+          <button
             key={index.toString()}
             type="button"
             onClick={handleViewAllImages}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={transitions.springStiff}
-            className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/75 shadow-sm"
+            className="h-20 w-20 shrink-0 overflow-hidden rounded-md border shadow-sm"
           >
             <img
               src={image}
@@ -43,19 +35,16 @@ export const ReviewImageGallery = ({
               className="h-full w-full object-cover"
               loading="lazy"
             />
-          </motion.button>
+          </button>
         ))}
 
-      <motion.button
+      <button
         type="button"
         onClick={handleViewAllImages}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        transition={transitions.springStiff}
-        className="flex h-20 w-20 shrink-0 cursor-pointer select-none items-center justify-center rounded-xl border border-white/70 bg-white/70 text-foreground text-sm font-medium"
+        className="flex h-20 w-20 shrink-0 cursor-pointer select-none items-center justify-center rounded-md border bg-background text-sm font-medium"
       >
         {t.view_all || "View All"}
-      </motion.button>
+      </button>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import {
@@ -20,12 +19,6 @@ import {
   Textarea,
 } from "@/components";
 import { useLocalizations, useReviewsWidget } from "@/hooks";
-import {
-  fadeInUp,
-  staggerContainer,
-  staggerItem,
-  transitions,
-} from "@/lib/transitions";
 import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
 import type { WidgetConfig } from "@/types";
@@ -69,10 +62,9 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
     <div className="fixed bottom-4 right-4 z-9999">
       <FloatingButton
         onClick={handleToggle}
-        icon={<Star className="h-7 w-7" />}
+        icon={<Star className="h-5 w-5" />}
         label={t.secondary_floating_button_title || "Reviews"}
         badge={meta?.total}
-        className="pl-2 pr-4"
       />
 
       <Panel
@@ -84,15 +76,10 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
           "p-0 box-border overflow-hidden",
         )}
       >
-        <PanelHeader className="py-5">
-          <motion.h2
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={transitions.spring}
-            className="font-bold tracking-tight text-foreground text-lg"
-          >
+        <PanelHeader>
+          <h2 className="font-semibold tracking-tight text-foreground text-lg">
             {t.reviews_system_header || "Customer Reviews"}
-          </motion.h2>
+          </h2>
         </PanelHeader>
 
         <TabNavigation
@@ -102,49 +89,36 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
         />
 
         <PanelContent className="flex-1 overflow-y-auto px-4 pb-4 pt-3">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={isLoading ? "loading" : activeTab}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={transitions.smooth}
-            >
-              {isLoading ? (
-                <LoadingState />
-              ) : activeTab === "reviews" ? (
-                <ReviewsTab t={t} reviews={reviews} meta={meta} />
-              ) : (
-                <WriteReviewTab
-                  t={t}
-                  isLoggedIn={isLoggedIn}
-                  formData={formData}
-                  canSubmit={canSubmit}
-                  isSubmitting={isSubmitting}
-                  onRatingChange={handleRatingChange}
-                  onInputChange={handleInputChange}
-                  onSubmit={handleSubmit}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
+          {isLoading ? (
+            <LoadingState />
+          ) : activeTab === "reviews" ? (
+            <ReviewsTab t={t} reviews={reviews} meta={meta} />
+          ) : (
+            <WriteReviewTab
+              t={t}
+              isLoggedIn={isLoggedIn}
+              formData={formData}
+              canSubmit={canSubmit}
+              isSubmitting={isSubmitting}
+              onRatingChange={handleRatingChange}
+              onInputChange={handleInputChange}
+              onSubmit={handleSubmit}
+            />
+          )}
         </PanelContent>
 
-        <PanelFooter className="bg-white/40">
-          <motion.button
+        <PanelFooter>
+          <button
             type="button"
-            whileHover={{ color: "var(--color-foreground)" }}
-            className="text-xs font-medium text-muted-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             {t.need_help || "Need help?"}
-          </motion.button>
+          </button>
         </PanelFooter>
       </Panel>
     </div>
   );
 }
-
-// ─── Reviews Tab ──────────────────────────────────────────────────────────
 
 interface ReviewsTabProps {
   t: Record<string, string>;
@@ -167,17 +141,9 @@ interface ReviewsTabProps {
 
 function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-      className="space-y-4"
-    >
+    <div className="space-y-4">
       {meta && (
-        <motion.section
-          variants={fadeInUp}
-          className="grid grid-cols-[auto_1fr] items-center gap-3 py-1 max-sm:grid-cols-1"
-        >
+        <section className="grid grid-cols-[auto_1fr] items-center gap-3 py-1 max-sm:grid-cols-1">
           <AverageRatingDisplay
             avgRating={meta.averageRating}
             className="shrink-0"
@@ -187,58 +153,40 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
             total={meta.total}
             className="flex-1 max-w-[230px] max-sm:max-w-full max-sm:w-full"
           />
-        </motion.section>
+        </section>
       )}
 
       {meta && (
-        <motion.p
-          variants={staggerItem}
-          className="inline-flex items-center gap-1 rounded-full border border-brand-amber/20 bg-brand-amber/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-brand-amber mx-auto"
-        >
+        <p className="inline-flex items-center gap-1 rounded-full border bg-muted/30 px-3 py-1 text-[11px] font-medium text-muted-foreground">
           {meta.total} {t.total_reviews || "reviews"}
-        </motion.p>
+        </p>
       )}
 
-      <motion.div
-        variants={staggerItem}
-        className="space-y-3 border-t border-white/50 pt-4"
-      >
+      <div className="space-y-3 border-t pt-4">
         {reviews.length > 0 ? (
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="space-y-3"
-          >
+          <div className="space-y-3">
             {reviews.map((review) => (
-              <motion.div key={review.id} variants={staggerItem}>
-                <ReviewCard review={review} />
-              </motion.div>
+              <ReviewCard key={review.id} review={review} />
             ))}
-          </motion.div>
+          </div>
         ) : (
           <p className="py-8 text-center text-sm text-muted-foreground">
             {t.no_reviews || "No reviews yet. Be the first to review!"}
           </p>
         )}
-      </motion.div>
+      </div>
 
       {reviews.length > 0 && (
-        <motion.button
+        <button
           type="button"
-          variants={staggerItem}
-          whileHover={{ x: 3 }}
-          transition={transitions.snappy}
-          className="w-full rounded-xl border border-white/60 bg-white/55 py-2 text-center text-sm font-medium text-foreground transition-colors hover:bg-white/70"
+          className="w-full rounded-md border bg-background py-2 text-center text-sm font-medium text-foreground hover:bg-muted/40"
         >
-          {t.view_all || "View All"} →
-        </motion.button>
+          {t.view_all || "View All"}
+        </button>
       )}
-    </motion.div>
+    </div>
   );
 }
-
-// ─── Write Review Tab ─────────────────────────────────────────────────────
 
 interface WriteReviewTabProps {
   t: Record<string, string>;
@@ -263,28 +211,18 @@ function WriteReviewTab({
 }: WriteReviewTabProps) {
   if (!isLoggedIn) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={transitions.spring}
-        className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm py-8 px-4 text-center"
-      >
+      <div className="rounded-lg border bg-card shadow-sm py-8 px-4 text-center">
         <p className="mb-4 text-sm text-muted-foreground">
           {t.sign_in || "Sign in"} to write a review
         </p>
         <Button fullWidth>{t.sign_in || "Sign In"}</Button>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-      className="space-y-4"
-    >
-      <motion.div variants={staggerItem}>
+    <div className="space-y-4 rounded-lg border bg-card p-4 shadow-sm">
+      <div>
         <Label>{t.add_website_review || "Rate your experience"}</Label>
         <div className="mt-2">
           <StarRating
@@ -294,9 +232,9 @@ function WriteReviewTab({
             onRate={onRatingChange}
           />
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div variants={staggerItem}>
+      <div>
         <Label htmlFor="review-title">
           {t.add_product_review_title || "Title"}
         </Label>
@@ -305,11 +243,11 @@ function WriteReviewTab({
           value={formData.title}
           onChange={(e) => onInputChange("title", e.target.value)}
           placeholder="Summary of your experience"
-          className="mt-1.5 border-white/70 bg-white/65"
+          className="mt-1.5"
         />
-      </motion.div>
+      </div>
 
-      <motion.div variants={staggerItem}>
+      <div>
         <Label htmlFor="review-body">
           {t.add_website_review_body || "Your review"}
         </Label>
@@ -319,37 +257,18 @@ function WriteReviewTab({
           onChange={(e) => onInputChange("body", e.target.value)}
           rows={4}
           placeholder="Tell us about your experience..."
-          className="mt-1.5 border-white/70 bg-white/65"
+          className="mt-1.5"
         />
-      </motion.div>
+      </div>
 
-      <motion.div variants={staggerItem}>
-        <Button
-          fullWidth
-          onClick={onSubmit}
-          disabled={!canSubmit}
-          className="rounded-xl shadow-lg"
-        >
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={isSubmitting ? "submitting" : "idle"}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={transitions.snappy}
-            >
-              {isSubmitting
-                ? "Submitting..."
-                : t.write_review || "Submit Review"}
-            </motion.span>
-          </AnimatePresence>
+      <div>
+        <Button fullWidth onClick={onSubmit} disabled={!canSubmit}>
+          {isSubmitting ? "Submitting..." : t.write_review || "Submit Review"}
         </Button>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
-
-// ─── Mount ────────────────────────────────────────────────────────────────
 
 export function mount(container: HTMLElement, config: WidgetConfig) {
   const shadowRoot = container.attachShadow({ mode: "open" });
