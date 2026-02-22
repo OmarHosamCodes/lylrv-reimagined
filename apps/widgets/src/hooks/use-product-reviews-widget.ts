@@ -15,6 +15,7 @@ interface ProductReviewFormData {
   rating: number;
   title: string;
   body: string;
+  images: File[];
 }
 
 export function useProductReviewsWidget(
@@ -30,8 +31,8 @@ export function useProductReviewsWidget(
     rating: 0,
     title: "",
     body: "",
+    images: [],
   });
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imageViewerOpen, setImageViewerOpen] = useState<string | null>(null);
 
   const t = useLocalizations(config);
@@ -62,8 +63,7 @@ export function useProductReviewsWidget(
     shop,
     apiBaseUrl,
     onSuccess: () => {
-      setFormData({ rating: 0, title: "", body: "" });
-      setImageFiles([]);
+      setFormData({ rating: 0, title: "", body: "", images: [] });
       setActiveTab("reviews");
       refetch();
     },
@@ -83,11 +83,17 @@ export function useProductReviewsWidget(
   const handleAddImages = useCallback((files: FileList | null) => {
     if (!files) return;
     const newFiles = Array.from(files);
-    setImageFiles((prev) => [...prev, ...newFiles].slice(0, 5));
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...newFiles].slice(0, 5),
+    }));
   }, []);
 
   const handleRemoveImage = useCallback((index: number) => {
-    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   }, []);
 
   const handleSubmit = useCallback(() => {
@@ -96,9 +102,9 @@ export function useProductReviewsWidget(
       rating: formData.rating,
       title: formData.title,
       body: formData.body,
-      images: imageFiles.length > 0 ? imageFiles : undefined,
+      images: formData.images.length > 0 ? formData.images : undefined,
     });
-  }, [formData, imageFiles, submitReview]);
+  }, [formData, submitReview]);
 
   const canSubmit = formData.rating > 0 && isLoggedIn && hasPurchased;
 
@@ -131,7 +137,6 @@ export function useProductReviewsWidget(
 
     // Form state
     formData,
-    imageFiles,
     handleRatingChange,
     handleInputChange,
     handleAddImages,

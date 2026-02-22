@@ -24,7 +24,6 @@
     "push": "pnpm with-env drizzle-kit push",
     "pull": "pnpm with-env drizzle-kit pull",
     "studio": "pnpm with-env drizzle-kit studio",
-    "seed:widgets": "pnpm with-env tsx script/seed-widget-settings.ts",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },

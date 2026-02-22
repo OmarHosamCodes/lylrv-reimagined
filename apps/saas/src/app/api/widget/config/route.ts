@@ -1,6 +1,6 @@
 import { eq } from "@lylrv/db";
 import { db } from "@lylrv/db/client";
-import { clientConfig, clients, widgetSettings } from "@lylrv/db/schema";
+import { clientConfig, clients } from "@lylrv/db/schema";
 import type { NextRequest } from "next/server";
 
 /**
@@ -52,47 +52,9 @@ export const GET = async (req: NextRequest) => {
       return response;
     }
 
-    // Fetch widget settings and client config in parallel
-    const [settings, config] = await Promise.all([
-      db.query.widgetSettings.findFirst({
-        where: eq(widgetSettings.clientId, client.id),
-      }),
-      db.query.clientConfig.findFirst({
-        where: eq(clientConfig.clientId, client.id),
-      }),
-    ]);
-
-    // Return default config if no settings exist
-    if (!settings) {
-      const response = Response.json({
-        enabled: false,
-        widgets: [],
-        styles: {
-          primaryColor: "#000000",
-          position: "right",
-        },
-      });
-      setCorsHeaders(response);
-      return response;
-    }
-
-    // Build list of active widgets
-    const activeWidgets: string[] = [];
-    if (settings.activeWidgets) {
-      const widgets = settings.activeWidgets as {
-        loyalty: boolean;
-        reviews: boolean;
-        productReviews: boolean;
-      };
-      if (widgets.loyalty) activeWidgets.push("loyalty");
-      if (widgets.reviews) activeWidgets.push("reviews");
-      if (widgets.productReviews) activeWidgets.push("productReviews");
-    }
-
-    const appearance = settings.appearance as {
-      primaryColor: string;
-      position: "left" | "right";
-    } | null;
+    const config = await db.query.clientConfig.findFirst({
+      where: eq(clientConfig.clientId, client.id),
+    });
 
     // Build clientConfig for widgets
     const widgetClientConfig = config
@@ -135,14 +97,11 @@ export const GET = async (req: NextRequest) => {
       : null;
 
     const response = Response.json({
-      enabled: settings.isEnabled ?? false,
-      widgets: activeWidgets,
+      enabled: config?.isActive ?? true,
+      widgets: ["loyalty", "reviews", "productReviews"],
       styles: {
-        primaryColor:
-          appearance?.primaryColor ??
-          widgetClientConfig?.theme?.buttonBackgroundColor ??
-          "#000000",
-        position: appearance?.position ?? "right",
+        primaryColor: "#c56f26",
+        position: "right",
       },
       shop: client.createSource,
       clientId: client.id,

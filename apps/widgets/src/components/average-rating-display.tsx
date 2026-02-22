@@ -20,9 +20,12 @@ export function AverageRatingDisplay({
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={transitions.spring}
-      className={cn("flex flex-col items-center gap-1", className)}
+      className={cn(
+        "ly-widget-card flex flex-col items-center gap-1 p-4",
+        className,
+      )}
     >
-      <span className="text-5xl font-light text-foreground/90 leading-tight tracking-tight tabular-nums">
+      <span className="text-5xl font-light text-foreground leading-tight tracking-tight tabular-nums">
         {avgRating.toFixed(1)}
       </span>
       <StarRating rating={Math.round(avgRating)} size="sm" />

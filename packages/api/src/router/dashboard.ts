@@ -7,7 +7,6 @@ import {
   orders,
   referrals,
   reviews,
-  widgetSettings,
 } from "@lylrv/db/schema";
 import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
@@ -71,10 +70,6 @@ export const dashboardRouter = {
           message: "Failed to create client",
         });
       }
-
-      await ctx.db.insert(widgetSettings).values({
-        clientId: createdClient.id,
-      });
 
       return createdClient;
     }),
@@ -324,10 +319,6 @@ export const dashboardRouter = {
         where: eq(clientConfig.clientId, client.id),
       });
 
-      const widgets = await ctx.db.query.widgetSettings.findFirst({
-        where: eq(widgetSettings.clientId, client.id),
-      });
-
-      return { client, config, widgets };
+      return { client, config };
     }),
 } satisfies TRPCRouterRecord;

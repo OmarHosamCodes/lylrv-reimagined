@@ -1,6 +1,6 @@
 // Default values for the widget configuration
-export const DEFAULT_PRIMARY_COLOR = "#6366f1";
-export const DEFAULT_TEXT_COLOR = "#ffffff";
+export const DEFAULT_PRIMARY_COLOR = "#c56f26";
+export const DEFAULT_TEXT_COLOR = "#fffaf3";
 export const DEFAULT_POSITION = "right" as const;
 
 // Default redeem values for loyalty

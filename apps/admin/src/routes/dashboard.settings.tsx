@@ -41,13 +41,13 @@ function SettingsPage() {
     );
   }
 
-  const { client, config, widgets } = settingsQuery.data;
+  const { client, config } = settingsQuery.data;
 
   return (
     <div className="flex flex-col gap-5">
       <DashboardPageHeader
         title="Settings"
-        description="Client and widget configuration from backend schema."
+        description="Client and integration configuration from backend schema."
         meta={client.name ?? client.email}
       />
 
@@ -56,7 +56,7 @@ function SettingsPage() {
           title="Client"
           description="Identity and account plan"
         >
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="m-3 space-y-2 text-sm">
             <p>
               <span className="text-muted-foreground">Name:</span>{" "}
               {client.name ?? "—"}
@@ -77,25 +77,23 @@ function SettingsPage() {
         </DashboardSection>
 
         <DashboardSection
-          title="Widget Settings"
-          description="Current widget configuration snapshot"
+          title="Widget Runtime"
+          description="Widget UI is now styled at runtime with non-persistent defaults."
         >
-          <div className="mt-3 space-y-2 text-sm">
+          <div className="m-3 space-y-2 text-sm">
             <p>
-              <span className="text-muted-foreground">Enabled:</span>{" "}
-              {widgets?.isEnabled ? "Yes" : "No"}
+              <span className="text-muted-foreground">
+                Customization Storage:
+              </span>{" "}
+              Disabled
             </p>
             <p>
-              <span className="text-muted-foreground">Primary Color:</span>{" "}
-              {widgets?.appearance?.primaryColor ?? "—"}
+              <span className="text-muted-foreground">Enabled Widgets:</span>{" "}
+              Loyalty, Reviews, Product Reviews
             </p>
             <p>
-              <span className="text-muted-foreground">Position:</span>{" "}
-              {widgets?.appearance?.position ?? "—"}
-            </p>
-            <p>
-              <span className="text-muted-foreground">Loyalty Widget:</span>{" "}
-              {widgets?.activeWidgets?.loyalty ? "On" : "Off"}
+              <span className="text-muted-foreground">Layout Position:</span>{" "}
+              Right-side floating launchers
             </p>
           </div>
         </DashboardSection>
@@ -105,7 +103,7 @@ function SettingsPage() {
         title="Client Config"
         description="Environment and integration details"
       >
-        <div className="mt-3 grid gap-2 text-sm md:grid-cols-2">
+        <div className="m-3 grid gap-2 text-sm md:grid-cols-2">
           <p>
             <span className="text-muted-foreground">Integration:</span>{" "}
             {config?.integrationType ?? "—"}

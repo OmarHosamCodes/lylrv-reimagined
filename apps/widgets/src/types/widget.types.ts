@@ -66,7 +66,7 @@ export interface WidgetConfig {
   enabled: boolean;
   widgets: string[];
   styles: {
-    primaryColor: string;
+    primaryColor?: string;
     position: "left" | "right";
   };
   shop?: string;

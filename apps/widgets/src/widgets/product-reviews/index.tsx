@@ -86,14 +86,13 @@ function ProductReviewsWidget({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={transitions.slowReveal}
-      className="w-full space-y-8 bg-transparent"
+      className="ly-widget-shell w-full space-y-6 p-4 sm:p-6"
       style={{ direction: widgetTheme.isRTL ? "rtl" : "ltr" }}
     >
       <ProductReviewsHeader
         avgRating={meta?.averageRating || 0}
         totalReviews={meta?.total || 0}
         t={t}
-        theme={widgetTheme}
         isReviewsContainImages={reviewsContainImages}
         allReviewsImages={allReviewsImages}
         onToggleReviewForm={handleToggleReviewForm}
@@ -108,6 +107,7 @@ function ProductReviewsWidget({
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={transitions.spring}
+            className="overflow-hidden"
           >
             <FormDisplay
               showForm={formMode}

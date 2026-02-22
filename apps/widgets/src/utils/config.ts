@@ -5,13 +5,9 @@ import type { ConfigVariable, WidgetConfig, WidgetTheme } from "../types";
  * Extract theme from widget config
  */
 export function getWidgetTheme(config: WidgetConfig): WidgetTheme {
-  const theme = config.clientConfig?.theme;
   return {
-    primaryColor:
-      theme?.buttonBackgroundColor ||
-      config.styles.primaryColor ||
-      DEFAULT_PRIMARY_COLOR,
-    textColor: theme?.buttonTextColor || DEFAULT_TEXT_COLOR,
+    primaryColor: DEFAULT_PRIMARY_COLOR,
+    textColor: DEFAULT_TEXT_COLOR,
     position: config.styles.position || "right",
     isRTL: config.clientConfig?.language?.direction === "rtl",
   };

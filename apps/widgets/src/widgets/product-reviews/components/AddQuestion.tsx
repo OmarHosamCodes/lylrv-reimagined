@@ -31,7 +31,7 @@ export const AddQuestion = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="rounded-xl border border-border/60 bg-card p-5"
+      className="ly-widget-card rounded-2xl p-5"
     >
       <motion.h3
         variants={staggerItem}

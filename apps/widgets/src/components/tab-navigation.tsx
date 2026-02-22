@@ -27,7 +27,12 @@ export function TabNavigation({
 }: TabNavigationProps) {
   return (
     <LayoutGroup>
-      <div className={cn("flex border-b border-border/60", className)}>
+      <div
+        className={cn(
+          "mx-4 mt-3 flex rounded-2xl border border-white/60 bg-white/55 p-1 shadow-[0_14px_28px_-24px_rgba(0,0,0,0.8)] backdrop-blur-sm",
+          className,
+        )}
+      >
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           return (
@@ -36,10 +41,10 @@ export function TabNavigation({
               type="button"
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                "relative flex-1 py-2.5 text-sm font-medium transition-colors duration-200",
+                "relative flex-1 rounded-xl px-3 py-2.5 text-xs font-semibold tracking-wide uppercase transition-colors duration-200",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
                 isActive
-                  ? "text-primary"
+                  ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
@@ -49,7 +54,7 @@ export function TabNavigation({
               {isActive && (
                 <motion.div
                   layoutId="activeTabIndicator"
-                  className="absolute inset-x-0 bottom-0 h-0.5 bg-primary rounded-full"
+                  className="absolute inset-0 rounded-xl bg-white/95 shadow-[0_10px_24px_-20px_rgba(0,0,0,0.9)]"
                   transition={transitions.springStiff}
                 />
               )}

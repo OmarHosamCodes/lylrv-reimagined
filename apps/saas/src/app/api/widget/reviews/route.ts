@@ -57,7 +57,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     // Build conditions for reviews query
-    let reviewsData;
+    let reviewsData: Awaited<ReturnType<typeof db.query.reviews.findMany>> = [];
 
     if (productId) {
       // Get product reviews for specific product
@@ -128,8 +128,9 @@ export const GET = async (req: NextRequest) => {
     const ratingDistribution = [0, 0, 0, 0, 0];
     allReviews.forEach((r) => {
       const rating = Math.floor(parseFloat(r.rating || "0"));
-      if (rating >= 1 && rating <= 5) {
-        ratingDistribution[rating - 1]++;
+      const bucket = rating - 1;
+      if (bucket >= 0 && bucket < ratingDistribution.length) {
+        ratingDistribution[bucket] = (ratingDistribution[bucket] ?? 0) + 1;
       }
     });
 

@@ -22,7 +22,7 @@ export function RatingDistribution({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className={cn("space-y-1.5", className)}
+      className={cn("ly-widget-card space-y-1.5 p-3", className)}
     >
       {[5, 4, 3, 2, 1].map((rating, index) => {
         const count = distribution[rating - 1] || 0;
@@ -47,9 +47,9 @@ export function RatingDistribution({
             <span className="w-3 text-muted-foreground font-medium tabular-nums">
               {rating}
             </span>
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/80">
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-brand-warm/80">
               <motion.div
-                className="h-full rounded-full bg-primary"
+                className="h-full rounded-full bg-brand-amber"
                 initial={{ width: 0 }}
                 animate={{ width: `${percentage}%` }}
                 transition={{

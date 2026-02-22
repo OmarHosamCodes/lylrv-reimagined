@@ -66,13 +66,13 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
   ];
 
   return (
-    <div className="fixed bottom-4 right-20 z-9999">
-      {/* Floating Button */}
+    <div className="fixed bottom-4 right-4 z-9999">
       <FloatingButton
         onClick={handleToggle}
         icon={<Star className="h-7 w-7" />}
         label={t.secondary_floating_button_title || "Reviews"}
         badge={meta?.total}
+        className="pl-2 pr-4"
       />
 
       <Panel
@@ -80,9 +80,8 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
         onClose={handleToggle}
         className={cn(
           "z-10002 flex flex-col",
-          "w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
+          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-[100dvh] max-sm:rounded-none",
           "p-0 box-border overflow-hidden",
-          "bg-background border-none rounded-none sm:rounded-2xl",
         )}
       >
         <PanelHeader className="py-5">
@@ -90,7 +89,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transitions.spring}
-            className="text-lg font-bold tracking-tight"
+            className="ly-widget-heading text-lg"
           >
             {t.reviews_system_header || "Customer Reviews"}
           </motion.h2>
@@ -102,7 +101,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
           onTabChange={(id) => setActiveTab(id as ReviewsTabs)}
         />
 
-        <PanelContent className="flex-1 overflow-y-auto px-5 py-5">
+        <PanelContent className="flex-1 overflow-y-auto px-4 pb-4 pt-3">
           <AnimatePresence mode="wait">
             <motion.div
               key={isLoading ? "loading" : activeTab}
@@ -131,11 +130,11 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
           </AnimatePresence>
         </PanelContent>
 
-        <PanelFooter>
+        <PanelFooter className="bg-white/40">
           <motion.button
             type="button"
             whileHover={{ color: "var(--color-foreground)" }}
-            className="text-xs text-muted-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground transition-colors"
           >
             {t.need_help || "Need help?"}
           </motion.button>
@@ -174,11 +173,10 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
       animate="visible"
       className="space-y-4"
     >
-      {/* Rating Summary Section */}
       {meta && (
         <motion.section
           variants={fadeInUp}
-          className="flex flex-row items-center justify-center gap-6 py-2 max-sm:flex-col max-sm:gap-4"
+          className="grid grid-cols-[auto_1fr] items-center gap-3 py-1 max-sm:grid-cols-1"
         >
           <AverageRatingDisplay
             avgRating={meta.averageRating}
@@ -187,25 +185,20 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
           <RatingDistribution
             distribution={meta.ratingDistribution}
             total={meta.total}
-            className="flex-1 max-w-[200px] max-sm:max-w-full max-sm:w-full"
+            className="flex-1 max-w-[230px] max-sm:max-w-full max-sm:w-full"
           />
         </motion.section>
       )}
 
-      {/* Review Count */}
       {meta && (
-        <motion.p
-          variants={staggerItem}
-          className="text-center text-sm text-muted-foreground"
-        >
+        <motion.p variants={staggerItem} className="ly-widget-pill mx-auto">
           {meta.total} {t.total_reviews || "reviews"}
         </motion.p>
       )}
 
-      {/* Reviews List */}
       <motion.div
         variants={staggerItem}
-        className="space-y-3 border-t border-border/50 pt-4"
+        className="space-y-3 border-t border-white/50 pt-4"
       >
         {reviews.length > 0 ? (
           <motion.div
@@ -227,14 +220,13 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
         )}
       </motion.div>
 
-      {/* View All Button */}
       {reviews.length > 0 && (
         <motion.button
           type="button"
           variants={staggerItem}
-          whileHover={{ x: 4 }}
+          whileHover={{ x: 3 }}
           transition={transitions.snappy}
-          className="w-full text-center text-sm font-medium text-primary hover:text-primary/80 transition-colors py-2"
+          className="w-full rounded-xl border border-white/60 bg-white/55 py-2 text-center text-sm font-medium text-foreground transition-colors hover:bg-white/70"
         >
           {t.view_all || "View All"} →
         </motion.button>
@@ -272,7 +264,7 @@ function WriteReviewTab({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="py-8 text-center"
+        className="ly-widget-card py-8 px-4 text-center"
       >
         <p className="mb-4 text-sm text-muted-foreground">
           {t.sign_in || "Sign in"} to write a review
@@ -310,6 +302,7 @@ function WriteReviewTab({
           value={formData.title}
           onChange={(e) => onInputChange("title", e.target.value)}
           placeholder="Summary of your experience"
+          className="mt-1.5 border-white/70 bg-white/65"
         />
       </motion.div>
 
@@ -323,11 +316,17 @@ function WriteReviewTab({
           onChange={(e) => onInputChange("body", e.target.value)}
           rows={4}
           placeholder="Tell us about your experience..."
+          className="mt-1.5 border-white/70 bg-white/65"
         />
       </motion.div>
 
       <motion.div variants={staggerItem}>
-        <Button fullWidth onClick={onSubmit} disabled={!canSubmit}>
+        <Button
+          fullWidth
+          onClick={onSubmit}
+          disabled={!canSubmit}
+          className="rounded-xl shadow-lg"
+        >
           <AnimatePresence mode="wait">
             <motion.span
               key={isSubmitting ? "submitting" : "idle"}

@@ -42,7 +42,6 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
   const userName = config.user?.name;
   const earnSections = config.clientConfig?.earnSections || [];
   const variables = config.clientConfig?.variables;
-  const themeColor = config.clientConfig?.theme?.color || "#6366f1";
 
   const redeemValues = parseNumberList(
     variables,
@@ -101,6 +100,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
         onClick={handleToggle}
         icon={<LoyaltyIcon className="h-7 w-7" />}
         label={t.main_floating_button_title || "Loyalty Points"}
+        className="pl-2 pr-4"
       />
 
       <Panel
@@ -108,17 +108,14 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
         onClose={handleToggle}
         className={cn(
           "z-10002 flex flex-col",
-          "w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
+          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-[100dvh] max-sm:rounded-none",
           "p-0 box-border overflow-hidden",
-          "bg-background border-none rounded-none sm:rounded-2xl",
         )}
       >
-        {/* Themed Header */}
         <ThemedHeader
           isLoggedIn={isLoggedIn}
           userName={userName}
           userEmail={userEmail}
-          themeColor={themeColor}
           headerTitle={t.point_system_header || "Loyalty Points"}
           onClose={handleToggle}
           activeTab={activeTab}
@@ -133,7 +130,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
           />
         )}
 
-        <PanelContent className="flex-1 overflow-y-auto px-5 py-5">
+        <PanelContent className="flex-1 overflow-y-auto px-4 pb-4 pt-3">
           <AnimatePresence mode="wait">
             <motion.div
               key={isLoading ? "loading" : !isLoggedIn ? "unauth" : activeTab}
@@ -181,11 +178,11 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
           </AnimatePresence>
         </PanelContent>
 
-        <PanelFooter>
+        <PanelFooter className="bg-white/40">
           <motion.button
             type="button"
             whileHover={{ color: "var(--color-foreground)" }}
-            className="text-xs text-muted-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground transition-colors"
           >
             {t.need_help || "Need help?"}
           </motion.button>
@@ -201,7 +198,6 @@ interface ThemedHeaderProps {
   isLoggedIn: boolean;
   userName?: string | null;
   userEmail?: string | null;
-  themeColor: string;
   headerTitle: string;
   onClose: () => void;
   activeTab: LoyaltyTab;
@@ -212,7 +208,6 @@ function ThemedHeader({
   isLoggedIn,
   userName,
   userEmail,
-  themeColor,
   headerTitle,
   onClose,
   activeTab,
@@ -221,24 +216,10 @@ function ThemedHeader({
   const showBackButton = activeTab !== "home";
 
   return (
-    <header
-      className="relative h-32 text-center flex flex-col items-center justify-center w-full sm:rounded-t-2xl rounded-none flex-shrink-0 overflow-hidden"
-      style={{
-        backgroundColor: themeColor,
-        color: "#ffffff",
-      }}
-    >
-      {/* Subtle gradient overlay for depth */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)",
-        }}
-      />
+    <header className="relative h-[8.5rem] text-center flex flex-col items-center justify-center w-full rounded-none flex-shrink-0 overflow-hidden border-b border-white/45 bg-gradient-to-r from-brand-amber via-brand-gold to-brand-amber text-primary-foreground">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.35),transparent_55%),radial-gradient(circle_at_86%_10%,rgba(255,255,255,0.25),transparent_42%)]" />
 
-      <div className="relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-6 max-sm:px-4">
-        {/* Top navigation row */}
+      <div className="relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-5 max-sm:px-4">
         <div className="relative flex flex-row items-center justify-between w-full mb-auto">
           <AnimatePresence>
             {showBackButton && (
@@ -249,7 +230,7 @@ function ThemedHeader({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -8 }}
                 transition={transitions.snappy}
-                className="p-1.5 rounded-full hover:bg-white/15 transition-colors"
+                className="p-1.5 rounded-full hover:bg-white/20 transition-colors"
                 aria-label="Go back"
               >
                 <ChevronLeftIcon className="h-5 w-5 text-white" />
@@ -273,7 +254,6 @@ function ThemedHeader({
           </motion.button>
         </div>
 
-        {/* Content area */}
         <div className="flex items-center justify-center grow">
           {isLoggedIn ? (
             <motion.div
@@ -282,7 +262,7 @@ function ThemedHeader({
               transition={transitions.spring}
               className="flex flex-col items-center justify-center text-center text-sm w-full"
             >
-              <h1 className="text-white/70 text-sm tracking-wide uppercase">
+              <h1 className="text-white/80 text-[11px] tracking-[0.2em] uppercase">
                 {headerTitle}
               </h1>
               <p className="font-bold text-xl mt-1.5 tracking-tight">
@@ -314,10 +294,7 @@ interface CardProps {
 }
 
 function Card({ children, className, onClick }: CardProps) {
-  const baseClasses = cn(
-    "bg-card rounded-xl border border-border/60 p-4",
-    className,
-  );
+  const baseClasses = cn("ly-widget-card rounded-2xl p-4", className);
 
   if (onClick) {
     return (
@@ -325,7 +302,7 @@ function Card({ children, className, onClick }: CardProps) {
         type="button"
         className={cn(baseClasses, "cursor-pointer text-left w-full")}
         onClick={onClick}
-        whileHover={{ y: -2, boxShadow: "0 8px 24px -8px rgba(0,0,0,0.1)" }}
+        whileHover={{ y: -2, boxShadow: "0 25px 30px -28px rgba(0,0,0,0.9)" }}
         whileTap={{ scale: 0.98 }}
         transition={transitions.spring}
       >
@@ -362,7 +339,7 @@ function UnauthenticatedView({
     >
       {/* Sign in section */}
       <motion.div variants={staggerItem}>
-        <Card className="text-center bg-primary/5 border-primary/15">
+        <Card className="text-center border-brand-amber/20 bg-brand-amber/10">
           <p className="mb-4 text-sm text-muted-foreground leading-relaxed">
             {t.unlock_exciting_perks || "Unlock exciting perks and rewards!"}
           </p>
@@ -407,7 +384,7 @@ function UnauthenticatedView({
 
       {/* Referral info */}
       <motion.div variants={staggerItem}>
-        <Card className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border-none">
+        <Card className="text-center border-brand-amber/20 bg-gradient-to-br from-brand-amber/8 to-brand-gold/12">
           <h3 className="text-base font-semibold text-foreground mb-1.5">
             {t.referral_title || "Refer a Friend"}
           </h3>
@@ -490,7 +467,7 @@ function HomeTab({
       {/* Earn and Redeem navigation cards */}
       <motion.div variants={staggerItem} className="grid grid-cols-2 gap-3">
         <Card
-          className="flex items-center justify-between hover:bg-primary/5"
+          className="flex items-center justify-between hover:bg-white/75"
           onClick={() => onNavigate("earn")}
         >
           <div className="flex flex-col items-start gap-2">
@@ -503,7 +480,7 @@ function HomeTab({
           <ArrowRightIcon className="h-4 w-4 text-muted-foreground" />
         </Card>
         <Card
-          className="flex items-center justify-between hover:bg-primary/5"
+          className="flex items-center justify-between hover:bg-white/75"
           onClick={() => onNavigate("redeem")}
         >
           <div className="flex flex-col items-start gap-2">
@@ -519,7 +496,7 @@ function HomeTab({
       {/* Referral section */}
       {referralCode && (
         <motion.div variants={staggerItem}>
-          <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-none">
+          <Card className="border-brand-amber/20 bg-gradient-to-br from-brand-amber/8 to-brand-gold/12">
             <h3 className="text-base font-semibold text-foreground mb-1.5">
               {t.referral_title || "Refer a Friend"}
             </h3>
@@ -783,9 +760,9 @@ function HistoryTab({ t, recentActivity }: HistoryTabProps) {
       </h3>
 
       {recentActivity.length > 0 ? (
-        <div className="border border-border/60 rounded-xl overflow-hidden">
+        <div className="rounded-xl border border-white/65 overflow-hidden bg-white/45">
           {/* Table header */}
-          <div className="grid grid-cols-4 gap-2 bg-muted/40 px-4 py-3 text-xs font-medium text-muted-foreground border-b border-border/60">
+          <div className="grid grid-cols-4 gap-2 border-b border-white/55 bg-white/55 px-4 py-3 text-xs font-medium text-muted-foreground">
             <span>{t.activity_reason || "Reason"}</span>
             <span>{t.activity_points || "Points"}</span>
             <span>{t.activity_date || "Date"}</span>

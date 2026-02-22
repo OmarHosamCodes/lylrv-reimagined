@@ -47,7 +47,7 @@ export const AddReview = ({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="rounded-xl border border-border/60 bg-card p-6 text-center"
+        className="ly-widget-card rounded-2xl p-6 text-center"
       >
         <p className="mb-4 text-sm text-muted-foreground">
           {t.sign_in || "Sign in"} to write a review
@@ -63,7 +63,7 @@ export const AddReview = ({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="rounded-xl border border-border/60 bg-card p-6 text-center"
+        className="ly-widget-card rounded-2xl p-6 text-center"
       >
         <p className="text-sm text-muted-foreground">
           Only verified purchasers can write reviews.
@@ -77,7 +77,7 @@ export const AddReview = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="space-y-4 rounded-xl border border-border/60 bg-card p-5"
+      className="ly-widget-card space-y-4 rounded-2xl p-5"
     >
       <motion.h3
         variants={staggerItem}
@@ -89,7 +89,7 @@ export const AddReview = ({
       {/* Points earned message */}
       <motion.div
         variants={staggerItem}
-        className="rounded-lg bg-primary/8 p-3 text-sm text-primary border border-primary/10"
+        className="rounded-xl border border-brand-amber/20 bg-brand-amber/10 p-3 text-sm text-brand-amber"
       >
         <span className="font-medium">
           {t.you_will_gain || "You'll earn"}{" "}
@@ -153,7 +153,7 @@ export const AddReview = ({
               borderColor: "var(--color-primary)",
               backgroundColor: "var(--color-accent)",
             }}
-            className="flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-border px-4 py-3 text-center transition-colors"
+            className="flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-white/80 bg-white/55 px-4 py-3 text-center transition-colors"
           >
             <input
               type="file"
@@ -178,7 +178,7 @@ export const AddReview = ({
                 <img
                   src={URL.createObjectURL(file)}
                   alt=""
-                  className="h-full w-full rounded-lg object-cover ring-1 ring-border/40"
+                  className="h-full w-full rounded-lg object-cover ring-1 ring-white/70"
                 />
                 <motion.button
                   type="button"

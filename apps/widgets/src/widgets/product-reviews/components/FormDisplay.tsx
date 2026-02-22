@@ -53,7 +53,7 @@ export const FormDisplay = ({
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={transitions.spring}
-          className="rounded-xl border border-border/60 bg-card p-6 text-center"
+          className="ly-widget-card rounded-2xl p-6 text-center"
         >
           <p className="mb-4 text-sm text-muted-foreground">
             {t.sign_in || "Sign in"} to ask a question
@@ -72,7 +72,7 @@ export const FormDisplay = ({
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={transitions.spring}
-          className="rounded-xl border border-border/60 bg-card p-6 text-center"
+          className="ly-widget-card rounded-2xl p-6 text-center"
         >
           <p className="text-sm text-muted-foreground">
             {t.already_reviewed || "You have already reviewed this product."}

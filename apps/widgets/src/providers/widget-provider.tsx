@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import { DEFAULT_PRIMARY_COLOR, DEFAULT_TEXT_COLOR } from "../constants";
 import type { WidgetConfig } from "../types";
 
 // Create a client
@@ -44,20 +45,13 @@ export function WidgetProvider({
   apiBaseUrl,
   children,
 }: WidgetProviderProps) {
-  const theme = config.clientConfig?.theme;
-  const primaryColor =
-    theme?.buttonBackgroundColor || config.styles.primaryColor || "#6366f1";
-  const textColor = theme?.buttonTextColor || "#ffffff";
   const isRTL = config.clientConfig?.language?.direction === "rtl";
-
-  // Create CSS custom properties for theming
   const themeStyles = {
-    "--primary": primaryColor,
-    "--primary-foreground": textColor,
-    "--ring": primaryColor,
-    // Derive other colors from primary
-    "--accent": `color-mix(in oklch, ${primaryColor} 15%, transparent)`,
-    "--accent-foreground": primaryColor,
+    "--primary": DEFAULT_PRIMARY_COLOR,
+    "--primary-foreground": DEFAULT_TEXT_COLOR,
+    "--ring": DEFAULT_PRIMARY_COLOR,
+    "--accent": "color-mix(in oklch, var(--primary) 18%, transparent)",
+    "--accent-foreground": DEFAULT_PRIMARY_COLOR,
   } as React.CSSProperties;
 
   return (
@@ -66,7 +60,7 @@ export function WidgetProvider({
         <div
           style={themeStyles}
           dir={isRTL ? "rtl" : "ltr"}
-          className="font-sans antialiased"
+          className="font-sans antialiased text-foreground"
         >
           {children}
         </div>

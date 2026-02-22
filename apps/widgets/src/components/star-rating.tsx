@@ -64,7 +64,9 @@ export function StarRating({
               fill="currentColor"
               viewBox="0 0 20 20"
               animate={{
-                color: isFilled ? "#FBBF24" : "var(--color-muted-foreground)",
+                color: isFilled
+                  ? "color-mix(in oklch, var(--color-brand-amber) 85%, #f5b84a)"
+                  : "var(--color-muted-foreground)",
                 scale: isFilled && interactive ? 1 : 1,
               }}
               transition={transitions.snappy}

@@ -28,14 +28,15 @@ export function ReviewCard({
 
   return (
     <motion.div
-      whileHover={{ y: -1 }}
+      whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
-        "rounded-xl border border-border/60 bg-card p-4",
-        "transition-shadow duration-300 hover:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)]",
+        "ly-widget-card relative overflow-hidden p-4",
+        "transition-shadow duration-300 hover:shadow-[0_25px_32px_-28px_rgba(0,0,0,0.8)]",
         className,
       )}
     >
+      <div className="pointer-events-none absolute -right-8 -top-12 h-24 w-24 rounded-full bg-brand-gold/20 blur-2xl" />
       {/* Header: Avatar + Author Info + Rating */}
       <div className="relative mb-3 flex items-start justify-between">
         <div className="flex items-start gap-3">
@@ -43,7 +44,7 @@ export function ReviewCard({
           <img
             src={`https://avatar.iran.liara.run/username?username=${encodeURIComponent(review.author)}`}
             alt={`${formattedAuthor}'s avatar`}
-            className="h-10 w-10 flex-shrink-0 rounded-full bg-muted ring-2 ring-border/40"
+            className="h-10 w-10 flex-shrink-0 rounded-full bg-muted ring-2 ring-white/70"
           />
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5">
@@ -55,7 +56,7 @@ export function ReviewCard({
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="h-4 w-4 flex-shrink-0 text-blue-500"
+                  className="h-4 w-4 flex-shrink-0 text-brand-amber"
                   aria-label="Verified"
                   role="img"
                 >
@@ -107,7 +108,7 @@ export function ReviewCard({
               onClick={() => onImageClick?.(img)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-border/60"
+              className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm"
             >
               <img
                 src={img}
@@ -117,7 +118,7 @@ export function ReviewCard({
             </motion.button>
           ))}
           {review.images.length > 3 && (
-            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted text-xs font-medium text-muted-foreground">
+            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-white/65 bg-muted text-xs font-medium text-muted-foreground">
               +{review.images.length - 3}
             </span>
           )}

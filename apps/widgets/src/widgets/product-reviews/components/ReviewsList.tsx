@@ -22,7 +22,7 @@ export const ReviewsList = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={transitions.smooth}
-        className="py-8 text-center"
+        className="ly-widget-card py-8 text-center"
       >
         <p className="text-muted-foreground">
           {t.no_reviews_yet || "No reviews yet for this product."}

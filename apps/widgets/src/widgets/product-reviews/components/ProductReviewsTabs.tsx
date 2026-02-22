@@ -52,7 +52,7 @@ export const ProductReviewsTabs = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={transitions.smooth}
-          className="mt-4"
+          className="ly-widget-card mt-2 p-4"
         >
           {activeTab === "reviews" && (
             <ReviewsList

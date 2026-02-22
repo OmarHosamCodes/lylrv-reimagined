@@ -19,31 +19,24 @@ export function Panel({ children, isOpen, onClose, className }: PanelProps) {
     <AnimatePresence mode="wait">
       {isOpen && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center">
-          {/* Backdrop overlay with blur */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={transitions.smooth}
-            className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
+            className="fixed inset-0 bg-[radial-gradient(circle_at_12%_14%,rgba(255,255,255,0.35)_0%,rgba(22,19,15,0.74)_58%)] backdrop-blur-[5px]"
             onClick={onClose}
             onKeyDown={(e) => e.key === "Escape" && onClose?.()}
             role="button"
             tabIndex={0}
             aria-label="Close dialog"
           />
-          {/* Dialog content — spring-animated entrance */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 24 }}
+            initial={{ opacity: 0, scale: 0.94, y: 26 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            exit={{ opacity: 0, scale: 0.97, y: 16 }}
             transition={transitions.spring}
-            className={cn(
-              "relative z-10 w-80 overflow-hidden rounded-2xl",
-              "bg-card text-card-foreground",
-              "shadow-[0_24px_80px_-12px_rgba(0,0,0,0.25),0_0_0_1px_rgba(0,0,0,0.05)]",
-              className,
-            )}
+            className={cn("ly-widget-shell relative z-10 w-80", className)}
           >
             {children}
           </motion.div>
@@ -62,7 +55,7 @@ export function PanelHeader({ children, className }: PanelHeaderProps) {
   return (
     <div
       className={cn(
-        "bg-primary p-4 text-center text-primary-foreground",
+        "relative overflow-hidden border-b border-white/55 bg-gradient-to-r from-brand-amber/95 via-brand-gold/90 to-brand-amber/95 p-5 text-center text-primary-foreground",
         className,
       )}
     >
@@ -78,7 +71,7 @@ interface PanelContentProps {
 
 export function PanelContent({ children, className }: PanelContentProps) {
   return (
-    <div className={cn("max-h-80 overflow-y-auto p-4", className)}>
+    <div className={cn("overflow-y-auto p-4 relative z-10", className)}>
       {children}
     </div>
   );
@@ -92,7 +85,10 @@ interface PanelFooterProps {
 export function PanelFooter({ children, className }: PanelFooterProps) {
   return (
     <div
-      className={cn("border-t border-border/50 p-2.5 text-center", className)}
+      className={cn(
+        "relative z-10 border-t border-white/55 bg-white/45 p-3 text-center backdrop-blur-sm",
+        className,
+      )}
     >
       {children}
     </div>

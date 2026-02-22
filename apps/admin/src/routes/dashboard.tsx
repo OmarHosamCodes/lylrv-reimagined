@@ -79,7 +79,7 @@ function DashboardLayout() {
             <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
               Insights
             </p>
-            <div className="space-y-1">
+            <div className="space-y-1 flex flex-col">
               <NavItem to="/dashboard" label="Overview" />
               <NavItem to="/dashboard/customers" label="Customers" />
               <NavItem to="/dashboard/loyalty" label="Loyalty" />
@@ -91,7 +91,7 @@ function DashboardLayout() {
             <p className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/45">
               Operations
             </p>
-            <div className="space-y-1">
+            <div className="space-y-1 flex flex-col">
               <NavItem to="/dashboard/referrals" label="Referrals" />
               <NavItem to="/dashboard/orders" label="Orders" />
               <NavItem to="/dashboard/settings" label="Settings" />

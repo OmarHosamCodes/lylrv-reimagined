@@ -30,27 +30,31 @@ export function FloatingButton({
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ ...transitions.springBouncy, delay: 0.3 }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.92 }}
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.96, y: 0 }}
       className={cn(
-        "relative flex h-14 w-14 items-center justify-center rounded-full",
-        "bg-primary text-primary-foreground",
-        "shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.1)_inset]",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        "cursor-pointer",
+        "group ly-widget-fab",
+        "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
+        "focus:outline-none",
+        "cursor-pointer select-none",
         className,
       )}
     >
-      {icon}
+      <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-xl bg-white/65 text-primary shadow-inner">
+        {icon}
+      </span>
+      <span className="relative z-10 hidden max-w-[9rem] truncate text-left text-[13px] leading-4 sm:block">
+        {label}
+      </span>
       {badge !== undefined && (
         <motion.span
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ ...transitions.springBouncy, delay: 0.6 }}
           className={cn(
-            "absolute -right-1 -top-1 flex min-w-5 items-center justify-center",
-            "rounded-full bg-accent px-1.5 py-0.5 text-xs font-bold text-accent-foreground",
-            "shadow-sm ring-2 ring-background",
+            "absolute -right-1.5 -top-1.5 z-20 flex min-w-6 items-center justify-center",
+            "rounded-full bg-foreground px-1.5 py-0.5 text-[11px] font-bold text-background",
+            "shadow-sm ring-2 ring-white/70",
           )}
         >
           {badge}

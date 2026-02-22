@@ -2,14 +2,12 @@ import { Button } from "@lylrv/ui/button";
 import { motion } from "framer-motion";
 import { StarRating } from "@/components";
 import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
-import type { WidgetTheme } from "@/types";
 import { ReviewImageGallery } from "./ReviewImageGallery";
 
 interface ProductReviewsHeaderProps {
   avgRating: number;
   totalReviews: number;
   t: Record<string, string>;
-  theme: WidgetTheme;
   isReviewsContainImages: boolean;
   allReviewsImages: string[];
   onToggleReviewForm: () => void;
@@ -23,7 +21,6 @@ export const ProductReviewsHeader = ({
   avgRating,
   totalReviews,
   t,
-  theme,
   isReviewsContainImages,
   allReviewsImages,
   onToggleReviewForm,
@@ -34,26 +31,24 @@ export const ProductReviewsHeader = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="flex w-full flex-row items-center justify-between"
+      className="ly-widget-card flex w-full flex-row items-center justify-between p-5 max-sm:p-4"
     >
       <section className="flex w-full flex-col items-start justify-start">
-        {/* Review Header */}
         <motion.div
           variants={staggerItem}
           className="flex w-full flex-col items-start justify-start gap-1"
         >
-          <h1 className="text-[1.75rem] font-bold leading-7 tracking-tight">
+          <h1 className="ly-widget-heading text-[1.75rem] leading-7">
             {t.reviews_system_header || "Customer Reviews"}
           </h1>
-          <section className="flex flex-row items-center gap-2">
+          <section className="ly-widget-pill mt-1">
             <StarRating rating={avgRating} className="text-yellow-400" />
-            <p className="text-base text-muted-foreground">
+            <p className="text-xs text-brand-amber">
               ({totalReviews} {t.total_reviews || "Reviews"})
             </p>
           </section>
         </motion.div>
 
-        {/* Big Rating Number — dramatic entrance */}
         <motion.h1
           variants={{
             hidden: { opacity: 0, scale: 0.8, y: 20 },
@@ -64,26 +59,28 @@ export const ProductReviewsHeader = ({
               transition: { ...transitions.springBouncy, delay: 0.15 },
             },
           }}
-          className="mt-3 w-full text-start text-[5.625rem] font-extralight tracking-tighter text-secondary leading-none"
+          className="mt-3 w-full text-start text-[5.2rem] font-extralight tracking-tighter text-foreground/80 leading-none max-sm:text-[4.1rem]"
         >
           {avgRating.toFixed(1)}
         </motion.h1>
 
-        {/* Actions and Gallery */}
         <motion.div
           variants={staggerItem}
           className="flex min-w-28 w-full flex-wrap gap-4"
         >
           <div className="flex flex-col justify-between gap-2">
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button className="text-base" onClick={onToggleReviewForm}>
+              <Button
+                className="rounded-xl text-base shadow-md"
+                onClick={onToggleReviewForm}
+              >
                 {t.add_product_review || "Write a Review"}
               </Button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Button
                 variant="outline"
-                className="text-base"
+                className="rounded-xl border-white/70 bg-white/50 text-base"
                 onClick={onToggleQuestionForm}
               >
                 {t.add_question || "Ask a Question"}
