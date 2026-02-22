@@ -3,92 +3,92 @@ import type { ReviewFormData, ReviewsTab } from "../types/reviews.types";
 import { useReviews, useSubmitReview } from "./queries";
 
 interface UseReviewsWidgetOptions {
-	shop: string;
-	apiBaseUrl: string;
-	type?: "website" | "product";
-	productId?: number;
-	enabled?: boolean;
+  shop: string;
+  apiBaseUrl: string;
+  type?: "website" | "product";
+  productId?: number;
+  enabled?: boolean;
 }
 
 export function useReviewsWidget({
-	shop,
-	apiBaseUrl,
-	type = "website",
-	productId,
-	enabled = true,
+  shop,
+  apiBaseUrl,
+  type = "website",
+  productId,
+  enabled = true,
 }: UseReviewsWidgetOptions) {
-	const [isOpen, setIsOpen] = useState(false);
-	const [activeTab, setActiveTab] = useState<ReviewsTab>("reviews");
-	const [formData, setFormData] = useState<ReviewFormData>({
-		rating: 0,
-		title: "",
-		body: "",
-		images: [],
-	});
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<ReviewsTab>("reviews");
+  const [formData, setFormData] = useState<ReviewFormData>({
+    rating: 0,
+    title: "",
+    body: "",
+    images: [],
+  });
 
-	// Fetch reviews when panel is open
-	const { reviews, meta, isLoading, refetch } = useReviews({
-		shop,
-		apiBaseUrl,
-		type,
-		productId,
-		enabled: enabled && isOpen,
-	});
+  // Fetch reviews when panel is open
+  const { reviews, meta, isLoading, refetch } = useReviews({
+    shop,
+    apiBaseUrl,
+    type,
+    productId,
+    enabled: enabled && isOpen,
+  });
 
-	// Submit review mutation
-	const submitMutation = useSubmitReview({
-		shop,
-		apiBaseUrl,
-		productId,
-		onSuccess: () => {
-			setFormData({ rating: 0, title: "", body: "", images: [] });
-			setActiveTab("reviews");
-			refetch();
-		},
-	});
+  // Submit review mutation
+  const submitMutation = useSubmitReview({
+    shop,
+    apiBaseUrl,
+    productId,
+    onSuccess: () => {
+      setFormData({ rating: 0, title: "", body: "", images: [] });
+      setActiveTab("reviews");
+      refetch();
+    },
+  });
 
-	const handleToggle = () => setIsOpen((prev) => !prev);
+  const handleToggle = () => setIsOpen((prev) => !prev);
 
-	const handleRatingChange = (rating: number) => {
-		setFormData((prev) => ({ ...prev, rating }));
-	};
+  const handleRatingChange = (rating: number) => {
+    setFormData((prev) => ({ ...prev, rating }));
+  };
 
-	const handleInputChange = (field: keyof ReviewFormData, value: string) => {
-		setFormData((prev) => ({ ...prev, [field]: value }));
-	};
+  const handleInputChange = (field: keyof ReviewFormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
-	const handleSubmit = () => {
-		if (formData.rating === 0) return;
-		submitMutation.mutate({
-			rating: formData.rating,
-			title: formData.title || undefined,
-			body: formData.body || undefined,
-			images: formData.images.length > 0 ? formData.images : undefined,
-		});
-	};
+  const handleSubmit = () => {
+    if (formData.rating === 0) return;
+    submitMutation.mutate({
+      rating: formData.rating,
+      title: formData.title || undefined,
+      body: formData.body || undefined,
+      images: formData.images.length > 0 ? formData.images : undefined,
+    });
+  };
 
-	const canSubmit = formData.rating > 0 && !submitMutation.isPending;
+  const canSubmit = formData.rating > 0 && !submitMutation.isPending;
 
-	return {
-		// State
-		isOpen,
-		activeTab,
-		formData,
-		isLoading,
+  return {
+    // State
+    isOpen,
+    activeTab,
+    formData,
+    isLoading,
 
-		// Data
-		reviews,
-		meta,
+    // Data
+    reviews,
+    meta,
 
-		// Actions
-		handleToggle,
-		setActiveTab,
-		handleRatingChange,
-		handleInputChange,
-		handleSubmit,
+    // Actions
+    handleToggle,
+    setActiveTab,
+    handleRatingChange,
+    handleInputChange,
+    handleSubmit,
 
-		// Computed
-		canSubmit,
-		isSubmitting: submitMutation.isPending,
-	};
+    // Computed
+    canSubmit,
+    isSubmitting: submitMutation.isPending,
+  };
 }

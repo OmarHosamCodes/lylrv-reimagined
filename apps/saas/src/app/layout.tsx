@@ -11,9 +11,10 @@ import "~/app/styles.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    env.VERCEL_ENV === "production"
-      ? "https://turbo.t3.gg"
-      : "http://localhost:3000",
+    env.PUBLIC_URL ??
+      (env.RAILWAY_PUBLIC_DOMAIN
+        ? `https://${env.RAILWAY_PUBLIC_DOMAIN}`
+        : "http://localhost:3000"),
   ),
   title: {
     default: "Lylrv — Loyalty & Reviews Platform",

@@ -5,10 +5,10 @@ import { widgetRouter } from "./router/widget";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
-	auth: authRouter,
-	dashboard: dashboardRouter,
-	post: postRouter,
-	widget: widgetRouter,
+  auth: authRouter,
+  dashboard: dashboardRouter,
+  post: postRouter,
+  widget: widgetRouter,
 });
 
 // export type definition of API

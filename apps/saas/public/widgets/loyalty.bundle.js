@@ -1,36 +1,1054 @@
-import{j as e,r as R,c as O}from"./vendor-react-DoxZ-W3t.js";import{c as j,u as G,a as K,g as B,s as J,W as Q,b as X,d as f,T as Y,A,m as o,t as u,e as k,f as h,B as H,h as W,D as Z,i as ee}from"./styles-ceTt42xX.js";import{F as te,P as se,a as ae,L as ne,b as re}from"./panel-BzTl2cCF.js";import{p as ie,g as $}from"./config-BHVJYPGW.js";/**
+import { g as $, p as ie } from "./config-BHVJYPGW.js"; /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const oe=[["path",{d:"M5 12h14",key:"1ays0h"}],["path",{d:"m12 5 7 7-7 7",key:"xquz4c"}]],D=j("arrow-right",oe);/**
+ */
+import {
+  a as ae,
+  L as ne,
+  b as re,
+  P as se,
+  F as te,
+} from "./panel-BzTl2cCF.js";
+import {
+  A,
+  g as B,
+  i as ee,
+  d as f,
+  u as G,
+  B as H,
+  f as h,
+  s as J,
+  c as j,
+  a as K,
+  e as k,
+  m as o,
+  W as Q,
+  t as u,
+  h as W,
+  b as X,
+  T as Y,
+  D as Z,
+} from "./styles-ceTt42xX.js";
+import { j as e, c as O, r as R } from "./vendor-react-DoxZ-W3t.js";
+
+const oe = [
+    ["path", { d: "M5 12h14", key: "1ays0h" }],
+    ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }],
+  ],
+  D = j("arrow-right", oe); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const le=[["path",{d:"m15 18-6-6 6-6",key:"1wnfg3"}]],ce=j("chevron-left",le);/**
+ */
+const le = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]],
+  ce = j("chevron-left", le); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const de=[["rect",{x:"3",y:"8",width:"18",height:"4",rx:"1",key:"bkv52"}],["path",{d:"M12 8v13",key:"1c76mn"}],["path",{d:"M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7",key:"6wjy6b"}],["path",{d:"M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5",key:"1ihvrl"}]],I=j("gift",de);/**
+ */
+const de = [
+    [
+      "rect",
+      { x: "3", y: "8", width: "18", height: "4", rx: "1", key: "bkv52" },
+    ],
+    ["path", { d: "M12 8v13", key: "1c76mn" }],
+    ["path", { d: "M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7", key: "6wjy6b" }],
+    [
+      "path",
+      {
+        d: "M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5",
+        key: "1ihvrl",
+      },
+    ],
+  ],
+  I = j("gift", de); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const me=[["path",{d:"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8",key:"1357e3"}],["path",{d:"M3 3v5h5",key:"1xhq8a"}],["path",{d:"M12 7v5l4 2",key:"1fdv2h"}]],xe=j("history",me);/**
+ */
+const me = [
+    [
+      "path",
+      { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" },
+    ],
+    ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
+    ["path", { d: "M12 7v5l4 2", key: "1fdv2h" }],
+  ],
+  xe = j("history", me); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const ue=[["path",{d:"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8",key:"5wwlr5"}],["path",{d:"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",key:"r6nss1"}]],he=j("house",ue);/**
+ */
+const ue = [
+    [
+      "path",
+      { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" },
+    ],
+    [
+      "path",
+      {
+        d: "M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+        key: "r6nss1",
+      },
+    ],
+  ],
+  he = j("house", ue); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const pe=[["path",{d:"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",key:"1s2grr"}]],fe=j("sparkle",pe);/**
+ */
+const pe = [
+    [
+      "path",
+      {
+        d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+        key: "1s2grr",
+      },
+    ],
+  ],
+  fe = j("sparkle", pe); /**
  * @license lucide-react v0.562.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
- */const ge=[["path",{d:"M18 6 6 18",key:"1bl5f8"}],["path",{d:"m6 6 12 12",key:"d8bk6v"}]],ye=j("x",ge);function je({className:t}){return e.jsx("svg",{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",fill:"currentColor",className:t,children:e.jsx("path",{d:"M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"})})}function z({className:t}){return e.jsx("svg",{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",fill:"currentColor",className:t,children:e.jsx("path",{fillRule:"evenodd",d:"M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM9 7.5A.75.75 0 019.75 6.75h1.5a.75.75 0 01.75.75v2.25h.75a.75.75 0 01.75.75v3a.75.75 0 01-.75.75h-.75v1.5a.75.75 0 01-1.5 0v-1.5h-.75a.75.75 0 01-.75-.75v-3a.75.75 0 01.75-.75h.75V7.5z",clipRule:"evenodd"})})}const F={all:["loyalty"],customer:(t,n)=>[...F.all,"customer",t,n]};function be({shop:t,email:n,apiBaseUrl:s,enabled:r=!0}){const a=B(s),{data:i,isLoading:c,isError:l,error:d,refetch:m}=G({queryKey:F.customer(t,n||""),queryFn:async()=>n?a.getCustomer(t,n):null,enabled:r&&!!t&&!!n,staleTime:120*1e3});return{customer:i?.exists?i.customer:null,isLoading:c,isError:l,error:d,refetch:m}}function ve({shop:t,email:n,apiBaseUrl:s,onSuccess:r}){const a=B(s);return K({mutationFn:async i=>a.redeemPoints(t,n,i),onSuccess:i=>{r?.(i.couponCode)}})}function Ne({shop:t,email:n,apiBaseUrl:s,isLoggedIn:r,userPoints:a=0,userReferralCode:i=null}){const[c,l]=R.useState(!1),[d,m]=R.useState("home"),[b,v]=R.useState(!1),[N,p]=R.useState(null),{customer:g,isLoading:L,refetch:S}=be({shop:t,email:n,apiBaseUrl:s,enabled:r&&c&&!!n}),w=ve({shop:t,email:n||"",apiBaseUrl:s,onSuccess:()=>{p(null),S()}}),E=g?.totalPoints??a,_=g?.referralCode??i,C=()=>l(y=>!y),P=async()=>{_&&(await navigator.clipboard.writeText(_),v(!0),setTimeout(()=>v(!1),2e3))},T=y=>{p(y)},M=()=>{N&&w.mutate(N)};return{isOpen:c,activeTab:d,copiedCode:b,selectedRedeem:N,isLoading:L,points:E,referralCode:_,customer:g,recentActivity:g?.recentActivity||[],activeCoupons:g?.activeCoupons||[],handleToggle:C,handleCopyReferral:P,handleRedeem:T,handleConfirmRedeem:M,setActiveTab:m,isRedeeming:w.isPending}}function we({config:t,apiBaseUrl:n}){const s=X(t),r=t.user?.isLoggedIn||!1,a=t.user?.email,i=t.user?.name,c=t.clientConfig?.earnSections||[],l=t.clientConfig?.variables,d=t.clientConfig?.theme?.color||"#6366f1",m=ie(l,"redeem_values",ee),b=Number.parseInt($(l,"min_redeem_value",String(Z)),10),v=$(l,"referral_gain_value","120"),{isOpen:N,activeTab:p,copiedCode:g,selectedRedeem:L,isLoading:S,points:w,referralCode:E,recentActivity:_,handleToggle:C,handleCopyReferral:P,handleRedeem:T,handleConfirmRedeem:M,setActiveTab:y,isRedeeming:U}=Ne({shop:t.shop||"",email:a??void 0,apiBaseUrl:n,isLoggedIn:r,userPoints:t.user?.points,userReferralCode:t.user?.referralCode}),V=[{id:"home",label:e.jsx(he,{className:"h-4 w-4"})},{id:"earn",label:s.earn_more_points?.split(" ")[0]||"Earn"},{id:"redeem",label:s.redeem||"Redeem"},{id:"history",label:e.jsx(xe,{className:"h-4 w-4"})}];return e.jsxs("div",{className:"fixed bottom-4 left-4 z-9999",children:[e.jsx(te,{onClick:C,icon:e.jsx(je,{className:"h-7 w-7"}),label:s.main_floating_button_title||"Loyalty Points"}),e.jsxs(se,{isOpen:N,onClose:C,className:f("z-10002 flex flex-col","w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg","p-0 box-border overflow-hidden","bg-background border-none rounded-none sm:rounded-2xl"),children:[e.jsx(_e,{isLoggedIn:r,userName:i,userEmail:a,themeColor:d,headerTitle:s.point_system_header||"Loyalty Points",onClose:C,activeTab:p,onBack:()=>y("home")}),r&&e.jsx(Y,{tabs:V,activeTab:p,onTabChange:q=>y(q)}),e.jsx(ae,{className:"flex-1 overflow-y-auto px-5 py-5",children:e.jsx(A,{mode:"wait",children:e.jsx(o.div,{initial:{opacity:0,y:8},animate:{opacity:1,y:0},exit:{opacity:0,y:-8},transition:u.smooth,children:S?e.jsx(ne,{}):r?p==="home"?e.jsx(ke,{t:s,points:w,spentPoints:0,referralCode:E,referralGainValue:v,copiedCode:g,onCopyReferral:P,onNavigate:y}):p==="earn"?e.jsx(Re,{t:s,earnSections:c}):p==="redeem"?e.jsx(Ae,{t:s,points:w,redeemValues:m,minRedeemValue:b,selectedRedeem:L,isRedeeming:U,onSelect:T,onConfirm:M}):e.jsx(Ee,{t:s,recentActivity:_}):e.jsx(Ce,{t:s,earnSections:c,referralGainValue:v})},S?"loading":r?p:"unauth")})}),e.jsx(re,{children:e.jsx(o.button,{type:"button",whileHover:{color:"var(--color-foreground)"},className:"text-xs text-muted-foreground transition-colors",children:s.need_help||"Need help?"})})]})]})}function _e({isLoggedIn:t,userName:n,userEmail:s,themeColor:r,headerTitle:a,onClose:i,activeTab:c,onBack:l}){const d=c!=="home";return e.jsxs("header",{className:"relative h-32 text-center flex flex-col items-center justify-center w-full sm:rounded-t-2xl rounded-none flex-shrink-0 overflow-hidden",style:{backgroundColor:r,color:"#ffffff"},children:[e.jsx("div",{className:"absolute inset-0 opacity-20",style:{background:"linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)"}}),e.jsxs("div",{className:"relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-6 max-sm:px-4",children:[e.jsxs("div",{className:"relative flex flex-row items-center justify-between w-full mb-auto",children:[e.jsx(A,{children:d&&e.jsx(o.button,{type:"button",onClick:l,initial:{opacity:0,x:-8},animate:{opacity:1,x:0},exit:{opacity:0,x:-8},transition:u.snappy,className:"p-1.5 rounded-full hover:bg-white/15 transition-colors","aria-label":"Go back",children:e.jsx(ce,{className:"h-5 w-5 text-white"})})}),!d&&e.jsx("div",{}),e.jsx(o.button,{type:"button",onClick:i,onKeyUp:m=>m.key==="Escape"&&i(),whileHover:{scale:1.1,backgroundColor:"rgba(255,255,255,0.15)"},whileTap:{scale:.9},className:"p-1.5 rounded-full transition-colors cursor-pointer","aria-label":"Close",children:e.jsx(ye,{className:"h-5 w-5 text-white"})})]}),e.jsx("div",{className:"flex items-center justify-center grow",children:t?e.jsxs(o.div,{initial:{opacity:0,y:6},animate:{opacity:1,y:0},transition:u.spring,className:"flex flex-col items-center justify-center text-center text-sm w-full",children:[e.jsx("h1",{className:"text-white/70 text-sm tracking-wide uppercase",children:a}),e.jsx("p",{className:"font-bold text-xl mt-1.5 tracking-tight",children:n||s||"User"})]}):e.jsx(o.h1,{initial:{opacity:0,y:6},animate:{opacity:1,y:0},transition:u.spring,className:"text-2xl text-center font-bold tracking-tight",children:a})})]})]})}function x({children:t,className:n,onClick:s}){const r=f("bg-card rounded-xl border border-border/60 p-4",n);return s?e.jsx(o.button,{type:"button",className:f(r,"cursor-pointer text-left w-full"),onClick:s,whileHover:{y:-2,boxShadow:"0 8px 24px -8px rgba(0,0,0,0.1)"},whileTap:{scale:.98},transition:u.spring,children:t}):e.jsx("div",{className:r,children:t})}function Ce({t,earnSections:n,referralGainValue:s}){return e.jsxs(o.div,{variants:k,initial:"hidden",animate:"visible",className:"space-y-6",children:[e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:"text-center bg-primary/5 border-primary/15",children:[e.jsx("p",{className:"mb-4 text-sm text-muted-foreground leading-relaxed",children:t.unlock_exciting_perks||"Unlock exciting perks and rewards!"}),e.jsx(H,{fullWidth:!0,children:t.sign_in||"Sign In"}),e.jsxs("p",{className:"mt-3 text-xs text-muted-foreground",children:[t.already_have_an_account||"Already have an account?"," ",e.jsx("button",{type:"button",className:"font-semibold text-primary hover:underline",children:t.join_now||"Join Now"})]})]})}),e.jsxs(o.div,{variants:h,children:[e.jsx("h3",{className:"mb-3 text-base font-semibold text-foreground",children:t.earn_more_points||"Ways to Earn Points"}),e.jsx("div",{className:"space-y-2.5",children:n.slice(0,3).map((r,a)=>e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:"flex items-center gap-3",children:[e.jsxs("div",{className:"flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-sm",children:["+",r.earnAmount]}),e.jsxs("div",{className:"flex-1",children:[e.jsx("p",{className:"font-medium text-foreground text-sm",children:r.title}),e.jsx("p",{className:"text-xs text-muted-foreground mt-0.5",children:r.description})]})]})},a))})]}),e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:"text-center bg-gradient-to-br from-primary/5 to-primary/10 border-none",children:[e.jsx("h3",{className:"text-base font-semibold text-foreground mb-1.5",children:t.referral_title||"Refer a Friend"}),e.jsxs("p",{className:"text-sm text-muted-foreground",children:[t.referral_paragraph_1||"Share your code and earn"," ",e.jsx("span",{className:"font-bold text-primary",children:s})," ",t.points||"points"]})]})})]})}function ke({t,points:n,spentPoints:s,referralCode:r,referralGainValue:a,copiedCode:i,onCopyReferral:c,onNavigate:l}){return e.jsxs(o.div,{variants:k,initial:"hidden",animate:"visible",className:"space-y-5",children:[e.jsxs(o.div,{variants:h,className:"grid grid-cols-2 gap-3 max-sm:grid-cols-1",children:[e.jsxs(x,{className:"flex items-center justify-between",children:[e.jsxs("div",{className:"flex items-center gap-2",children:[e.jsx(z,{className:"h-5 w-5 text-primary"}),e.jsx("span",{className:"text-sm text-muted-foreground",children:t.total_points||"Total Points"})]}),e.jsx(o.span,{initial:{scale:1.2,opacity:0},animate:{scale:1,opacity:1},transition:u.springBouncy,className:"text-xl font-bold text-foreground tabular-nums",children:W(n)},n)]}),e.jsxs(x,{className:"flex items-center justify-between",children:[e.jsxs("div",{className:"flex items-center gap-2",children:[e.jsx(z,{className:"h-5 w-5 text-muted-foreground"}),e.jsx("span",{className:"text-sm text-muted-foreground",children:t.spent_points||"Spent Points"})]}),e.jsx("span",{className:"text-xl font-bold text-foreground tabular-nums",children:W(Math.abs(s))})]})]}),e.jsxs(o.div,{variants:h,className:"grid grid-cols-2 gap-3",children:[e.jsxs(x,{className:"flex items-center justify-between hover:bg-primary/5",onClick:()=>l("earn"),children:[e.jsxs("div",{className:"flex flex-col items-start gap-2",children:[e.jsx(fe,{className:"h-7 w-7 text-primary"}),e.jsx("span",{className:"text-sm font-medium text-foreground",children:t.earn_more_points?.split(" ").slice(0,2).join(" ")||"Earn Points"})]}),e.jsx(D,{className:"h-4 w-4 text-muted-foreground"})]}),e.jsxs(x,{className:"flex items-center justify-between hover:bg-primary/5",onClick:()=>l("redeem"),children:[e.jsxs("div",{className:"flex flex-col items-start gap-2",children:[e.jsx(I,{className:"h-7 w-7 text-primary"}),e.jsx("span",{className:"text-sm font-medium text-foreground",children:t.redeem_points||"Redeem Points"})]}),e.jsx(D,{className:"h-4 w-4 text-muted-foreground"})]})]}),r&&e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:"bg-gradient-to-br from-primary/5 to-primary/10 border-none",children:[e.jsx("h3",{className:"text-base font-semibold text-foreground mb-1.5",children:t.referral_title||"Refer a Friend"}),e.jsxs("p",{className:"text-sm text-muted-foreground mb-3",children:[t.referral_paragraph_1||"Share your code and earn"," ",e.jsx("span",{className:"font-bold text-primary",children:a})," ",t.points||"points"]}),e.jsxs("div",{className:"flex items-center gap-2",children:[e.jsx("div",{className:"flex-1 rounded-lg border border-input bg-muted/70 px-4 py-2.5 font-mono text-sm text-center tracking-wide",children:r}),e.jsx(H,{onClick:c,size:"sm",children:e.jsx(A,{mode:"wait",children:e.jsx(o.span,{initial:{opacity:0,y:4},animate:{opacity:1,y:0},exit:{opacity:0,y:-4},transition:u.snappy,children:i?"Copied!":t.copy_referral_code?.split(" ")[0]||"Copy"},i?"copied":"copy")})})]})]})})]})}function Se(t,n){const r=[...n].sort((c,l)=>c-l).indexOf(t),a=["bg-slate-100 text-slate-600","bg-blue-50 text-blue-600","bg-emerald-50 text-emerald-600","bg-amber-50 text-amber-600","bg-orange-50 text-orange-600","bg-rose-50 text-rose-600","bg-violet-50 text-violet-600"];return a[Math.min(r,a.length-1)]??a[0]??""}function Re({t,earnSections:n}){const s=[...n].sort((a,i)=>Number(a.earnAmount)-Number(i.earnAmount)),r=s.map(a=>Number(a.earnAmount));return e.jsxs("div",{className:"space-y-4",children:[e.jsx("h3",{className:"text-lg font-semibold text-foreground",children:t.earn_points_page_title||"Ways to Earn Points"}),e.jsx(o.div,{variants:k,initial:"hidden",animate:"visible",className:"grid grid-cols-2 gap-3 max-sm:grid-cols-1",children:s.map((a,i)=>e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:"flex items-start gap-3 max-sm:flex-row",children:[e.jsxs(o.div,{whileHover:{scale:1.08},transition:u.springStiff,className:f("h-12 w-12 max-sm:h-10 max-sm:w-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm",Se(Number(a.earnAmount),r)),children:["+",a.earnAmount]}),e.jsxs("div",{className:"flex-1 min-w-0",children:[e.jsx("p",{className:"font-medium text-foreground text-sm mb-0.5",children:a.title}),e.jsx("p",{className:"text-xs text-muted-foreground line-clamp-2 leading-relaxed",children:a.description})]})]})},i))})]})}function Ae({t,points:n,redeemValues:s,minRedeemValue:r,selectedRedeem:a,isRedeeming:i,onSelect:c,onConfirm:l}){return e.jsxs("div",{className:"space-y-4",children:[e.jsxs("div",{children:[e.jsx("h3",{className:"text-lg font-semibold text-foreground",children:t.redeem_points_title?.replace("{redeemValue}",String(r))||"Redeem Points"}),e.jsx("p",{className:"text-sm text-muted-foreground mt-1 leading-relaxed",children:t.redeem_points_description||"Exchange your points for discounts"})]}),e.jsx(o.div,{variants:k,initial:"hidden",animate:"visible",className:"grid grid-cols-2 gap-3",children:s.map(d=>{const m=n>=d,b=a===d;return e.jsx(o.div,{variants:h,children:e.jsxs(x,{className:f("flex flex-col items-center p-4 transition-all",m?"hover:border-primary cursor-pointer":"opacity-40 cursor-not-allowed saturate-0",b&&"border-primary ring-2 ring-primary/20 bg-primary/5"),onClick:()=>m&&c(d),children:[e.jsx(o.div,{animate:b?{scale:[1,1.1,1]}:{scale:1},transition:u.springBouncy,className:"flex items-center justify-center mb-2",children:e.jsx(I,{className:f("h-9 w-9",m?"text-primary":"text-muted-foreground")})}),e.jsx("p",{className:f("text-2xl font-bold tabular-nums",m?"text-primary":"text-muted-foreground"),children:d}),e.jsx("p",{className:"text-xs text-muted-foreground",children:t.points||"Points"}),m&&e.jsxs("div",{className:"flex items-center gap-1 mt-2 text-primary text-sm font-medium",children:[e.jsx("span",{children:t.redeem||"Redeem"}),e.jsx(D,{className:"h-3 w-3"})]})]})},d)})}),e.jsx(A,{children:a&&e.jsx(o.div,{initial:{opacity:0,y:8,height:0},animate:{opacity:1,y:0,height:"auto"},exit:{opacity:0,y:8,height:0},transition:u.spring,children:e.jsx(H,{fullWidth:!0,onClick:l,disabled:i,children:i?"...":`${t.redeem_confirmation||"Confirm Redeem"} - ${a} ${t.points||"pts"}`})})})]})}function Le(t,n,s){if(n<=0)return"-";const r=new Date(t),a=new Date(r);a.setDate(a.getDate()+90);const i=new Date,c=a.getTime()-i.getTime(),l=Math.ceil(c/(1e3*60*60*24));return l<=0?s.expired||"Expired":`${l} ${s.days_till_expiry||"days"}`}function Ee({t,recentActivity:n}){return e.jsxs("div",{className:"space-y-4",children:[e.jsx("h3",{className:"text-lg font-semibold text-foreground",children:t.activity_reason||"Activity History"}),n.length>0?e.jsxs("div",{className:"border border-border/60 rounded-xl overflow-hidden",children:[e.jsxs("div",{className:"grid grid-cols-4 gap-2 bg-muted/40 px-4 py-3 text-xs font-medium text-muted-foreground border-b border-border/60",children:[e.jsx("span",{children:t.activity_reason||"Reason"}),e.jsx("span",{children:t.activity_points||"Points"}),e.jsx("span",{children:t.activity_date||"Date"}),e.jsx("span",{children:t.activity_expiry_status||"Expiry"})]}),e.jsx(o.div,{variants:k,initial:"hidden",animate:"visible",className:"divide-y divide-border/40",children:n.map(s=>e.jsxs(o.div,{variants:h,className:"grid grid-cols-4 gap-2 px-4 py-3 text-sm hover:bg-muted/20 transition-colors duration-150",children:[e.jsx("span",{className:"text-foreground truncate",children:s.reason}),e.jsxs("span",{className:f("font-semibold tabular-nums",s.amount>=0?"text-emerald-600":"text-rose-500"),children:[s.amount>=0?"+":"",s.amount]}),e.jsx("span",{className:"text-muted-foreground tabular-nums",children:new Date(s.createdAt).toLocaleDateString()}),e.jsx("span",{className:"text-muted-foreground",children:Le(s.createdAt,s.amount,t)})]},s.id))})]}):e.jsx(o.div,{initial:{opacity:0},animate:{opacity:1},transition:u.smooth,children:e.jsx(x,{className:"text-center py-8",children:e.jsx("p",{className:"text-muted-foreground",children:t.no_activity||"No activity yet."})})})]})}function Pe(t,n){const s=t.attachShadow({mode:"open"}),a=document.querySelectorAll('script[src*="loader.bundle.js"]')[0],i=a?new URL(a.src).origin:window.location.origin,c=new CSSStyleSheet;c.replaceSync(J),s.adoptedStyleSheets=[c];const l=document.createElement("div");s.appendChild(l),O.createRoot(l).render(e.jsx(Q,{config:n,apiBaseUrl:i,children:e.jsx(we,{config:n,apiBaseUrl:i})}))}typeof window<"u"&&(window.LylrvWidgets=window.LylrvWidgets||{},window.LylrvWidgets.loyalty={mount:Pe});export{Pe as mount};
+ */
+const ge = [
+    ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+    ["path", { d: "m6 6 12 12", key: "d8bk6v" }],
+  ],
+  ye = j("x", ge);
+function je({ className: t }) {
+  return e.jsx("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "currentColor",
+    className: t,
+    children: e.jsx("path", {
+      d: "M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z",
+    }),
+  });
+}
+function z({ className: t }) {
+  return e.jsx("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "currentColor",
+    className: t,
+    children: e.jsx("path", {
+      fillRule: "evenodd",
+      d: "M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM9 7.5A.75.75 0 019.75 6.75h1.5a.75.75 0 01.75.75v2.25h.75a.75.75 0 01.75.75v3a.75.75 0 01-.75.75h-.75v1.5a.75.75 0 01-1.5 0v-1.5h-.75a.75.75 0 01-.75-.75v-3a.75.75 0 01.75-.75h.75V7.5z",
+      clipRule: "evenodd",
+    }),
+  });
+}
+const F = {
+  all: ["loyalty"],
+  customer: (t, n) => [...F.all, "customer", t, n],
+};
+function be({ shop: t, email: n, apiBaseUrl: s, enabled: r = !0 }) {
+  const a = B(s),
+    {
+      data: i,
+      isLoading: c,
+      isError: l,
+      error: d,
+      refetch: m,
+    } = G({
+      queryKey: F.customer(t, n || ""),
+      queryFn: async () => (n ? a.getCustomer(t, n) : null),
+      enabled: r && !!t && !!n,
+      staleTime: 120 * 1e3,
+    });
+  return {
+    customer: i?.exists ? i.customer : null,
+    isLoading: c,
+    isError: l,
+    error: d,
+    refetch: m,
+  };
+}
+function ve({ shop: t, email: n, apiBaseUrl: s, onSuccess: r }) {
+  const a = B(s);
+  return K({
+    mutationFn: async (i) => a.redeemPoints(t, n, i),
+    onSuccess: (i) => {
+      r?.(i.couponCode);
+    },
+  });
+}
+function Ne({
+  shop: t,
+  email: n,
+  apiBaseUrl: s,
+  isLoggedIn: r,
+  userPoints: a = 0,
+  userReferralCode: i = null,
+}) {
+  const [c, l] = R.useState(!1),
+    [d, m] = R.useState("home"),
+    [b, v] = R.useState(!1),
+    [N, p] = R.useState(null),
+    {
+      customer: g,
+      isLoading: L,
+      refetch: S,
+    } = be({ shop: t, email: n, apiBaseUrl: s, enabled: r && c && !!n }),
+    w = ve({
+      shop: t,
+      email: n || "",
+      apiBaseUrl: s,
+      onSuccess: () => {
+        p(null), S();
+      },
+    }),
+    E = g?.totalPoints ?? a,
+    _ = g?.referralCode ?? i,
+    C = () => l((y) => !y),
+    P = async () => {
+      _ &&
+        (await navigator.clipboard.writeText(_),
+        v(!0),
+        setTimeout(() => v(!1), 2e3));
+    },
+    T = (y) => {
+      p(y);
+    },
+    M = () => {
+      N && w.mutate(N);
+    };
+  return {
+    isOpen: c,
+    activeTab: d,
+    copiedCode: b,
+    selectedRedeem: N,
+    isLoading: L,
+    points: E,
+    referralCode: _,
+    customer: g,
+    recentActivity: g?.recentActivity || [],
+    activeCoupons: g?.activeCoupons || [],
+    handleToggle: C,
+    handleCopyReferral: P,
+    handleRedeem: T,
+    handleConfirmRedeem: M,
+    setActiveTab: m,
+    isRedeeming: w.isPending,
+  };
+}
+function we({ config: t, apiBaseUrl: n }) {
+  const s = X(t),
+    r = t.user?.isLoggedIn || !1,
+    a = t.user?.email,
+    i = t.user?.name,
+    c = t.clientConfig?.earnSections || [],
+    l = t.clientConfig?.variables,
+    d = t.clientConfig?.theme?.color || "#6366f1",
+    m = ie(l, "redeem_values", ee),
+    b = Number.parseInt($(l, "min_redeem_value", String(Z)), 10),
+    v = $(l, "referral_gain_value", "120"),
+    {
+      isOpen: N,
+      activeTab: p,
+      copiedCode: g,
+      selectedRedeem: L,
+      isLoading: S,
+      points: w,
+      referralCode: E,
+      recentActivity: _,
+      handleToggle: C,
+      handleCopyReferral: P,
+      handleRedeem: T,
+      handleConfirmRedeem: M,
+      setActiveTab: y,
+      isRedeeming: U,
+    } = Ne({
+      shop: t.shop || "",
+      email: a ?? void 0,
+      apiBaseUrl: n,
+      isLoggedIn: r,
+      userPoints: t.user?.points,
+      userReferralCode: t.user?.referralCode,
+    }),
+    V = [
+      { id: "home", label: e.jsx(he, { className: "h-4 w-4" }) },
+      { id: "earn", label: s.earn_more_points?.split(" ")[0] || "Earn" },
+      { id: "redeem", label: s.redeem || "Redeem" },
+      { id: "history", label: e.jsx(xe, { className: "h-4 w-4" }) },
+    ];
+  return e.jsxs("div", {
+    className: "fixed bottom-4 left-4 z-9999",
+    children: [
+      e.jsx(te, {
+        onClick: C,
+        icon: e.jsx(je, { className: "h-7 w-7" }),
+        label: s.main_floating_button_title || "Loyalty Points",
+      }),
+      e.jsxs(se, {
+        isOpen: N,
+        onClose: C,
+        className: f(
+          "z-10002 flex flex-col",
+          "w-3xl h-[600px] max-sm:w-screen max-sm:h-screen max-sm:min-w-full max-sm:max-w-lg",
+          "p-0 box-border overflow-hidden",
+          "bg-background border-none rounded-none sm:rounded-2xl",
+        ),
+        children: [
+          e.jsx(_e, {
+            isLoggedIn: r,
+            userName: i,
+            userEmail: a,
+            themeColor: d,
+            headerTitle: s.point_system_header || "Loyalty Points",
+            onClose: C,
+            activeTab: p,
+            onBack: () => y("home"),
+          }),
+          r && e.jsx(Y, { tabs: V, activeTab: p, onTabChange: (q) => y(q) }),
+          e.jsx(ae, {
+            className: "flex-1 overflow-y-auto px-5 py-5",
+            children: e.jsx(A, {
+              mode: "wait",
+              children: e.jsx(
+                o.div,
+                {
+                  initial: { opacity: 0, y: 8 },
+                  animate: { opacity: 1, y: 0 },
+                  exit: { opacity: 0, y: -8 },
+                  transition: u.smooth,
+                  children: S
+                    ? e.jsx(ne, {})
+                    : r
+                      ? p === "home"
+                        ? e.jsx(ke, {
+                            t: s,
+                            points: w,
+                            spentPoints: 0,
+                            referralCode: E,
+                            referralGainValue: v,
+                            copiedCode: g,
+                            onCopyReferral: P,
+                            onNavigate: y,
+                          })
+                        : p === "earn"
+                          ? e.jsx(Re, { t: s, earnSections: c })
+                          : p === "redeem"
+                            ? e.jsx(Ae, {
+                                t: s,
+                                points: w,
+                                redeemValues: m,
+                                minRedeemValue: b,
+                                selectedRedeem: L,
+                                isRedeeming: U,
+                                onSelect: T,
+                                onConfirm: M,
+                              })
+                            : e.jsx(Ee, { t: s, recentActivity: _ })
+                      : e.jsx(Ce, {
+                          t: s,
+                          earnSections: c,
+                          referralGainValue: v,
+                        }),
+                },
+                S ? "loading" : r ? p : "unauth",
+              ),
+            }),
+          }),
+          e.jsx(re, {
+            children: e.jsx(o.button, {
+              type: "button",
+              whileHover: { color: "var(--color-foreground)" },
+              className: "text-xs text-muted-foreground transition-colors",
+              children: s.need_help || "Need help?",
+            }),
+          }),
+        ],
+      }),
+    ],
+  });
+}
+function _e({
+  isLoggedIn: t,
+  userName: n,
+  userEmail: s,
+  themeColor: r,
+  headerTitle: a,
+  onClose: i,
+  activeTab: c,
+  onBack: l,
+}) {
+  const d = c !== "home";
+  return e.jsxs("header", {
+    className:
+      "relative h-32 text-center flex flex-col items-center justify-center w-full sm:rounded-t-2xl rounded-none flex-shrink-0 overflow-hidden",
+    style: { backgroundColor: r, color: "#ffffff" },
+    children: [
+      e.jsx("div", {
+        className: "absolute inset-0 opacity-20",
+        style: {
+          background:
+            "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)",
+        },
+      }),
+      e.jsxs("div", {
+        className:
+          "relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-6 max-sm:px-4",
+        children: [
+          e.jsxs("div", {
+            className:
+              "relative flex flex-row items-center justify-between w-full mb-auto",
+            children: [
+              e.jsx(A, {
+                children:
+                  d &&
+                  e.jsx(o.button, {
+                    type: "button",
+                    onClick: l,
+                    initial: { opacity: 0, x: -8 },
+                    animate: { opacity: 1, x: 0 },
+                    exit: { opacity: 0, x: -8 },
+                    transition: u.snappy,
+                    className:
+                      "p-1.5 rounded-full hover:bg-white/15 transition-colors",
+                    "aria-label": "Go back",
+                    children: e.jsx(ce, { className: "h-5 w-5 text-white" }),
+                  }),
+              }),
+              !d && e.jsx("div", {}),
+              e.jsx(o.button, {
+                type: "button",
+                onClick: i,
+                onKeyUp: (m) => m.key === "Escape" && i(),
+                whileHover: {
+                  scale: 1.1,
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                },
+                whileTap: { scale: 0.9 },
+                className:
+                  "p-1.5 rounded-full transition-colors cursor-pointer",
+                "aria-label": "Close",
+                children: e.jsx(ye, { className: "h-5 w-5 text-white" }),
+              }),
+            ],
+          }),
+          e.jsx("div", {
+            className: "flex items-center justify-center grow",
+            children: t
+              ? e.jsxs(o.div, {
+                  initial: { opacity: 0, y: 6 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: u.spring,
+                  className:
+                    "flex flex-col items-center justify-center text-center text-sm w-full",
+                  children: [
+                    e.jsx("h1", {
+                      className:
+                        "text-white/70 text-sm tracking-wide uppercase",
+                      children: a,
+                    }),
+                    e.jsx("p", {
+                      className: "font-bold text-xl mt-1.5 tracking-tight",
+                      children: n || s || "User",
+                    }),
+                  ],
+                })
+              : e.jsx(o.h1, {
+                  initial: { opacity: 0, y: 6 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: u.spring,
+                  className: "text-2xl text-center font-bold tracking-tight",
+                  children: a,
+                }),
+          }),
+        ],
+      }),
+    ],
+  });
+}
+function x({ children: t, className: n, onClick: s }) {
+  const r = f("bg-card rounded-xl border border-border/60 p-4", n);
+  return s
+    ? e.jsx(o.button, {
+        type: "button",
+        className: f(r, "cursor-pointer text-left w-full"),
+        onClick: s,
+        whileHover: { y: -2, boxShadow: "0 8px 24px -8px rgba(0,0,0,0.1)" },
+        whileTap: { scale: 0.98 },
+        transition: u.spring,
+        children: t,
+      })
+    : e.jsx("div", { className: r, children: t });
+}
+function Ce({ t, earnSections: n, referralGainValue: s }) {
+  return e.jsxs(o.div, {
+    variants: k,
+    initial: "hidden",
+    animate: "visible",
+    className: "space-y-6",
+    children: [
+      e.jsx(o.div, {
+        variants: h,
+        children: e.jsxs(x, {
+          className: "text-center bg-primary/5 border-primary/15",
+          children: [
+            e.jsx("p", {
+              className: "mb-4 text-sm text-muted-foreground leading-relaxed",
+              children:
+                t.unlock_exciting_perks || "Unlock exciting perks and rewards!",
+            }),
+            e.jsx(H, { fullWidth: !0, children: t.sign_in || "Sign In" }),
+            e.jsxs("p", {
+              className: "mt-3 text-xs text-muted-foreground",
+              children: [
+                t.already_have_an_account || "Already have an account?",
+                " ",
+                e.jsx("button", {
+                  type: "button",
+                  className: "font-semibold text-primary hover:underline",
+                  children: t.join_now || "Join Now",
+                }),
+              ],
+            }),
+          ],
+        }),
+      }),
+      e.jsxs(o.div, {
+        variants: h,
+        children: [
+          e.jsx("h3", {
+            className: "mb-3 text-base font-semibold text-foreground",
+            children: t.earn_more_points || "Ways to Earn Points",
+          }),
+          e.jsx("div", {
+            className: "space-y-2.5",
+            children: n.slice(0, 3).map((r, a) =>
+              e.jsx(
+                o.div,
+                {
+                  variants: h,
+                  children: e.jsxs(x, {
+                    className: "flex items-center gap-3",
+                    children: [
+                      e.jsxs("div", {
+                        className:
+                          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-sm",
+                        children: ["+", r.earnAmount],
+                      }),
+                      e.jsxs("div", {
+                        className: "flex-1",
+                        children: [
+                          e.jsx("p", {
+                            className: "font-medium text-foreground text-sm",
+                            children: r.title,
+                          }),
+                          e.jsx("p", {
+                            className: "text-xs text-muted-foreground mt-0.5",
+                            children: r.description,
+                          }),
+                        ],
+                      }),
+                    ],
+                  }),
+                },
+                a,
+              ),
+            ),
+          }),
+        ],
+      }),
+      e.jsx(o.div, {
+        variants: h,
+        children: e.jsxs(x, {
+          className:
+            "text-center bg-gradient-to-br from-primary/5 to-primary/10 border-none",
+          children: [
+            e.jsx("h3", {
+              className: "text-base font-semibold text-foreground mb-1.5",
+              children: t.referral_title || "Refer a Friend",
+            }),
+            e.jsxs("p", {
+              className: "text-sm text-muted-foreground",
+              children: [
+                t.referral_paragraph_1 || "Share your code and earn",
+                " ",
+                e.jsx("span", {
+                  className: "font-bold text-primary",
+                  children: s,
+                }),
+                " ",
+                t.points || "points",
+              ],
+            }),
+          ],
+        }),
+      }),
+    ],
+  });
+}
+function ke({
+  t,
+  points: n,
+  spentPoints: s,
+  referralCode: r,
+  referralGainValue: a,
+  copiedCode: i,
+  onCopyReferral: c,
+  onNavigate: l,
+}) {
+  return e.jsxs(o.div, {
+    variants: k,
+    initial: "hidden",
+    animate: "visible",
+    className: "space-y-5",
+    children: [
+      e.jsxs(o.div, {
+        variants: h,
+        className: "grid grid-cols-2 gap-3 max-sm:grid-cols-1",
+        children: [
+          e.jsxs(x, {
+            className: "flex items-center justify-between",
+            children: [
+              e.jsxs("div", {
+                className: "flex items-center gap-2",
+                children: [
+                  e.jsx(z, { className: "h-5 w-5 text-primary" }),
+                  e.jsx("span", {
+                    className: "text-sm text-muted-foreground",
+                    children: t.total_points || "Total Points",
+                  }),
+                ],
+              }),
+              e.jsx(
+                o.span,
+                {
+                  initial: { scale: 1.2, opacity: 0 },
+                  animate: { scale: 1, opacity: 1 },
+                  transition: u.springBouncy,
+                  className: "text-xl font-bold text-foreground tabular-nums",
+                  children: W(n),
+                },
+                n,
+              ),
+            ],
+          }),
+          e.jsxs(x, {
+            className: "flex items-center justify-between",
+            children: [
+              e.jsxs("div", {
+                className: "flex items-center gap-2",
+                children: [
+                  e.jsx(z, { className: "h-5 w-5 text-muted-foreground" }),
+                  e.jsx("span", {
+                    className: "text-sm text-muted-foreground",
+                    children: t.spent_points || "Spent Points",
+                  }),
+                ],
+              }),
+              e.jsx("span", {
+                className: "text-xl font-bold text-foreground tabular-nums",
+                children: W(Math.abs(s)),
+              }),
+            ],
+          }),
+        ],
+      }),
+      e.jsxs(o.div, {
+        variants: h,
+        className: "grid grid-cols-2 gap-3",
+        children: [
+          e.jsxs(x, {
+            className: "flex items-center justify-between hover:bg-primary/5",
+            onClick: () => l("earn"),
+            children: [
+              e.jsxs("div", {
+                className: "flex flex-col items-start gap-2",
+                children: [
+                  e.jsx(fe, { className: "h-7 w-7 text-primary" }),
+                  e.jsx("span", {
+                    className: "text-sm font-medium text-foreground",
+                    children:
+                      t.earn_more_points?.split(" ").slice(0, 2).join(" ") ||
+                      "Earn Points",
+                  }),
+                ],
+              }),
+              e.jsx(D, { className: "h-4 w-4 text-muted-foreground" }),
+            ],
+          }),
+          e.jsxs(x, {
+            className: "flex items-center justify-between hover:bg-primary/5",
+            onClick: () => l("redeem"),
+            children: [
+              e.jsxs("div", {
+                className: "flex flex-col items-start gap-2",
+                children: [
+                  e.jsx(I, { className: "h-7 w-7 text-primary" }),
+                  e.jsx("span", {
+                    className: "text-sm font-medium text-foreground",
+                    children: t.redeem_points || "Redeem Points",
+                  }),
+                ],
+              }),
+              e.jsx(D, { className: "h-4 w-4 text-muted-foreground" }),
+            ],
+          }),
+        ],
+      }),
+      r &&
+        e.jsx(o.div, {
+          variants: h,
+          children: e.jsxs(x, {
+            className:
+              "bg-gradient-to-br from-primary/5 to-primary/10 border-none",
+            children: [
+              e.jsx("h3", {
+                className: "text-base font-semibold text-foreground mb-1.5",
+                children: t.referral_title || "Refer a Friend",
+              }),
+              e.jsxs("p", {
+                className: "text-sm text-muted-foreground mb-3",
+                children: [
+                  t.referral_paragraph_1 || "Share your code and earn",
+                  " ",
+                  e.jsx("span", {
+                    className: "font-bold text-primary",
+                    children: a,
+                  }),
+                  " ",
+                  t.points || "points",
+                ],
+              }),
+              e.jsxs("div", {
+                className: "flex items-center gap-2",
+                children: [
+                  e.jsx("div", {
+                    className:
+                      "flex-1 rounded-lg border border-input bg-muted/70 px-4 py-2.5 font-mono text-sm text-center tracking-wide",
+                    children: r,
+                  }),
+                  e.jsx(H, {
+                    onClick: c,
+                    size: "sm",
+                    children: e.jsx(A, {
+                      mode: "wait",
+                      children: e.jsx(
+                        o.span,
+                        {
+                          initial: { opacity: 0, y: 4 },
+                          animate: { opacity: 1, y: 0 },
+                          exit: { opacity: 0, y: -4 },
+                          transition: u.snappy,
+                          children: i
+                            ? "Copied!"
+                            : t.copy_referral_code?.split(" ")[0] || "Copy",
+                        },
+                        i ? "copied" : "copy",
+                      ),
+                    }),
+                  }),
+                ],
+              }),
+            ],
+          }),
+        }),
+    ],
+  });
+}
+function Se(t, n) {
+  const r = [...n].sort((c, l) => c - l).indexOf(t),
+    a = [
+      "bg-slate-100 text-slate-600",
+      "bg-blue-50 text-blue-600",
+      "bg-emerald-50 text-emerald-600",
+      "bg-amber-50 text-amber-600",
+      "bg-orange-50 text-orange-600",
+      "bg-rose-50 text-rose-600",
+      "bg-violet-50 text-violet-600",
+    ];
+  return a[Math.min(r, a.length - 1)] ?? a[0] ?? "";
+}
+function Re({ t, earnSections: n }) {
+  const s = [...n].sort((a, i) => Number(a.earnAmount) - Number(i.earnAmount)),
+    r = s.map((a) => Number(a.earnAmount));
+  return e.jsxs("div", {
+    className: "space-y-4",
+    children: [
+      e.jsx("h3", {
+        className: "text-lg font-semibold text-foreground",
+        children: t.earn_points_page_title || "Ways to Earn Points",
+      }),
+      e.jsx(o.div, {
+        variants: k,
+        initial: "hidden",
+        animate: "visible",
+        className: "grid grid-cols-2 gap-3 max-sm:grid-cols-1",
+        children: s.map((a, i) =>
+          e.jsx(
+            o.div,
+            {
+              variants: h,
+              children: e.jsxs(x, {
+                className: "flex items-start gap-3 max-sm:flex-row",
+                children: [
+                  e.jsxs(o.div, {
+                    whileHover: { scale: 1.08 },
+                    transition: u.springStiff,
+                    className: f(
+                      "h-12 w-12 max-sm:h-10 max-sm:w-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm",
+                      Se(Number(a.earnAmount), r),
+                    ),
+                    children: ["+", a.earnAmount],
+                  }),
+                  e.jsxs("div", {
+                    className: "flex-1 min-w-0",
+                    children: [
+                      e.jsx("p", {
+                        className: "font-medium text-foreground text-sm mb-0.5",
+                        children: a.title,
+                      }),
+                      e.jsx("p", {
+                        className:
+                          "text-xs text-muted-foreground line-clamp-2 leading-relaxed",
+                        children: a.description,
+                      }),
+                    ],
+                  }),
+                ],
+              }),
+            },
+            i,
+          ),
+        ),
+      }),
+    ],
+  });
+}
+function Ae({
+  t,
+  points: n,
+  redeemValues: s,
+  minRedeemValue: r,
+  selectedRedeem: a,
+  isRedeeming: i,
+  onSelect: c,
+  onConfirm: l,
+}) {
+  return e.jsxs("div", {
+    className: "space-y-4",
+    children: [
+      e.jsxs("div", {
+        children: [
+          e.jsx("h3", {
+            className: "text-lg font-semibold text-foreground",
+            children:
+              t.redeem_points_title?.replace("{redeemValue}", String(r)) ||
+              "Redeem Points",
+          }),
+          e.jsx("p", {
+            className: "text-sm text-muted-foreground mt-1 leading-relaxed",
+            children:
+              t.redeem_points_description ||
+              "Exchange your points for discounts",
+          }),
+        ],
+      }),
+      e.jsx(o.div, {
+        variants: k,
+        initial: "hidden",
+        animate: "visible",
+        className: "grid grid-cols-2 gap-3",
+        children: s.map((d) => {
+          const m = n >= d,
+            b = a === d;
+          return e.jsx(
+            o.div,
+            {
+              variants: h,
+              children: e.jsxs(x, {
+                className: f(
+                  "flex flex-col items-center p-4 transition-all",
+                  m
+                    ? "hover:border-primary cursor-pointer"
+                    : "opacity-40 cursor-not-allowed saturate-0",
+                  b && "border-primary ring-2 ring-primary/20 bg-primary/5",
+                ),
+                onClick: () => m && c(d),
+                children: [
+                  e.jsx(o.div, {
+                    animate: b ? { scale: [1, 1.1, 1] } : { scale: 1 },
+                    transition: u.springBouncy,
+                    className: "flex items-center justify-center mb-2",
+                    children: e.jsx(I, {
+                      className: f(
+                        "h-9 w-9",
+                        m ? "text-primary" : "text-muted-foreground",
+                      ),
+                    }),
+                  }),
+                  e.jsx("p", {
+                    className: f(
+                      "text-2xl font-bold tabular-nums",
+                      m ? "text-primary" : "text-muted-foreground",
+                    ),
+                    children: d,
+                  }),
+                  e.jsx("p", {
+                    className: "text-xs text-muted-foreground",
+                    children: t.points || "Points",
+                  }),
+                  m &&
+                    e.jsxs("div", {
+                      className:
+                        "flex items-center gap-1 mt-2 text-primary text-sm font-medium",
+                      children: [
+                        e.jsx("span", { children: t.redeem || "Redeem" }),
+                        e.jsx(D, { className: "h-3 w-3" }),
+                      ],
+                    }),
+                ],
+              }),
+            },
+            d,
+          );
+        }),
+      }),
+      e.jsx(A, {
+        children:
+          a &&
+          e.jsx(o.div, {
+            initial: { opacity: 0, y: 8, height: 0 },
+            animate: { opacity: 1, y: 0, height: "auto" },
+            exit: { opacity: 0, y: 8, height: 0 },
+            transition: u.spring,
+            children: e.jsx(H, {
+              fullWidth: !0,
+              onClick: l,
+              disabled: i,
+              children: i
+                ? "..."
+                : `${t.redeem_confirmation || "Confirm Redeem"} - ${a} ${t.points || "pts"}`,
+            }),
+          }),
+      }),
+    ],
+  });
+}
+function Le(t, n, s) {
+  if (n <= 0) return "-";
+  const r = new Date(t),
+    a = new Date(r);
+  a.setDate(a.getDate() + 90);
+  const i = new Date(),
+    c = a.getTime() - i.getTime(),
+    l = Math.ceil(c / (1e3 * 60 * 60 * 24));
+  return l <= 0
+    ? s.expired || "Expired"
+    : `${l} ${s.days_till_expiry || "days"}`;
+}
+function Ee({ t, recentActivity: n }) {
+  return e.jsxs("div", {
+    className: "space-y-4",
+    children: [
+      e.jsx("h3", {
+        className: "text-lg font-semibold text-foreground",
+        children: t.activity_reason || "Activity History",
+      }),
+      n.length > 0
+        ? e.jsxs("div", {
+            className: "border border-border/60 rounded-xl overflow-hidden",
+            children: [
+              e.jsxs("div", {
+                className:
+                  "grid grid-cols-4 gap-2 bg-muted/40 px-4 py-3 text-xs font-medium text-muted-foreground border-b border-border/60",
+                children: [
+                  e.jsx("span", { children: t.activity_reason || "Reason" }),
+                  e.jsx("span", { children: t.activity_points || "Points" }),
+                  e.jsx("span", { children: t.activity_date || "Date" }),
+                  e.jsx("span", {
+                    children: t.activity_expiry_status || "Expiry",
+                  }),
+                ],
+              }),
+              e.jsx(o.div, {
+                variants: k,
+                initial: "hidden",
+                animate: "visible",
+                className: "divide-y divide-border/40",
+                children: n.map((s) =>
+                  e.jsxs(
+                    o.div,
+                    {
+                      variants: h,
+                      className:
+                        "grid grid-cols-4 gap-2 px-4 py-3 text-sm hover:bg-muted/20 transition-colors duration-150",
+                      children: [
+                        e.jsx("span", {
+                          className: "text-foreground truncate",
+                          children: s.reason,
+                        }),
+                        e.jsxs("span", {
+                          className: f(
+                            "font-semibold tabular-nums",
+                            s.amount >= 0
+                              ? "text-emerald-600"
+                              : "text-rose-500",
+                          ),
+                          children: [s.amount >= 0 ? "+" : "", s.amount],
+                        }),
+                        e.jsx("span", {
+                          className: "text-muted-foreground tabular-nums",
+                          children: new Date(s.createdAt).toLocaleDateString(),
+                        }),
+                        e.jsx("span", {
+                          className: "text-muted-foreground",
+                          children: Le(s.createdAt, s.amount, t),
+                        }),
+                      ],
+                    },
+                    s.id,
+                  ),
+                ),
+              }),
+            ],
+          })
+        : e.jsx(o.div, {
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: u.smooth,
+            children: e.jsx(x, {
+              className: "text-center py-8",
+              children: e.jsx("p", {
+                className: "text-muted-foreground",
+                children: t.no_activity || "No activity yet.",
+              }),
+            }),
+          }),
+    ],
+  });
+}
+function Pe(t, n) {
+  const s = t.attachShadow({ mode: "open" }),
+    a = document.querySelectorAll('script[src*="loader.bundle.js"]')[0],
+    i = a ? new URL(a.src).origin : window.location.origin,
+    c = new CSSStyleSheet();
+  c.replaceSync(J), (s.adoptedStyleSheets = [c]);
+  const l = document.createElement("div");
+  s.appendChild(l),
+    O.createRoot(l).render(
+      e.jsx(Q, {
+        config: n,
+        apiBaseUrl: i,
+        children: e.jsx(we, { config: n, apiBaseUrl: i }),
+      }),
+    );
+}
+typeof window < "u" &&
+  ((window.LylrvWidgets = window.LylrvWidgets || {}),
+  (window.LylrvWidgets.loyalty = { mount: Pe }));
+export { Pe as mount };

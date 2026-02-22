@@ -1,39 +1,22 @@
 {
-	"extends": "@lylrv/tsconfig/base.json",
-	"compilerOptions": {
-		"lib": [
-			"ES2022",
-			"DOM",
-			"DOM.Iterable"
-		],
-		"module": "ESNext",
-		"moduleResolution": "bundler",
-		"target": "ES2022",
-		"jsx": "react-jsx",
-		"strict": true,
-		"noEmit": true,
-		"outDir": "dist",
-		"skipLibCheck": true,
-		"types": [
-			"vite/client"
-		],
-		"baseUrl": ".",
-		"paths": {
-			"@widgets/*": [
-				"src/widgets/*"
-			],
-			"@/*": [
-				"src/*"
-			]
-		}
-	},
-	"include": [
-		"src/**/*.ts",
-		"src/**/*.tsx",
-		"vite.config.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
-	],
+  "extends": "@lylrv/tsconfig/base.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@widgets/*": ["src/widgets/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }

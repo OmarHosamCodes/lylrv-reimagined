@@ -6,25 +6,25 @@ import type { WidgetConfig } from "./widget.types";
 export interface WidgetConfigResponse extends WidgetConfig {}
 
 export interface CustomerResponse {
-	exists: boolean;
-	customer: CustomerData | null;
+  exists: boolean;
+  customer: CustomerData | null;
 }
 
 export interface ReviewsResponse {
-	reviews: Review[];
-	meta: ReviewsMeta;
+  reviews: Review[];
+  meta: ReviewsMeta;
 }
 
 // API Request Types
 export interface CustomerRequest {
-	shop: string;
-	email: string;
+  shop: string;
+  email: string;
 }
 
 export interface ReviewsRequest {
-	shop: string;
-	type?: "website" | "product";
-	productId?: number;
-	limit?: number;
-	offset?: number;
+  shop: string;
+  type?: "website" | "product";
+  productId?: number;
+  limit?: number;
+  offset?: number;
 }

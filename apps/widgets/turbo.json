@@ -1,12 +1,12 @@
 {
-	"extends": ["//"],
-	"tasks": {
-		"build": {
-			"dependsOn": ["^build"],
-			"outputs": ["../../apps/saas/public/widgets/**"]
-		},
-		"dev": {
-			"persistent": true
-		}
-	}
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["../../apps/saas/public/widgets/**"]
+    },
+    "dev": {
+      "persistent": true
+    }
+  }
 }

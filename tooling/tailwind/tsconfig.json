@@ -1,5 +1,5 @@
 {
-	"extends": "@lylrv/tsconfig/base.json",
-	"include": ["."],
-	"exclude": ["node_modules"]
+  "extends": "@lylrv/tsconfig/base.json",
+  "include": ["."],
+  "exclude": ["node_modules"]
 }

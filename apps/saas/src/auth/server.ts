@@ -9,12 +9,12 @@ import { env } from "~/env";
 import { getBaseUrl, getProductionUrl } from "~/lib/url";
 
 export const auth = initAuth({
-	baseUrl: getBaseUrl(),
-	productionUrl: getProductionUrl(),
-	secret: env.AUTH_SECRET,
-	extraPlugins: [nextCookies()],
+  baseUrl: getBaseUrl(),
+  productionUrl: getProductionUrl(),
+  secret: env.AUTH_SECRET,
+  extraPlugins: [nextCookies()],
 });
 
 export const getSession = cache(async () =>
-	auth.api.getSession({ headers: await headers() }),
+  auth.api.getSession({ headers: await headers() }),
 );

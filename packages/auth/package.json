@@ -1,29 +1,29 @@
 {
-	"name": "@lylrv/auth",
-	"private": true,
-	"type": "module",
-	"exports": {
-		".": "./src/index.ts",
-		"./middleware": "./src/middleware.ts",
-		"./client": "./src/client.ts",
-		"./env": "./env.ts"
-	},
-	"license": "MIT",
-	"scripts": {
-		"clean": "git clean -xdf .cache .turbo dist node_modules",
+  "name": "@lylrv/auth",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./middleware": "./src/middleware.ts",
+    "./client": "./src/client.ts",
+    "./env": "./env.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
 
-		"generate": "dotenv -e ../../.env -- pnpx @better-auth/cli generate --config script/auth-cli.ts --output ../db/src/auth-schema.ts",
-		"typecheck": "tsc --noEmit"
-	},
-	"dependencies": {
-		"@lylrv/db": "workspace:*",
-		"@t3-oss/env-core": "^0.13.8",
-		"better-auth": "catalog:",
-		"zod": "catalog:"
-	},
-	"devDependencies": {
-		"@better-auth/cli": "catalog:",
-		"@lylrv/tsconfig": "workspace:*",
-		"typescript": "catalog:"
-	}
+    "generate": "dotenv -e ../../.env -- pnpx @better-auth/cli generate --config script/auth-cli.ts --output ../db/src/auth-schema.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@lylrv/db": "workspace:*",
+    "@t3-oss/env-core": "^0.13.8",
+    "better-auth": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "catalog:",
+    "@lylrv/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
 }

@@ -4,28 +4,28 @@ import { StarRating } from "./star-rating";
 import { cn } from "./utils";
 
 interface AverageRatingDisplayProps {
-	avgRating: number;
-	className?: string;
+  avgRating: number;
+  className?: string;
 }
 
 /**
  * Large average rating display with animated number count-up
  */
 export function AverageRatingDisplay({
-	avgRating,
-	className,
+  avgRating,
+  className,
 }: AverageRatingDisplayProps) {
-	return (
-		<motion.div
-			initial={{ opacity: 0, scale: 0.9 }}
-			animate={{ opacity: 1, scale: 1 }}
-			transition={transitions.spring}
-			className={cn("flex flex-col items-center gap-1", className)}
-		>
-			<span className="text-5xl font-light text-foreground/90 leading-tight tracking-tight tabular-nums">
-				{avgRating.toFixed(1)}
-			</span>
-			<StarRating rating={Math.round(avgRating)} size="sm" />
-		</motion.div>
-	);
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={transitions.spring}
+      className={cn("flex flex-col items-center gap-1", className)}
+    >
+      <span className="text-5xl font-light text-foreground/90 leading-tight tracking-tight tabular-nums">
+        {avgRating.toFixed(1)}
+      </span>
+      <StarRating rating={Math.round(avgRating)} size="sm" />
+    </motion.div>
+  );
 }
