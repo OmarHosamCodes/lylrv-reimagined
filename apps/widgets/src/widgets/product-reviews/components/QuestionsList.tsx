@@ -15,7 +15,7 @@ export const QuestionsList = ({ questions, t }: QuestionsListProps) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={transitions.smooth}
-        className="ly-widget-card py-6 text-center text-muted-foreground"
+        className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm py-6 text-center text-muted-foreground"
       >
         {t.no_questions_yet || "No questions yet"}
       </motion.p>

@@ -33,13 +33,39 @@ export function FloatingButton({
       whileHover={{ scale: 1.03, y: -2 }}
       whileTap={{ scale: 0.96, y: 0 }}
       className={cn(
-        "group ly-widget-fab",
+        // FAB shell — replaces .ly-widget-fab
+        "group relative inline-flex items-center gap-2 overflow-hidden rounded-2xl",
+        "border border-white/65 bg-linear-to-br from-white to-brand-warm",
+        "px-4 py-3 text-sm font-semibold text-foreground",
+        "shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]",
+        // Focus ring
         "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         "focus:outline-none",
         "cursor-pointer select-none",
         className,
       )}
     >
+      {/* Shimmer sweep — previously ::before in .ly-widget-fab */}
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(120deg, transparent 20%, color-mix(in oklch, white 40%, transparent) 50%, transparent 75%)",
+          transform: "rotate(16deg)",
+        }}
+        animate={{
+          x: ["-70%", "95%"],
+          opacity: [0, 0.7, 0, 0],
+        }}
+        transition={{
+          duration: 4.2,
+          ease: "easeInOut",
+          repeat: Number.POSITIVE_INFINITY,
+          repeatDelay: 0,
+          times: [0, 0.25, 0.55, 1],
+        }}
+      />
       <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-xl bg-white/65 text-primary shadow-inner">
         {icon}
       </span>

@@ -31,7 +31,9 @@ export function ReviewCard({
       whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
-        "ly-widget-card relative overflow-hidden p-4",
+        // Card shell — replaces .ly-widget-card
+        "relative overflow-hidden rounded-2xl border border-white/60 bg-white/70 p-4",
+        "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
         "transition-shadow duration-300 hover:shadow-[0_25px_32px_-28px_rgba(0,0,0,0.8)]",
         className,
       )}
@@ -57,7 +59,7 @@ export function ReviewCard({
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   className="h-4 w-4 shrink-0 text-brand-amber"
-                  aria-label="Verified"
+                  aria-label="Verified Review"
                   role="img"
                 >
                   <title>Verified Review</title>
@@ -108,11 +110,11 @@ export function ReviewCard({
               onClick={() => onImageClick?.(img)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm cursor-pointer"
             >
               <img
                 src={img}
-                alt={`Review ${i + 1}`}
+                alt={`Review attachment ${i + 1}`}
                 className="h-full w-full object-cover"
               />
             </motion.button>

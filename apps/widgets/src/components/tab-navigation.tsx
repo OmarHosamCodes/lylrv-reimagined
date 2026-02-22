@@ -29,7 +29,8 @@ export function TabNavigation({
     <LayoutGroup>
       <div
         className={cn(
-          "mx-4 mt-3 flex rounded-2xl border border-white/60 bg-white/55 p-1 shadow-[0_14px_28px_-24px_rgba(0,0,0,0.8)] backdrop-blur-sm",
+          "mx-4 mt-3 flex rounded-2xl border border-white/60 bg-white/55 p-1",
+          "shadow-[0_14px_28px_-24px_rgba(0,0,0,0.8)] backdrop-blur-sm",
           className,
         )}
       >
@@ -43,6 +44,7 @@ export function TabNavigation({
               className={cn(
                 "relative flex-1 rounded-xl px-3 py-2.5 text-xs font-semibold tracking-wide uppercase transition-colors duration-200",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                "cursor-pointer",
                 isActive
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground",

@@ -1,6 +1,5 @@
-import { Button } from "@lylrv/ui/button";
 import { motion } from "framer-motion";
-import { StarRating } from "@/components";
+import { Button, StarRating } from "@/components";
 import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
 import { ReviewImageGallery } from "./ReviewImageGallery";
 
@@ -31,17 +30,17 @@ export const ProductReviewsHeader = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="ly-widget-card flex w-full flex-row items-center justify-between p-5 max-sm:p-4"
+      className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm flex w-full flex-row items-center justify-between p-5 max-sm:p-4"
     >
       <section className="flex w-full flex-col items-start justify-start">
         <motion.div
           variants={staggerItem}
           className="flex w-full flex-col items-start justify-start gap-1"
         >
-          <h1 className="ly-widget-heading text-[1.75rem] leading-7">
+          <h1 className="font-bold tracking-tight text-foreground text-[1.75rem] leading-7">
             {t.reviews_system_header || "Customer Reviews"}
           </h1>
-          <section className="ly-widget-pill mt-1">
+          <section className="inline-flex items-center gap-1 rounded-full border border-brand-amber/20 bg-brand-amber/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-brand-amber mt-1">
             <StarRating rating={avgRating} className="text-yellow-400" />
             <p className="text-xs text-brand-amber">
               ({totalReviews} {t.total_reviews || "Reviews"})

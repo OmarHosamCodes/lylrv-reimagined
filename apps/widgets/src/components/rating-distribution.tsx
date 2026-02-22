@@ -22,7 +22,13 @@ export function RatingDistribution({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className={cn("ly-widget-card space-y-1.5 p-3", className)}
+      className={cn(
+        // Card shell — replaces .ly-widget-card
+        "space-y-1.5 p-3",
+        "rounded-2xl border border-white/60 bg-white/70",
+        "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
+        className,
+      )}
     >
       {[5, 4, 3, 2, 1].map((rating, index) => {
         const count = distribution[rating - 1] || 0;
@@ -42,7 +48,7 @@ export function RatingDistribution({
             }}
             whileHover={{ scale: 1.02 }}
             transition={transitions.snappy}
-            className="flex w-full items-center gap-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 rounded"
+            className="flex w-full items-center gap-2 text-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1 rounded"
           >
             <span className="w-3 text-muted-foreground font-medium tabular-nums">
               {rating}

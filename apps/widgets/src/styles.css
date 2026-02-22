@@ -8,138 +8,34 @@
 @custom-variant auto (&:where(.auto, .auto *));
 
 @utility container {
-    margin-inline: auto;
-    padding-inline: 2rem;
+  margin-inline: auto;
+  padding-inline: 2rem;
 
-    @media (width >= --theme(--breakpoint-sm)) {
-        max-width: none;
-    }
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
 
-    @media (width >= 1400px) {
-        max-width: 1400px;
-    }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
 }
 
 @layer base {
-    :host {
-        color-scheme: light;
-        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
-    }
+  :host {
+    color-scheme: light;
+    font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+  }
 
-    :host,
-    :host * {
-        box-sizing: border-box;
-    }
+  :host,
+  :host * {
+    box-sizing: border-box;
+  }
 
-    * {
-        @apply border-border;
-    }
+  * {
+    @apply border-border;
+  }
 
-    :host body {
-        letter-spacing: var(--tracking-normal);
-    }
-}
-
-@layer components {
-    .ly-widget-shell {
-        @apply relative overflow-hidden rounded-[26px] border border-white/55 bg-gradient-to-br from-white/95 via-brand-surface/95 to-brand-warm/60 text-foreground shadow-[0_30px_75px_-25px_color-mix(in_oklch,var(--color-brand-amber)_45%,black)];
-        backdrop-filter: blur(18px);
-    }
-
-    .ly-widget-shell::before {
-        content: "";
-        position: absolute;
-        inset: -40% -10% auto -10%;
-        height: 240px;
-        background:
-            radial-gradient(
-                circle at 20% 20%,
-                color-mix(in oklch, var(--color-brand-gold) 55%, transparent) 0%,
-                transparent 58%
-            ),
-            radial-gradient(
-                circle at 80% 10%,
-                color-mix(in oklch, var(--color-brand-amber) 30%, transparent)
-                    0%,
-                transparent 64%
-            );
-        pointer-events: none;
-        opacity: 0.7;
-    }
-
-    .ly-widget-shell::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background-image: radial-gradient(
-            color-mix(in oklch, var(--color-foreground) 5%, transparent) 0.6px,
-            transparent 0.6px
-        );
-        background-size: 3px 3px;
-        opacity: 0.16;
-    }
-
-    .ly-widget-card {
-        @apply rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm;
-    }
-
-    .ly-widget-pill {
-        @apply inline-flex items-center gap-1 rounded-full border border-brand-amber/20 bg-brand-amber/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-brand-amber;
-    }
-
-    .ly-widget-heading {
-        @apply font-bold tracking-tight text-foreground;
-        font-family: "Avenir Next Demi Bold", "Trebuchet MS", sans-serif;
-    }
-
-    .ly-widget-fab {
-        @apply relative inline-flex items-center gap-2 overflow-hidden rounded-2xl border border-white/65 bg-gradient-to-br from-white to-brand-warm px-4 py-3 text-sm font-semibold text-foreground shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)];
-    }
-
-    .ly-widget-fab::before {
-        content: "";
-        position: absolute;
-        inset: -90% auto auto -40%;
-        width: 140%;
-        height: 220%;
-        transform: rotate(16deg);
-        background: linear-gradient(
-            120deg,
-            transparent 20%,
-            color-mix(in oklch, white 40%, transparent) 50%,
-            transparent 75%
-        );
-        animation: shimmer-slide 4.2s ease-in-out infinite;
-        pointer-events: none;
-    }
-}
-
-@keyframes shimmer-slide {
-    0% {
-        transform: translateX(-70%) rotate(16deg);
-        opacity: 0;
-    }
-    25% {
-        opacity: 0.7;
-    }
-    55% {
-        opacity: 0;
-    }
-    100% {
-        transform: translateX(95%) rotate(16deg);
-        opacity: 0;
-    }
-}
-
-@keyframes drift-glow {
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0);
-        opacity: 0.25;
-    }
-    50% {
-        transform: translate3d(2%, -6%, 0);
-        opacity: 0.45;
-    }
+  :host body {
+    letter-spacing: var(--tracking-normal);
+  }
 }

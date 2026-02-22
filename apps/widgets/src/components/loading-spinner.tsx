@@ -28,8 +28,7 @@ export function LoadingSpinner({
         ease: "linear",
       }}
       className={cn(
-        "rounded-full border-muted",
-        "border-t-primary",
+        "rounded-full border-muted border-t-primary",
         sizeClasses[size],
         className,
       )}

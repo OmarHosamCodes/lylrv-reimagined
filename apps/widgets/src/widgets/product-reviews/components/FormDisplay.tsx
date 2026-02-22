@@ -1,5 +1,5 @@
-import { Button } from "@lylrv/ui/button";
 import { motion } from "framer-motion";
+import { Button } from "@/components";
 import { transitions } from "@/lib/transitions";
 import type { ReviewFormData } from "@/types";
 import { AddQuestion } from "./AddQuestion";
@@ -53,7 +53,7 @@ export const FormDisplay = ({
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={transitions.spring}
-          className="ly-widget-card rounded-2xl p-6 text-center"
+          className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm p-6 text-center"
         >
           <p className="mb-4 text-sm text-muted-foreground">
             {t.sign_in || "Sign in"} to ask a question
@@ -72,7 +72,7 @@ export const FormDisplay = ({
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={transitions.spring}
-          className="ly-widget-card rounded-2xl p-6 text-center"
+          className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm p-6 text-center"
         >
           <p className="text-sm text-muted-foreground">
             {t.already_reviewed || "You have already reviewed this product."}

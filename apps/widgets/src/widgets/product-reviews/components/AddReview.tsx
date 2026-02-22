@@ -1,10 +1,6 @@
-import { Button } from "@lylrv/ui/button";
-import { Input } from "@lylrv/ui/input";
-import { Label } from "@lylrv/ui/label";
-import { Textarea } from "@lylrv/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
 import { CameraIcon } from "lucide-react";
-import { StarRating } from "@/components";
+import { Button, Input, Label, StarRating, Textarea } from "@/components";
 import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
 import type { ReviewFormData } from "@/types";
 
@@ -47,7 +43,7 @@ export const AddReview = ({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="ly-widget-card rounded-2xl p-6 text-center"
+        className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm rounded-2xl p-6 text-center"
       >
         <p className="mb-4 text-sm text-muted-foreground">
           {t.sign_in || "Sign in"} to write a review
@@ -63,7 +59,7 @@ export const AddReview = ({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="ly-widget-card rounded-2xl p-6 text-center"
+        className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm rounded-2xl p-6 text-center"
       >
         <p className="text-sm text-muted-foreground">
           Only verified purchasers can write reviews.
@@ -77,7 +73,7 @@ export const AddReview = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="ly-widget-card space-y-4 rounded-2xl p-5"
+      className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm space-y-4 rounded-2xl p-5"
     >
       <motion.h3
         variants={staggerItem}

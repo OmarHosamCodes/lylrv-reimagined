@@ -1,14 +1,13 @@
-import { cn } from "@lylrv/ui";
-import { Button } from "@lylrv/ui/button";
-import { Input } from "@lylrv/ui/input";
-import { Label } from "@lylrv/ui/label";
-import { Textarea } from "@lylrv/ui/textarea";
 import { AnimatePresence, motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import {
   AverageRatingDisplay,
+  Button,
+  cn,
   FloatingButton,
+  Input,
+  Label,
   LoadingState,
   Panel,
   PanelContent,
@@ -18,6 +17,7 @@ import {
   ReviewCard,
   StarRating,
   TabNavigation,
+  Textarea,
 } from "@/components";
 import { useLocalizations, useReviewsWidget } from "@/hooks";
 import {
@@ -89,7 +89,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transitions.spring}
-            className="ly-widget-heading text-lg"
+            className="font-bold tracking-tight text-foreground text-lg"
           >
             {t.reviews_system_header || "Customer Reviews"}
           </motion.h2>
@@ -191,7 +191,10 @@ function ReviewsTab({ t, reviews, meta }: ReviewsTabProps) {
       )}
 
       {meta && (
-        <motion.p variants={staggerItem} className="ly-widget-pill mx-auto">
+        <motion.p
+          variants={staggerItem}
+          className="inline-flex items-center gap-1 rounded-full border border-brand-amber/20 bg-brand-amber/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-brand-amber mx-auto"
+        >
           {meta.total} {t.total_reviews || "reviews"}
         </motion.p>
       )}
@@ -264,7 +267,7 @@ function WriteReviewTab({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={transitions.spring}
-        className="ly-widget-card py-8 px-4 text-center"
+        className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm py-8 px-4 text-center"
       >
         <p className="mb-4 text-sm text-muted-foreground">
           {t.sign_in || "Sign in"} to write a review

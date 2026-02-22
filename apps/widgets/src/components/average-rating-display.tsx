@@ -9,7 +9,7 @@ interface AverageRatingDisplayProps {
 }
 
 /**
- * Large average rating display with animated number count-up
+ * Large average rating display with animated entrance.
  */
 export function AverageRatingDisplay({
   avgRating,
@@ -21,7 +21,10 @@ export function AverageRatingDisplay({
       animate={{ opacity: 1, scale: 1 }}
       transition={transitions.spring}
       className={cn(
-        "ly-widget-card flex flex-col items-center gap-1 p-4",
+        // Card shell — replaces .ly-widget-card
+        "flex flex-col items-center gap-1 p-4",
+        "rounded-2xl border border-white/60 bg-white/70",
+        "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
         className,
       )}
     >

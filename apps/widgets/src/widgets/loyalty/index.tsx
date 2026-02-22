@@ -1,5 +1,4 @@
 import { cn } from "@lylrv/ui";
-import { Button } from "@lylrv/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRightIcon,
@@ -12,6 +11,7 @@ import {
 } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import {
+  Button,
   FloatingButton,
   LoadingState,
   LoyaltyIcon,
@@ -182,7 +182,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
           <motion.button
             type="button"
             whileHover={{ color: "var(--color-foreground)" }}
-            className="text-xs font-medium text-muted-foreground transition-colors"
+            className="text-xs font-medium text-muted-foreground transition-colors cursor-pointer"
           >
             {t.need_help || "Need help?"}
           </motion.button>
@@ -230,7 +230,7 @@ function ThemedHeader({
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -8 }}
                 transition={transitions.snappy}
-                className="p-1.5 rounded-full hover:bg-white/20 transition-colors"
+                className="p-1.5 rounded-full hover:bg-white/20 transition-colors cursor-pointer"
                 aria-label="Go back"
               >
                 <ChevronLeftIcon className="h-5 w-5 text-white" />
@@ -293,14 +293,19 @@ interface CardProps {
   onClick?: () => void;
 }
 
+/** Inline card — pure Tailwind, no stylesheet class */
 function Card({ children, className, onClick }: CardProps) {
-  const baseClasses = cn("ly-widget-card rounded-2xl p-4", className);
+  const cardClasses = cn(
+    "rounded-2xl border border-white/60 bg-white/70 p-4",
+    "shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm",
+    className,
+  );
 
   if (onClick) {
     return (
       <motion.button
         type="button"
-        className={cn(baseClasses, "cursor-pointer text-left w-full")}
+        className={cn(cardClasses, "cursor-pointer text-left w-full")}
         onClick={onClick}
         whileHover={{ y: -2, boxShadow: "0 25px 30px -28px rgba(0,0,0,0.9)" }}
         whileTap={{ scale: 0.98 }}
@@ -310,7 +315,7 @@ function Card({ children, className, onClick }: CardProps) {
       </motion.button>
     );
   }
-  return <div className={baseClasses}>{children}</div>;
+  return <div className={cardClasses}>{children}</div>;
 }
 
 // ─── Unauthenticated View ─────────────────────────────────────────────────
@@ -348,7 +353,7 @@ function UnauthenticatedView({
             {t.already_have_an_account || "Already have an account?"}{" "}
             <button
               type="button"
-              className="font-semibold text-primary hover:underline"
+              className="font-semibold text-primary hover:underline cursor-pointer"
             >
               {t.join_now || "Join Now"}
             </button>

@@ -21,7 +21,7 @@ export const QuestionCard = ({ question, t }: QuestionCardProps) => {
     <motion.div
       whileHover={{ y: -1 }}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="ly-widget-card rounded-2xl p-4 transition-shadow duration-300 hover:shadow-[0_20px_32px_-28px_rgba(0,0,0,0.8)]"
+      className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm rounded-2xl p-4 transition-shadow duration-300 hover:shadow-[0_20px_32px_-28px_rgba(0,0,0,0.8)]"
     >
       <div className="relative mb-2 flex flex-row items-start justify-between">
         <div className="flex flex-row items-center justify-start gap-2">

@@ -1,8 +1,6 @@
-import { Button } from "@lylrv/ui/button";
-import { Label } from "@lylrv/ui/label";
-import { Textarea } from "@lylrv/ui/textarea";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { Button, Label, Textarea } from "@/components";
 import { staggerContainer, staggerItem } from "@/lib/transitions";
 
 interface AddQuestionProps {
@@ -31,7 +29,7 @@ export const AddQuestion = ({
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="ly-widget-card rounded-2xl p-5"
+      className="rounded-2xl border border-white/60 bg-white/70 shadow-[0_18px_35px_-28px_rgba(0,0,0,0.95)] backdrop-blur-sm rounded-2xl p-5"
     >
       <motion.h3
         variants={staggerItem}
