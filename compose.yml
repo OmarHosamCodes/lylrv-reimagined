@@ -1,7 +1,7 @@
 name: lylrv_db
 services:
   db:
-    image: postgres:17.7-alpine
+    image: postgres:15-alpine
     environment:
       POSTGRES_DB: lylrv_db
       POSTGRES_USER: lylrv_user
