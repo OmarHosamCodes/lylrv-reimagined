@@ -45,7 +45,7 @@ function ProductReviewsWidget({
     isSubmitting,
     setImageViewerOpen,
   } = useProductReviewsWidget(config, {
-    shop: config.shop || "",
+    shop: config.apiKey || config.shop || "",
     productId: productId,
     apiBaseUrl,
   });

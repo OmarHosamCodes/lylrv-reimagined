@@ -35,7 +35,7 @@ export const ReviewImageGallery = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={transitions.springStiff}
-            className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl ring-1 ring-white/75 shadow-sm"
+            className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-white/75 shadow-sm"
           >
             <img
               src={image}
@@ -52,7 +52,7 @@ export const ReviewImageGallery = ({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={transitions.springStiff}
-        className="flex h-20 w-20 flex-shrink-0 cursor-pointer select-none items-center justify-center rounded-xl border border-white/70 bg-white/70 text-foreground text-sm font-medium"
+        className="flex h-20 w-20 shrink-0 cursor-pointer select-none items-center justify-center rounded-xl border border-white/70 bg-white/70 text-foreground text-sm font-medium"
       >
         {t.view_all || "View All"}
       </motion.button>

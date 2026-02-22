@@ -18,6 +18,9 @@ const setCorsHeaders = (res: Response) => {
   );
 };
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export const OPTIONS = () => {
   const response = new Response(null, { status: 204 });
   setCorsHeaders(response);
@@ -26,11 +29,20 @@ export const OPTIONS = () => {
 
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
-  const shop = searchParams.get("shop");
+  const apiKey = searchParams.get("apiKey") ?? searchParams.get("shop");
 
-  if (!shop) {
+  if (!apiKey) {
     const response = Response.json(
-      { error: "Missing 'shop' query parameter" },
+      { error: "Missing 'apiKey' query parameter" },
+      { status: 400 },
+    );
+    setCorsHeaders(response);
+    return response;
+  }
+
+  if (!UUID_PATTERN.test(apiKey)) {
+    const response = Response.json(
+      { error: "Invalid 'apiKey' format" },
       { status: 400 },
     );
     setCorsHeaders(response);
@@ -38,14 +50,14 @@ export const GET = async (req: NextRequest) => {
   }
 
   try {
-    // Find client by createSource (shop identifier)
+    // Find client by API key
     const client = await db.query.clients.findFirst({
-      where: eq(clients.createSource, shop),
+      where: eq(clients.apiKey, apiKey),
     });
 
     if (!client) {
       const response = Response.json(
-        { error: "Shop not found", enabled: false },
+        { error: "API key not found", enabled: false },
         { status: 404 },
       );
       setCorsHeaders(response);
@@ -103,7 +115,9 @@ export const GET = async (req: NextRequest) => {
         primaryColor: "#c56f26",
         position: "right",
       },
-      shop: client.createSource,
+      apiKey: client.apiKey,
+      // Backward compatibility for existing widgets expecting `shop`.
+      shop: client.apiKey,
       clientId: client.id,
       clientConfig: widgetClientConfig,
     });

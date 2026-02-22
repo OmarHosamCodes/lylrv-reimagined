@@ -87,7 +87,7 @@ export function GlassCard({
       data-slot="glass-card"
       className={cn(
         "relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 shadow-lg backdrop-blur-xl transition-all duration-300",
-        "before:pointer-events-none before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-br before:from-white/10 before:via-transparent before:to-transparent before:opacity-60",
+        "before:pointer-events-none before:absolute before:inset-0 before:rounded-xl before:bg-linear-to-br before:from-white/10 before:via-transparent before:to-transparent before:opacity-60",
         "hover:border-white/20 hover:bg-white/[0.07] hover:shadow-xl",
         className,
       )}

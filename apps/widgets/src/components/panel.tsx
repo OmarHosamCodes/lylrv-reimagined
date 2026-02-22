@@ -18,7 +18,7 @@ export function Panel({ children, isOpen, onClose, className }: PanelProps) {
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
-        <div className="fixed inset-0 z-[10000] flex items-center justify-center">
+        <div className="fixed inset-0 z-10000 flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -55,7 +55,7 @@ export function PanelHeader({ children, className }: PanelHeaderProps) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden border-b border-white/55 bg-gradient-to-r from-brand-amber/95 via-brand-gold/90 to-brand-amber/95 p-5 text-center text-primary-foreground",
+        "relative overflow-hidden border-b border-white/55 bg-linear-to-r from-brand-amber/95 via-brand-gold/90 to-brand-amber/95 p-5 text-center text-primary-foreground",
         className,
       )}
     >

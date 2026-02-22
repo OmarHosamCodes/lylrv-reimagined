@@ -41,10 +41,10 @@ export const QuestionCard = ({ question, t }: QuestionCardProps) => {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <h3 className="break-words text-lg font-semibold text-card-foreground leading-snug">
+        <h3 className="wrap-break-word text-lg font-semibold text-card-foreground leading-snug">
           {question.body}
         </h3>
-        <p className="break-words text-sm text-muted-foreground leading-relaxed">
+        <p className="wrap-break-word text-sm text-muted-foreground leading-relaxed">
           {question.answer
             ? question.answer
             : t.no_answer_yet || "No answer yet"}

@@ -74,7 +74,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
     setActiveTab,
     isRedeeming,
   } = useLoyaltyWidget({
-    shop: config.shop || "",
+    shop: config.apiKey || config.shop || "",
     email: userEmail ?? undefined,
     apiBaseUrl,
     isLoggedIn,
@@ -108,7 +108,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
         onClose={handleToggle}
         className={cn(
           "z-10002 flex flex-col",
-          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-[100dvh] max-sm:rounded-none",
+          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-dvh max-sm:rounded-none",
           "p-0 box-border overflow-hidden",
         )}
       >
@@ -216,7 +216,7 @@ function ThemedHeader({
   const showBackButton = activeTab !== "home";
 
   return (
-    <header className="relative h-[8.5rem] text-center flex flex-col items-center justify-center w-full rounded-none flex-shrink-0 overflow-hidden border-b border-white/45 bg-gradient-to-r from-brand-amber via-brand-gold to-brand-amber text-primary-foreground">
+    <header className="relative h-[8.5rem] text-center flex flex-col items-center justify-center w-full rounded-none shrink-0 overflow-hidden border-b border-white/45 bg-linear-to-r from-brand-amber via-brand-gold to-brand-amber text-primary-foreground">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.35),transparent_55%),radial-gradient(circle_at_86%_10%,rgba(255,255,255,0.25),transparent_42%)]" />
 
       <div className="relative flex flex-col w-full h-full py-4 text-lg font-semibold leading-none tracking-tight px-5 max-sm:px-4">
@@ -384,7 +384,7 @@ function UnauthenticatedView({
 
       {/* Referral info */}
       <motion.div variants={staggerItem}>
-        <Card className="text-center border-brand-amber/20 bg-gradient-to-br from-brand-amber/8 to-brand-gold/12">
+        <Card className="text-center border-brand-amber/20 bg-linear-to-br from-brand-amber/8 to-brand-gold/12">
           <h3 className="text-base font-semibold text-foreground mb-1.5">
             {t.referral_title || "Refer a Friend"}
           </h3>
@@ -496,7 +496,7 @@ function HomeTab({
       {/* Referral section */}
       {referralCode && (
         <motion.div variants={staggerItem}>
-          <Card className="border-brand-amber/20 bg-gradient-to-br from-brand-amber/8 to-brand-gold/12">
+          <Card className="border-brand-amber/20 bg-linear-to-br from-brand-amber/8 to-brand-gold/12">
             <h3 className="text-base font-semibold text-foreground mb-1.5">
               {t.referral_title || "Refer a Friend"}
             </h3>

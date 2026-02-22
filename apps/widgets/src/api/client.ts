@@ -10,10 +10,10 @@ import type {
 export class WidgetApiClient {
   constructor(private baseUrl: string) {}
 
-  async getConfig(shop: string): Promise<WidgetConfigResponse | null> {
+  async getConfig(apiKey: string): Promise<WidgetConfigResponse | null> {
     try {
       const response = await fetch(
-        `${this.baseUrl}/api/widget/config?shop=${encodeURIComponent(shop)}`,
+        `${this.baseUrl}/api/widget/config?apiKey=${encodeURIComponent(apiKey)}`,
       );
       if (!response.ok) {
         console.error("[Lylrv] Failed to load config:", response.status);
@@ -26,9 +26,9 @@ export class WidgetApiClient {
     }
   }
 
-  async getCustomer(shop: string, email: string): Promise<CustomerResponse> {
+  async getCustomer(apiKey: string, email: string): Promise<CustomerResponse> {
     const response = await fetch(
-      `${this.baseUrl}/api/widget/customer?shop=${encodeURIComponent(shop)}&email=${encodeURIComponent(email)}`,
+      `${this.baseUrl}/api/widget/customer?apiKey=${encodeURIComponent(apiKey)}&email=${encodeURIComponent(email)}`,
     );
     if (!response.ok) {
       throw new Error(`Failed to fetch customer: ${response.status}`);
@@ -37,7 +37,7 @@ export class WidgetApiClient {
   }
 
   async getReviews(
-    shop: string,
+    apiKey: string,
     options: {
       type?: "website" | "product";
       productId?: number;
@@ -45,7 +45,7 @@ export class WidgetApiClient {
       offset?: number;
     } = {},
   ): Promise<ReviewsResponse> {
-    const params = new URLSearchParams({ shop });
+    const params = new URLSearchParams({ apiKey });
 
     if (options.type) params.set("type", options.type);
     if (options.productId) params.set("productId", String(options.productId));
@@ -62,7 +62,7 @@ export class WidgetApiClient {
   }
 
   async submitReview(
-    shop: string,
+    apiKey: string,
     data: {
       rating: number;
       title?: string;
@@ -72,7 +72,7 @@ export class WidgetApiClient {
     },
   ): Promise<{ success: boolean }> {
     const formData = new FormData();
-    formData.append("shop", shop);
+    formData.append("apiKey", apiKey);
     formData.append("rating", String(data.rating));
     if (data.title) formData.append("title", data.title);
     if (data.body) formData.append("body", data.body);
@@ -94,14 +94,14 @@ export class WidgetApiClient {
   }
 
   async redeemPoints(
-    shop: string,
+    apiKey: string,
     email: string,
     points: number,
   ): Promise<{ success: boolean; couponCode?: string }> {
     const response = await fetch(`${this.baseUrl}/api/widget/redeem`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ shop, email, points }),
+      body: JSON.stringify({ apiKey, email, points }),
     });
     if (!response.ok) {
       throw new Error(`Failed to redeem points: ${response.status}`);

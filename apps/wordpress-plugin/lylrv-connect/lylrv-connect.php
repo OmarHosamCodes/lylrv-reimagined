@@ -23,7 +23,7 @@ define('LYLRV_CONNECT_PLUGIN_URL', plugin_dir_url(__FILE__));
  * Register settings
  */
 function lylrv_connect_register_settings() {
-    register_setting('lylrv_connect_options', 'lylrv_shop_domain');
+    register_setting('lylrv_connect_options', 'lylrv_api_key');
     register_setting('lylrv_connect_options', 'lylrv_saas_url', array(
         'default' => 'https://app.lylrv.com'
     ));
@@ -56,10 +56,10 @@ function lylrv_connect_options_page() {
             <?php do_settings_sections('lylrv_connect_options'); ?>
             <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">Shop Domain</th>
+                    <th scope="row">API Key</th>
                     <td>
-                        <input type="text" name="lylrv_shop_domain" value="<?php echo esc_attr(get_option('lylrv_shop_domain')); ?>" class="regular-text" />
-                        <p class="description">Enter the shop domain registered in Lylrv (e.g., myshop.com).</p>
+                        <input type="text" name="lylrv_api_key" value="<?php echo esc_attr(get_option('lylrv_api_key')); ?>" class="regular-text" />
+                        <p class="description">Enter your Lylrv API key from the admin dashboard.</p>
                     </td>
                 </tr>
                 <tr valign="top">
@@ -80,27 +80,27 @@ function lylrv_connect_options_page() {
  * Inject the widget loader script
  */
 function lylrv_connect_script() {
-    $shop_domain = get_option('lylrv_shop_domain');
+    $api_key = get_option('lylrv_api_key');
     $saas_url = get_option('lylrv_saas_url', 'https://app.lylrv.com');
 
     // Remove trailing slash from URL if present
     $saas_url = untrailingslashit($saas_url);
 
-    if (!empty($shop_domain) && !empty($saas_url)) {
+    if (!empty($api_key) && !empty($saas_url)) {
         $script_url = $saas_url . '/widgets/loader.bundle.js';
-        
-        // Add shop parameter
-        $final_url = add_query_arg('shop', $shop_domain, $script_url);
-        
-        // Enqueue the script with the 'shop' parameter
-        // We handle this via wp_enqueue_script for better compatibility, 
+
+        // Add API key parameter
+        $final_url = add_query_arg('apiKey', $api_key, $script_url);
+
+        // Enqueue the script with the API key parameter
+        // We handle this via wp_enqueue_script for better compatibility,
         // but since we need query params in the src, creating a handle with the exact URL is one way,
-        // or printing it directly. 
+        // or printing it directly.
         // Best practice for scripts with dynamic query params that shouldn't be cached as versioning:
-        
+
         // Register it first without params to be clean? No, the params are needed for the loader initialization logic (document.currentScript).
         // So we must include the params in the src attribute.
-        
+
         wp_enqueue_script('lylrv-widget-loader', $final_url, array(), null, true);
 
         // Prepare data to inject
@@ -127,7 +127,7 @@ function lylrv_connect_script() {
             if (is_product()) {
                 global $post;
                 $product_id = $post->ID;
-                
+
                 $has_purchased = false;
                 if (is_user_logged_in()) {
                     // Check if current user bought this product
@@ -155,12 +155,12 @@ function lylrv_add_module_type($tag, $handle, $src) {
     if ($handle !== 'lylrv-widget-loader') {
         return $tag;
     }
-    
+
     // Replace the script tag to add type="module"
     // Note: wp_localize_script creates an inline script before the module.
     // We only need to modify the main script tag that has the src attribute.
     $tag = str_replace(' src=', ' type="module" src=', $tag);
-    
+
     return $tag;
 }
 add_filter('script_loader_tag', 'lylrv_add_module_type', 10, 3);
@@ -170,16 +170,16 @@ add_filter('script_loader_tag', 'lylrv_add_module_type', 10, 3);
  * Includes product-reviews widget container on WooCommerce product pages.
  */
 function lylrv_inject_floating_widgets() {
-    $shop_domain = get_option('lylrv_shop_domain');
-    if (empty($shop_domain)) {
+    $api_key = get_option('lylrv_api_key');
+    if (empty($api_key)) {
         return;
     }
-    
+
     // Inject containers for floating widgets (loyalty and reviews)
     // The loader will mount into these if the widgets are enabled in the config
     echo '<div id="lylrv-loyalty-container"></div>';
     echo '<div id="lylrv-reviews-container"></div>';
-    
+
     // Inject product reviews container on WooCommerce product pages
     if (class_exists('WooCommerce') && is_product()) {
         echo '<div id="lylrv-productReviews-container"></div>';
@@ -198,7 +198,7 @@ function lylrv_widget_shortcode($atts) {
     ), $atts);
 
     $widget_name = sanitize_title($a['name']); // clean slug
-    
+
     // We output a div that the loader will find and mount into.
     return '<div id="lylrv-' . esc_attr($widget_name) . '-container"></div>';
 }

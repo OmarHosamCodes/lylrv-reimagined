@@ -44,7 +44,7 @@ export function ReviewCard({
           <img
             src={`https://avatar.iran.liara.run/username?username=${encodeURIComponent(review.author)}`}
             alt={`${formattedAuthor}'s avatar`}
-            className="h-10 w-10 flex-shrink-0 rounded-full bg-muted ring-2 ring-white/70"
+            className="h-10 w-10 shrink-0 rounded-full bg-muted ring-2 ring-white/70"
           />
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5">
@@ -56,7 +56,7 @@ export function ReviewCard({
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="h-4 w-4 flex-shrink-0 text-brand-amber"
+                  className="h-4 w-4 shrink-0 text-brand-amber"
                   aria-label="Verified"
                   role="img"
                 >
@@ -76,7 +76,7 @@ export function ReviewCard({
         </div>
 
         {/* Right side: Star Rating */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <StarRating rating={review.rating} size="md" />
         </div>
       </div>
@@ -84,7 +84,7 @@ export function ReviewCard({
       {/* Title */}
       {review.title && (
         <h3
-          className="mb-1.5 text-[0.95rem] font-semibold text-card-foreground break-words leading-snug"
+          className="mb-1.5 text-[0.95rem] font-semibold text-card-foreground wrap-break-word leading-snug"
           title={review.title}
         >
           {review.title}
@@ -93,7 +93,7 @@ export function ReviewCard({
 
       {/* Body */}
       {review.body && (
-        <p className="text-sm leading-relaxed text-muted-foreground break-words">
+        <p className="text-sm leading-relaxed text-muted-foreground wrap-break-word">
           {review.body}
         </p>
       )}
@@ -108,7 +108,7 @@ export function ReviewCard({
               onClick={() => onImageClick?.(img)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-white/65 shadow-sm"
             >
               <img
                 src={img}
@@ -118,7 +118,7 @@ export function ReviewCard({
             </motion.button>
           ))}
           {review.images.length > 3 && (
-            <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border border-white/65 bg-muted text-xs font-medium text-muted-foreground">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-white/65 bg-muted text-xs font-medium text-muted-foreground">
               +{review.images.length - 3}
             </span>
           )}

@@ -69,6 +69,7 @@ export interface WidgetConfig {
     primaryColor?: string;
     position: "left" | "right";
   };
+  apiKey?: string;
   shop?: string;
   clientId?: string;
   clientConfig?: WidgetClientConfig | null;

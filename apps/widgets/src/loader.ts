@@ -7,7 +7,7 @@
  * 3. Initializing widgets with Shadow DOM isolation
  *
  * Usage:
- * <script src="https://your-domain.com/widgets/loader.bundle.js?shop=myshop.com" async></script>
+ * <script src="https://your-domain.com/widgets/loader.bundle.js?apiKey=YOUR_API_KEY" async></script>
  */
 
 import type {
@@ -53,12 +53,13 @@ import type {
   }
 
   const scriptUrl = new URL(scriptElement.src);
-  const shop = scriptUrl.searchParams.get("shop");
+  const apiKey = scriptUrl.searchParams.get("apiKey");
 
-  if (!shop) {
-    console.error("[Lylrv] Missing 'shop' parameter in script URL");
+  if (!apiKey) {
+    console.error("[Lylrv] Missing 'apiKey' parameter in script URL");
     return;
   }
+  const widgetApiKey = apiKey;
 
   // Determine API base URL (same origin as the script)
   const apiBaseUrl = scriptUrl.origin;
@@ -66,7 +67,7 @@ import type {
   async function loadConfig(): Promise<WidgetConfig | null> {
     try {
       const response = await fetch(
-        `${apiBaseUrl}/api/widget/config?shop=${encodeURIComponent(shop!)}`,
+        `${apiBaseUrl}/api/widget/config?apiKey=${encodeURIComponent(widgetApiKey)}`,
       );
       if (!response.ok) {
         console.error("[Lylrv] Failed to load config:", response.status);

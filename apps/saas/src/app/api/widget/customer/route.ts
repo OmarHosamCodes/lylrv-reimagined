@@ -21,6 +21,9 @@ const setCorsHeaders = (res: Response) => {
   res.headers.set("Cache-Control", "private, max-age=0, no-cache");
 };
 
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export const OPTIONS = () => {
   const response = new Response(null, { status: 204 });
   setCorsHeaders(response);
@@ -29,12 +32,21 @@ export const OPTIONS = () => {
 
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
-  const shop = searchParams.get("shop");
+  const apiKey = searchParams.get("apiKey") ?? searchParams.get("shop");
   const email = searchParams.get("email");
 
-  if (!shop) {
+  if (!apiKey) {
     const response = Response.json(
-      { error: "Missing 'shop' query parameter" },
+      { error: "Missing 'apiKey' query parameter" },
+      { status: 400 },
+    );
+    setCorsHeaders(response);
+    return response;
+  }
+
+  if (!UUID_PATTERN.test(apiKey)) {
+    const response = Response.json(
+      { error: "Invalid 'apiKey' format" },
       { status: 400 },
     );
     setCorsHeaders(response);
@@ -51,14 +63,14 @@ export const GET = async (req: NextRequest) => {
   }
 
   try {
-    // Find client by createSource (shop identifier)
+    // Find client by API key
     const client = await db.query.clients.findFirst({
-      where: eq(clients.createSource, shop),
+      where: eq(clients.apiKey, apiKey),
     });
 
     if (!client) {
       const response = Response.json(
-        { error: "Shop not found" },
+        { error: "API key not found" },
         { status: 404 },
       );
       setCorsHeaders(response);

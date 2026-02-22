@@ -55,7 +55,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
     canSubmit,
     isSubmitting,
   } = useReviewsWidget({
-    shop: config.shop || "",
+    shop: config.apiKey || config.shop || "",
     apiBaseUrl,
     type: "website",
   });
@@ -80,7 +80,7 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
         onClose={handleToggle}
         className={cn(
           "z-10002 flex flex-col",
-          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-[100dvh] max-sm:rounded-none",
+          "w-[min(440px,calc(100vw-1.25rem))] h-[min(82vh,700px)] max-sm:w-screen max-sm:h-dvh max-sm:rounded-none",
           "p-0 box-border overflow-hidden",
         )}
       >

@@ -73,6 +73,10 @@ function SettingsPage() {
               <span className="text-muted-foreground">Source:</span>{" "}
               {client.createSource}
             </p>
+            <p>
+              <span className="text-muted-foreground">API Key:</span>{" "}
+              <code>{client.apiKey}</code>
+            </p>
           </div>
         </DashboardSection>
 
