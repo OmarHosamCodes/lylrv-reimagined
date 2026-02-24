@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { useProductReviewsWidget } from "@/hooks";
+import { useProductReviewsWidget } from "@lylrv/hooks";
 import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
 import type { WidgetConfig } from "@/types";

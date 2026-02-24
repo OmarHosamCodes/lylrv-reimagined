@@ -9,6 +9,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@lylrv/hooks": "workspace:*",
+    "@lylrv/state": "workspace:*",
+    "@lylrv/store": "workspace:*",
     "@lylrv/ui": "workspace:*",
     "@tanstack/react-query": "^5.64.2",
     "class-variance-authority": "^0.7.1",

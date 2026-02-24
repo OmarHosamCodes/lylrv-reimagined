@@ -18,7 +18,7 @@ import {
   TabNavigation,
   Textarea,
 } from "@/components";
-import { useLocalizations, useReviewsWidget } from "@/hooks";
+import { useLocalizations, useReviewsWidget } from "@lylrv/hooks";
 import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
 import type { WidgetConfig } from "@/types";

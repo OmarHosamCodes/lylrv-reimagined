@@ -1,0 +1,121 @@
+import type {
+  CustomerResponse,
+  ReviewsResponse,
+  WidgetConfigResponse,
+} from "./types";
+
+export class WidgetApiClient {
+  constructor(private readonly baseUrl: string) {}
+
+  async getConfig(apiKey: string): Promise<WidgetConfigResponse | null> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/widget/config?apiKey=${encodeURIComponent(apiKey)}`,
+      );
+      if (!response.ok) {
+        console.error("[Lylrv] Failed to load config:", response.status);
+        return null;
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("[Lylrv] Error loading config:", error);
+      return null;
+    }
+  }
+
+  async getCustomer(apiKey: string, email: string): Promise<CustomerResponse> {
+    const response = await fetch(
+      `${this.baseUrl}/api/widget/customer?apiKey=${encodeURIComponent(apiKey)}&email=${encodeURIComponent(email)}`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch customer: ${response.status}`);
+    }
+    return await response.json();
+  }
+
+  async getReviews(
+    apiKey: string,
+    options: {
+      type?: "website" | "product";
+      productId?: number;
+      limit?: number;
+      offset?: number;
+    } = {},
+  ): Promise<ReviewsResponse> {
+    const params = new URLSearchParams({ apiKey });
+
+    if (options.type) params.set("type", options.type);
+    if (options.productId) params.set("productId", String(options.productId));
+    if (options.limit) params.set("limit", String(options.limit));
+    if (options.offset) params.set("offset", String(options.offset));
+
+    const response = await fetch(
+      `${this.baseUrl}/api/widget/reviews?${params.toString()}`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch reviews: ${response.status}`);
+    }
+    return await response.json();
+  }
+
+  async submitReview(
+    apiKey: string,
+    data: {
+      rating: number;
+      title?: string;
+      body?: string;
+      productId?: number;
+      images?: File[];
+    },
+  ): Promise<{ success: boolean }> {
+    const formData = new FormData();
+    formData.append("apiKey", apiKey);
+    formData.append("rating", String(data.rating));
+    if (data.title) formData.append("title", data.title);
+    if (data.body) formData.append("body", data.body);
+    if (data.productId) formData.append("productId", String(data.productId));
+    if (data.images) {
+      for (const image of data.images) {
+        formData.append("images", image);
+      }
+    }
+
+    const response = await fetch(`${this.baseUrl}/api/widget/reviews`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to submit review: ${response.status}`);
+    }
+    return await response.json();
+  }
+
+  async redeemPoints(
+    apiKey: string,
+    email: string,
+    points: number,
+  ): Promise<{ success: boolean; couponCode?: string }> {
+    const response = await fetch(`${this.baseUrl}/api/widget/redeem`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey, email, points }),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to redeem points: ${response.status}`);
+    }
+    return await response.json();
+  }
+}
+
+const clientsByBaseUrl = new Map<string, WidgetApiClient>();
+
+export function getApiClient(baseUrl: string): WidgetApiClient {
+  const existingClient = clientsByBaseUrl.get(baseUrl);
+  if (existingClient) {
+    return existingClient;
+  }
+
+  const client = new WidgetApiClient(baseUrl);
+  clientsByBaseUrl.set(baseUrl, client);
+  return client;
+}

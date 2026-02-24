@@ -20,8 +20,8 @@ import {
   PointIcon,
   TabNavigation,
 } from "@/components";
+import { useLocalizations, useLoyaltyWidget } from "@lylrv/hooks";
 import { DEFAULT_MIN_REDEEM, DEFAULT_REDEEM_VALUES } from "@/constants";
-import { useLocalizations, useLoyaltyWidget } from "@/hooks";
 import { staggerContainer, staggerItem, transitions } from "@/lib/transitions";
 import { WidgetProvider } from "@/providers";
 import stylesText from "@/styles.css?inline";
