@@ -8,34 +8,34 @@
 @custom-variant auto (&:where(.auto, .auto *));
 
 @utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
+    margin-inline: auto;
+    padding-inline: 2rem;
 
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
+    @media (width >= --theme(--breakpoint-sm)) {
+        max-width: none;
+    }
 
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
+    @media (width >= 1400px) {
+        max-width: 1400px;
+    }
 }
 
 @layer base {
-  :host {
-    color-scheme: light;
-    font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
-  }
+    :host {
+        color-scheme: dark;
+        font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+    }
 
-  :host,
-  :host * {
-    box-sizing: border-box;
-  }
+    :host,
+    :host * {
+        box-sizing: border-box;
+    }
 
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  :host body {
-    letter-spacing: var(--tracking-normal);
-  }
+    :host body {
+        letter-spacing: var(--tracking-normal);
+    }
 }
