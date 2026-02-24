@@ -35,7 +35,7 @@ export default defineConfig({
         // Manually chunk to keep widgets separate
         manualChunks: (id) => {
           // Keep React in a shared vendor chunk
-          if (id.includes("node_modules/react")) {
+          if (id?.includes("node_modules/react")) {
             return "vendor-react";
           }
           return undefined;

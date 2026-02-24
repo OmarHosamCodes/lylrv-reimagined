@@ -16,7 +16,7 @@ import type { NextRequest } from "next/server";
 
 const setCorsHeaders = (res: Response) => {
   res.headers.set("Access-Control-Allow-Origin", "*");
-  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET");
+  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   res.headers.set("Access-Control-Allow-Headers", "*");
   res.headers.set("Cache-Control", "private, max-age=0, no-cache");
 };

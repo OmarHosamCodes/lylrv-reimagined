@@ -4,20 +4,19 @@ import { clients, reviews } from "@lylrv/db/schema";
 import type { NextRequest } from "next/server";
 
 /**
- * Public REST endpoint for fetching reviews
+ * Public REST endpoint for fetching and submitting reviews
  * Called by widget from external client sites
  */
 
 const setCorsHeaders = (res: Response) => {
   res.headers.set("Access-Control-Allow-Origin", "*");
-  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET");
+  res.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   res.headers.set("Access-Control-Allow-Headers", "*");
   res.headers.set(
     "Cache-Control",
     "public, max-age=60, stale-while-revalidate=300",
   );
 };
-
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -172,6 +171,125 @@ export const GET = async (req: NextRequest) => {
     console.error("Widget reviews error:", error);
     const response = Response.json(
       { error: "Internal server error", reviews: [] },
+      { status: 500 },
+    );
+    setCorsHeaders(response);
+    return response;
+  }
+};
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const formData = await req.formData();
+    const apiKey = formData.get("apiKey") as string | null;
+    const rating = formData.get("rating") as string | null;
+    const title = formData.get("title") as string | null;
+    const body = formData.get("body") as string | null;
+    const productId = formData.get("productId") as string | null;
+    const images = formData.getAll("images") as File[];
+
+    if (!apiKey) {
+      const response = Response.json(
+        { error: "Missing 'apiKey' field" },
+        { status: 400 },
+      );
+      setCorsHeaders(response);
+      return response;
+    }
+
+    if (!UUID_PATTERN.test(apiKey)) {
+      const response = Response.json(
+        { error: "Invalid 'apiKey' format" },
+        { status: 400 },
+      );
+      setCorsHeaders(response);
+      return response;
+    }
+
+    if (!rating) {
+      const response = Response.json(
+        { error: "Missing 'rating' field" },
+        { status: 400 },
+      );
+      setCorsHeaders(response);
+      return response;
+    }
+
+    const ratingNum = parseFloat(rating);
+    if (Number.isNaN(ratingNum) || ratingNum < 0 || ratingNum > 5) {
+      const response = Response.json(
+        { error: "Invalid rating: must be between 0 and 5" },
+        { status: 400 },
+      );
+      setCorsHeaders(response);
+      return response;
+    }
+
+    // Find client by API key
+    const client = await db.query.clients.findFirst({
+      where: eq(clients.apiKey, apiKey),
+    });
+
+    if (!client) {
+      const response = Response.json(
+        { error: "API key not found" },
+        { status: 404 },
+      );
+      setCorsHeaders(response);
+      return response;
+    }
+
+    // Process image uploads
+    const imageUrls: string[] = [];
+    if (images && images.length > 0) {
+      // For now, we store file names or base64 data
+      // In production, you'd upload to cloud storage (S3, etc.)
+      for (const image of images) {
+        const buffer = await image.arrayBuffer();
+        const base64 = Buffer.from(buffer).toString("base64");
+        imageUrls.push(`data:${image.type};base64,${base64}`);
+      }
+    }
+
+    // Determine review type and product UUID
+    let productUUID: string | null = null;
+    let reviewType: "product" | "website" = "website";
+
+    if (productId) {
+      // Find product by productId (external ID) and client
+      const product = await db.query.products.findFirst({
+        where: (p, { and, eq: eqOp }) =>
+          and(
+            eqOp(p.clientId, client.id),
+            eqOp(p.productId, parseInt(productId, 10)),
+          ),
+      });
+
+      if (product) {
+        productUUID = product.id;
+        reviewType = "product";
+      }
+    }
+
+    // Create review
+    await db.insert(reviews).values({
+      clientId: client.id,
+      productId: productUUID,
+      rating: ratingNum.toString(),
+      title: title || null,
+      body: body || null,
+      images: imageUrls.length > 0 ? imageUrls : null,
+      type: reviewType,
+      verified: false,
+    });
+
+    const response = Response.json({ success: true });
+    setCorsHeaders(response);
+    return response;
+  } catch (error) {
+    console.error("Widget review submission error:", error);
+    const response = Response.json(
+      { error: "Internal server error", success: false },
       { status: 500 },
     );
     setCorsHeaders(response);

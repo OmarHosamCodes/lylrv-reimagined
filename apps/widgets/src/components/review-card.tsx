@@ -15,7 +15,7 @@ export function ReviewCard({
   className,
 }: ReviewCardProps) {
   const formattedAuthor = (() => {
-    const authorName = review.author.includes("@")
+    const authorName = review.author?.includes("@")
       ? review.author.split("@")[0]
       : review.author;
     const name = authorName ?? "";
