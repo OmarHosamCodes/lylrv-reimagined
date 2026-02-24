@@ -26,10 +26,11 @@ export function FloatingButton({
         "focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         "focus:outline-none",
         "cursor-pointer select-none",
+        "bg-primary/25",
         className,
       )}
     >
-      <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-md bg-primary/10 text-primary">
+      <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-md text-primary">
         {icon}
       </span>
       <span className="relative z-10 hidden max-w-36 truncate text-left text-[13px] leading-4 sm:block">

@@ -14,7 +14,6 @@ import {
   Button,
   FloatingButton,
   LoadingState,
-  LoyaltyIcon,
   Panel,
   PanelContent,
   PanelFooter,
@@ -98,7 +97,7 @@ function LoyaltyWidget({ config, apiBaseUrl }: LoyaltyWidgetProps) {
     <div className="fixed bottom-4 left-4 z-9999">
       <FloatingButton
         onClick={handleToggle}
-        icon={<LoyaltyIcon className="h-7 w-7" />}
+        icon={<GiftIcon className="h-5 w-5" />}
         label={t.main_floating_button_title || "Loyalty Points"}
         className="pl-2 pr-4"
       />

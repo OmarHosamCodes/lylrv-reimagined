@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { createRoot } from "react-dom/client";
 import {
   AverageRatingDisplay,
@@ -59,12 +59,13 @@ function ReviewsWidget({ config, apiBaseUrl }: ReviewsWidgetProps) {
   ];
 
   return (
-    <div className="fixed bottom-4 right-4 z-9999">
+    <div className="fixed left-0 bottom-1/2 z-9999">
       <FloatingButton
         onClick={handleToggle}
-        icon={<Star className="h-5 w-5" />}
+        icon={<StarIcon className="h-5 w-5" />}
         label={t.secondary_floating_button_title || "Reviews"}
         badge={meta?.total}
+        className="pl-2 pr-4 -translate-4 rotate-90"
       />
 
       <Panel

@@ -22,7 +22,7 @@
 
 @layer base {
     :host {
-        color-scheme: dark;
+        color-scheme: light;
         font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
     }
 
