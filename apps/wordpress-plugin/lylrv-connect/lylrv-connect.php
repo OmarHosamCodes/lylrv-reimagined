@@ -20,6 +20,8 @@ define("LYLRV_CONNECT_PLUGIN_URL", plugin_dir_url(__FILE__));
 
 final class Lylrv_Connect_Plugin
 {
+    private static $referral_coupon_error_messages = [];
+
     const OPTION_GROUP = "lylrv_connect_options";
     const OPTION_API_KEY = "lylrv_api_key";
     const OPTION_SAAS_URL = "lylrv_saas_url";
@@ -106,6 +108,30 @@ final class Lylrv_Connect_Plugin
         add_filter(
             "woocommerce_get_shop_coupon_data",
             [__CLASS__, "provide_saas_coupon_data"],
+            10,
+            2,
+        );
+        add_filter(
+            "woocommerce_coupon_is_valid",
+            [__CLASS__, "validate_referral_coupon"],
+            10,
+            3,
+        );
+        add_filter(
+            "woocommerce_coupon_error",
+            [__CLASS__, "filter_referral_coupon_error"],
+            10,
+            3,
+        );
+        add_action(
+            "woocommerce_after_checkout_validation",
+            [__CLASS__, "validate_referral_checkout_submission"],
+            10,
+            2,
+        );
+        add_action(
+            "woocommerce_checkout_validate_order_before_payment",
+            [__CLASS__, "validate_referral_order_before_payment"],
             10,
             2,
         );
@@ -1520,6 +1546,136 @@ final class Lylrv_Connect_Plugin
         }
     }
 
+    public static function validate_referral_coupon(
+        $is_valid,
+        $coupon,
+        $discounts,
+    ) {
+        if (!$is_valid || !($coupon instanceof WC_Coupon)) {
+            return $is_valid;
+        }
+
+        $reason = self::get_referral_coupon_validation_reason(
+            $coupon->get_code(),
+            self::get_current_referral_buyer_identity(),
+        );
+        if (empty($reason)) {
+            return $is_valid;
+        }
+
+        self::remember_referral_coupon_error($coupon->get_code(), $reason);
+        return false;
+    }
+
+    public static function filter_referral_coupon_error(
+        $message,
+        $error_code,
+        $coupon,
+    ) {
+        if (!$coupon instanceof WC_Coupon) {
+            return $message;
+        }
+
+        $code = self::sanitize_referral_code($coupon->get_code());
+        if (
+            empty($code) ||
+            empty(self::$referral_coupon_error_messages[$code])
+        ) {
+            return $message;
+        }
+
+        $message = self::$referral_coupon_error_messages[$code];
+        unset(self::$referral_coupon_error_messages[$code]);
+
+        return $message;
+    }
+
+    public static function validate_referral_checkout_submission($data, $errors)
+    {
+        if (
+            !$errors instanceof WP_Error ||
+            !self::is_woocommerce_available() ||
+            !function_exists("WC") ||
+            !WC()->cart
+        ) {
+            return;
+        }
+
+        $identity = self::build_referral_buyer_identity(
+            is_user_logged_in() ? get_current_user_id() : 0,
+            !empty($data["billing_email"]) ? $data["billing_email"] : "",
+            !empty($data["billing_phone"]) ? $data["billing_phone"] : "",
+        );
+
+        foreach ((array) WC()->cart->get_applied_coupons() as $coupon_code) {
+            $reason = self::get_referral_coupon_validation_reason(
+                $coupon_code,
+                $identity,
+            );
+            if (empty($reason)) {
+                continue;
+            }
+
+            self::remove_invalid_referral_coupon($coupon_code);
+            $errors->add(
+                "lylrv_referral_coupon_invalid",
+                sprintf(
+                    /* translators: 1: coupon code, 2: validation message */
+                    __(
+                        '"%1$s" was removed from your cart. %2$s',
+                        "lylrv-connect",
+                    ),
+                    esc_html((string) $coupon_code),
+                    self::get_referral_coupon_error_message($reason),
+                ),
+            );
+        }
+    }
+
+    public static function validate_referral_order_before_payment(
+        $order,
+        $errors,
+    ) {
+        if (
+            !$order instanceof WC_Order ||
+            !$errors instanceof WP_Error ||
+            !self::is_woocommerce_available()
+        ) {
+            return;
+        }
+
+        $identity = self::build_referral_buyer_identity(
+            (int) $order->get_customer_id(),
+            $order->get_billing_email(),
+            $order->get_billing_phone(),
+            (int) $order->get_id(),
+        );
+
+        foreach ((array) $order->get_coupon_codes() as $coupon_code) {
+            $reason = self::get_referral_coupon_validation_reason(
+                $coupon_code,
+                $identity,
+            );
+            if (empty($reason)) {
+                continue;
+            }
+
+            self::remove_invalid_referral_coupon($coupon_code, $order);
+            $errors->add(
+                "lylrv_referral_coupon_invalid",
+                sprintf(
+                    /* translators: 1: coupon code, 2: validation message */
+                    __(
+                        '"%1$s" was removed from your order. %2$s',
+                        "lylrv-connect",
+                    ),
+                    esc_html((string) $coupon_code),
+                    self::get_referral_coupon_error_message($reason),
+                ),
+            );
+        }
+    }
+
     private static function build_customer_payload_from_user($user)
     {
         $email = sanitize_email($user->user_email);
@@ -2152,6 +2308,54 @@ final class Lylrv_Connect_Plugin
         return "";
     }
 
+    private static function detect_self_referral_reason_from_identity(
+        $identity,
+        $referrer_user_id,
+    ) {
+        $buyer_user_id = !empty($identity["customerId"])
+            ? (int) $identity["customerId"]
+            : 0;
+        if ($buyer_user_id > 0 && $buyer_user_id === (int) $referrer_user_id) {
+            return "self_referral_user_id";
+        }
+
+        $referrer = get_userdata($referrer_user_id);
+        if (!$referrer instanceof WP_User) {
+            return "invalid_referrer_user";
+        }
+
+        $buyer_email = !empty($identity["email"])
+            ? self::normalize_email($identity["email"])
+            : null;
+        $referrer_email = self::normalize_email($referrer->user_email);
+        $referrer_billing_email = self::normalize_email(
+            get_user_meta($referrer_user_id, "billing_email", true),
+        );
+        if (
+            !empty($buyer_email) &&
+            ($buyer_email === $referrer_email ||
+                $buyer_email === $referrer_billing_email)
+        ) {
+            return "self_referral_email";
+        }
+
+        $buyer_phone = !empty($identity["phone"])
+            ? self::normalize_phone($identity["phone"])
+            : null;
+        $referrer_phone = self::normalize_phone(
+            get_user_meta($referrer_user_id, "billing_phone", true),
+        );
+        if (
+            !empty($buyer_phone) &&
+            !empty($referrer_phone) &&
+            $buyer_phone === $referrer_phone
+        ) {
+            return "self_referral_phone";
+        }
+
+        return "";
+    }
+
     private static function get_or_create_referral_code_for_user($user_id)
     {
         $user_id = absint($user_id);
@@ -2279,6 +2483,250 @@ final class Lylrv_Connect_Plugin
     {
         $order->update_meta_data(self::ORDER_META_REFERRAL_STATUS, $status);
         $order->update_meta_data(self::ORDER_META_REFERRAL_REASON, $reason);
+    }
+
+    private static function remember_referral_coupon_error($code, $reason)
+    {
+        $code = self::sanitize_referral_code($code);
+        if (empty($code) || empty($reason)) {
+            return;
+        }
+
+        self::$referral_coupon_error_messages[
+            $code
+        ] = self::get_referral_coupon_error_message($reason);
+    }
+
+    private static function get_referral_coupon_validation_reason(
+        $coupon_code,
+        $identity,
+    ) {
+        $coupon_code = self::sanitize_referral_code($coupon_code);
+        if (empty($coupon_code)) {
+            return "";
+        }
+
+        $referrer_user_id = self::find_user_id_by_referral_code($coupon_code);
+        if ($referrer_user_id < 1) {
+            return "";
+        }
+
+        $self_referral_reason = self::detect_self_referral_reason_from_identity(
+            $identity,
+            $referrer_user_id,
+        );
+        if (!empty($self_referral_reason)) {
+            return $self_referral_reason;
+        }
+
+        if (self::customer_has_previous_referred_order($identity)) {
+            return "repeat_referral_customer";
+        }
+
+        return "";
+    }
+
+    private static function get_referral_coupon_error_message($reason)
+    {
+        switch ((string) $reason) {
+            case "repeat_referral_customer":
+                return __(
+                    "Referral codes can only be used on your first referred order.",
+                    "lylrv-connect",
+                );
+            case "self_referral_user_id":
+            case "self_referral_email":
+            case "self_referral_phone":
+                return __(
+                    "You cannot use your own referral code.",
+                    "lylrv-connect",
+                );
+            default:
+                return __(
+                    "This referral code is not valid for your order.",
+                    "lylrv-connect",
+                );
+        }
+    }
+
+    private static function get_current_referral_buyer_identity()
+    {
+        $customer_id = is_user_logged_in() ? get_current_user_id() : 0;
+        $email = "";
+        $phone = "";
+
+        if (function_exists("WC") && WC()->customer) {
+            $email = WC()->customer->get_billing_email();
+            $phone = WC()->customer->get_billing_phone();
+        }
+
+        return self::build_referral_buyer_identity(
+            $customer_id,
+            $email,
+            $phone,
+        );
+    }
+
+    private static function build_referral_buyer_identity(
+        $customer_id,
+        $email,
+        $phone,
+        $exclude_order_id = 0,
+    ) {
+        return [
+            "customerId" => absint($customer_id),
+            "email" => self::normalize_email($email),
+            "phone" => self::normalize_phone($phone),
+            "excludeOrderId" => absint($exclude_order_id),
+        ];
+    }
+
+    private static function customer_has_previous_referred_order($identity)
+    {
+        $exclude_order_id = !empty($identity["excludeOrderId"])
+            ? absint($identity["excludeOrderId"])
+            : 0;
+        $statuses = ["pending", "on-hold", "processing", "completed"];
+
+        $customer_id = !empty($identity["customerId"])
+            ? absint($identity["customerId"])
+            : 0;
+        if (
+            $customer_id > 0 &&
+            self::find_referred_order_by_query(
+                [
+                    "customer_id" => $customer_id,
+                    "status" => $statuses,
+                ],
+                $exclude_order_id,
+            ) > 0
+        ) {
+            return true;
+        }
+
+        $email = !empty($identity["email"])
+            ? self::normalize_email($identity["email"])
+            : null;
+        if (
+            !empty($email) &&
+            self::find_referred_order_by_query(
+                [
+                    "billing_email" => $email,
+                    "status" => $statuses,
+                ],
+                $exclude_order_id,
+            ) > 0
+        ) {
+            return true;
+        }
+
+        $phone = !empty($identity["phone"])
+            ? self::normalize_phone($identity["phone"])
+            : null;
+        if (!empty($phone)) {
+            foreach (
+                self::get_recent_referred_orders_for_validation(
+                    $exclude_order_id,
+                )
+                as $order
+            ) {
+                if (
+                    self::normalize_phone($order->get_billing_phone()) ===
+                    $phone
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static function find_referred_order_by_query(
+        $args,
+        $exclude_order_id,
+    ) {
+        $query_args = array_merge(
+            [
+                "limit" => 1,
+                "orderby" => "date",
+                "order" => "DESC",
+                "return" => "ids",
+                "meta_query" => [
+                    [
+                        "key" => self::ORDER_META_REFERRAL_CODE,
+                        "compare" => "EXISTS",
+                    ],
+                ],
+            ],
+            $args,
+        );
+
+        if ($exclude_order_id > 0) {
+            $query_args["exclude"] = [$exclude_order_id];
+        }
+
+        $matching_orders = wc_get_orders($query_args);
+        if (empty($matching_orders)) {
+            return 0;
+        }
+
+        return (int) reset($matching_orders);
+    }
+
+    private static function get_recent_referred_orders_for_validation(
+        $exclude_order_id,
+    ) {
+        $orders = wc_get_orders([
+            "limit" => 100,
+            "orderby" => "date",
+            "order" => "DESC",
+            "return" => "objects",
+            "status" => ["pending", "on-hold", "processing", "completed"],
+            "meta_query" => [
+                [
+                    "key" => self::ORDER_META_REFERRAL_CODE,
+                    "compare" => "EXISTS",
+                ],
+            ],
+        ]);
+
+        if ($exclude_order_id < 1) {
+            return $orders;
+        }
+
+        return array_values(
+            array_filter($orders, function ($order) use ($exclude_order_id) {
+                return (int) $order->get_id() !== $exclude_order_id;
+            }),
+        );
+    }
+
+    private static function remove_invalid_referral_coupon(
+        $coupon_code,
+        $order = null,
+    ) {
+        $coupon_code = wc_format_coupon_code((string) $coupon_code);
+        if (empty($coupon_code)) {
+            return;
+        }
+
+        if ($order instanceof WC_Order) {
+            $order->remove_coupon($coupon_code);
+            $order->calculate_totals(false);
+        }
+
+        if (function_exists("WC") && WC()->cart) {
+            WC()->cart->remove_coupon($coupon_code);
+            WC()->cart->calculate_totals();
+        }
+
+        if (
+            self::sanitize_referral_code($coupon_code) ===
+            self::get_active_referral_code()
+        ) {
+            self::clear_active_referral_code();
+        }
     }
 
     private static function generate_unique_coupon_code(
@@ -2434,6 +2882,8 @@ final class Lylrv_Connect_Plugin
         $code,
         $description,
     ) {
+        // WooCommerce Store API assumes usage_limit_per_user coupons have a real data store.
+        // Virtual coupons provided via woocommerce_get_shop_coupon_data do not, so keep this at 0.
         return self::build_virtual_coupon_data(
             $code,
             (string) self::get_referral_coupon_amount(),
@@ -2442,7 +2892,7 @@ final class Lylrv_Connect_Plugin
             null,
             $description,
             true,
-            1,
+            0,
         );
     }
 
