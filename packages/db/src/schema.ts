@@ -333,10 +333,14 @@ export const referrals = pgTable(
     id: uuid().defaultRandom().primaryKey().notNull(),
     clientId: uuid("client_id").notNull(),
     customerId: uuid("customer_id").notNull(),
-    code: varchar({ length: 6 }).notNull(),
+    code: varchar({ length: 12 }).notNull(),
     isActive: boolean("is_active").default(false),
     usageCount: integer("usage_count").default(0),
     createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "string",
     }).defaultNow(),
@@ -376,12 +380,28 @@ export const orders = pgTable(
     orderId: bigint("order_id", { mode: "number" }).notNull(),
     email: text(),
     phone: text(),
+    externalUserId: text("external_user_id"),
     status: text(),
     payment: text(),
     total: numeric({ precision: 10, scale: 2 }),
     billing: jsonb(),
     shipping: jsonb(),
     slugs: text().array(),
+    referralCode: text("referral_code"),
+    referralStatus: text("referral_status"),
+    referralReason: text("referral_reason"),
+    rewardCouponId: text("reward_coupon_id"),
+    rewardCouponCode: text("reward_coupon_code"),
+    rewardCouponType: text("reward_coupon_type"),
+    rewardCouponAmount: integer("reward_coupon_amount"),
+    rewardIssuedAt: timestamp("reward_issued_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    rewardRevokedAt: timestamp("reward_revoked_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -401,6 +421,14 @@ export const orders = pgTable(
       "btree",
       table.email.asc().nullsLast().op("text_ops"),
       table.clientId.asc().nullsLast().op("uuid_ops"),
+    ),
+    index("idx_orders_referral_code").using(
+      "btree",
+      table.referralCode.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_orders_referral_status").using(
+      "btree",
+      table.referralStatus.asc().nullsLast().op("text_ops"),
     ),
     foreignKey({
       columns: [table.clientId],
@@ -546,25 +574,63 @@ export const coupons = pgTable(
   "coupons",
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
+    clientId: uuid("client_id"),
     customerId: uuid("customer_id").notNull(),
+    orderId: bigint("order_id", { mode: "number" }),
     code: text().notNull(),
+    externalCouponId: text("external_coupon_id"),
+    type: text(),
     amount: integer().default(0),
     isActive: boolean("is_active").default(true),
+    source: text().default("loyalty"),
+    usageLimit: integer("usage_limit"),
+    timesUsed: integer("times_used").default(0),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    isRevoked: boolean("is_revoked").default(false),
+    revokedAt: timestamp("revoked_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
     createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "string",
     }).defaultNow(),
   },
   (table) => [
+    index("idx_coupons_client").using(
+      "btree",
+      table.clientId.asc().nullsLast().op("uuid_ops"),
+    ),
     index("idx_coupons_customer").using(
       "btree",
       table.customerId.asc().nullsLast().op("uuid_ops"),
     ),
+    index("idx_coupons_order").using(
+      "btree",
+      table.orderId.asc().nullsLast().op("int8_ops"),
+    ),
+    index("idx_coupons_source").using(
+      "btree",
+      table.source.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.clientId],
+      foreignColumns: [clients.id],
+      name: "coupons_client_id_fkey",
+    }).onDelete("cascade"),
     foreignKey({
       columns: [table.customerId],
       foreignColumns: [customers.id],
       name: "coupons_customer_id_fkey",
     }).onDelete("cascade"),
+    unique("coupons_client_id_code_key").on(table.clientId, table.code),
   ],
 );
 
@@ -732,6 +798,7 @@ export const clientsRelations = relations(clients, ({ one, many }) => ({
   activities: many(activity),
   referrals: many(referrals),
   orders: many(orders),
+  coupons: many(coupons),
   products: many(products),
   reviews: many(reviews),
   questions: many(questions),
@@ -819,6 +886,10 @@ export const questionsRelations = relations(questions, ({ one }) => ({
 }));
 
 export const couponsRelations = relations(coupons, ({ one }) => ({
+  client: one(clients, {
+    fields: [coupons.clientId],
+    references: [clients.id],
+  }),
   customer: one(customers, {
     fields: [coupons.customerId],
     references: [customers.id],

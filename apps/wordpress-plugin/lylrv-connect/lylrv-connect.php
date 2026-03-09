@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Lylrv Connect
  * Plugin URI: https://lylrv.com
- * Description: Connects your WordPress site to Lylrv to display loyalty widgets and sync WooCommerce customers and orders.
- * Version: 1.1.0
+ * Description: Connects your WordPress site to Lylrv to display loyalty widgets and sync WooCommerce customers, orders, and referral rewards.
+ * Version: 1.2.0
  * Author: Lylrv
  * Author URI: https://lylrv.com
  * License: GPLv2 or later
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('LYLRV_CONNECT_VERSION', '1.1.0');
+define('LYLRV_CONNECT_VERSION', '1.2.0');
 define('LYLRV_CONNECT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('LYLRV_CONNECT_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -31,10 +31,30 @@ final class Lylrv_Connect_Plugin {
 	const OPTION_LAST_USERS_CURSOR = 'lylrv_last_users_cursor';
 	const OPTION_LAST_ORDERS_CURSOR = 'lylrv_last_orders_cursor';
 	const OPTION_LAST_SYNC_SITE = 'lylrv_last_sync_site';
+	const OPTION_REFERRAL_PARAM = 'lylrv_referral_param';
+	const OPTION_REFERRAL_COUPON_TYPE = 'lylrv_referral_coupon_type';
+	const OPTION_REFERRAL_COUPON_AMOUNT = 'lylrv_referral_coupon_amount';
+	const OPTION_REFERRAL_COUPON_EXPIRY_DAYS = 'lylrv_referral_coupon_expiry_days';
+	const OPTION_REFERRAL_COUPON_USAGE_LIMIT = 'lylrv_referral_coupon_usage_limit';
 	const CRON_HOOK = 'lylrv_connect_cron_sync';
 	const MANUAL_SYNC_ACTION = 'lylrv_connect_manual_sync';
+	const COOKIE_REFERRAL_CODE = 'lylrv_referral_code';
+	const USER_META_REFERRAL_CODE = 'lylrv_referral_code';
+	const ORDER_META_REFERRAL_CODE = '_lylrv_referral_code';
+	const ORDER_META_REFERRER_USER_ID = '_lylrv_referrer_user_id';
+	const ORDER_META_REFERRAL_STATUS = '_lylrv_referral_status';
+	const ORDER_META_REFERRAL_REASON = '_lylrv_referral_reason';
+	const ORDER_META_REWARD_COUPON_ID = '_lylrv_referral_coupon_id';
+	const ORDER_META_REWARD_COUPON_CODE = '_lylrv_referral_coupon_code';
+	const ORDER_META_REWARD_COUPON_TYPE = '_lylrv_referral_coupon_type';
+	const ORDER_META_REWARD_COUPON_AMOUNT = '_lylrv_referral_coupon_amount';
+	const ORDER_META_REWARD_ISSUED_AT = '_lylrv_referral_reward_issued_at';
+	const ORDER_META_REWARD_REVOKED_AT = '_lylrv_referral_reward_revoked_at';
 
 	public static function init() {
+		add_action('init', array(__CLASS__, 'ensure_sync_secret'), 5);
+		add_action('init', array(__CLASS__, 'maybe_schedule_cron'), 10);
+		add_action('init', array(__CLASS__, 'maybe_capture_referral_code'), 20);
 		add_action('admin_init', array(__CLASS__, 'register_settings'));
 		add_action('admin_menu', array(__CLASS__, 'register_menu'));
 		add_action('admin_notices', array(__CLASS__, 'render_admin_notice'));
@@ -43,13 +63,13 @@ final class Lylrv_Connect_Plugin {
 		add_action('wp_footer', array(__CLASS__, 'inject_widget_containers'));
 		add_shortcode('lylrv_widget', array(__CLASS__, 'widget_shortcode'));
 		add_filter('cron_schedules', array(__CLASS__, 'register_cron_schedule'));
-		add_action('init', array(__CLASS__, 'ensure_sync_secret'));
-		add_action('init', array(__CLASS__, 'maybe_schedule_cron'));
 		add_action(self::CRON_HOOK, array(__CLASS__, 'run_scheduled_sync'));
 		add_action('admin_post_' . self::MANUAL_SYNC_ACTION, array(__CLASS__, 'handle_manual_sync'));
 		add_action('user_register', array(__CLASS__, 'handle_user_event'));
 		add_action('profile_update', array(__CLASS__, 'handle_user_event'), 10, 2);
 		add_action('woocommerce_created_customer', array(__CLASS__, 'handle_user_event'));
+		add_action('woocommerce_checkout_create_order', array(__CLASS__, 'capture_referral_on_checkout'), 10, 2);
+		add_action('woocommerce_thankyou', array(__CLASS__, 'clear_referral_tracking_after_checkout'));
 		add_action('woocommerce_new_order', array(__CLASS__, 'handle_order_event'));
 		add_action('woocommerce_update_order', array(__CLASS__, 'handle_order_event'));
 		add_action('woocommerce_order_status_changed', array(__CLASS__, 'handle_order_status_event'), 10, 3);
@@ -101,6 +121,54 @@ final class Lylrv_Connect_Plugin {
 				'sanitize_callback' => array(__CLASS__, 'sanitize_batch_size'),
 			)
 		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_REFERRAL_PARAM,
+			array(
+				'default' => 'ref',
+				'sanitize_callback' => array(__CLASS__, 'sanitize_referral_param'),
+			)
+		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_REFERRAL_COUPON_TYPE,
+			array(
+				'default' => 'fixed_cart',
+				'sanitize_callback' => array(__CLASS__, 'sanitize_referral_coupon_type'),
+			)
+		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_REFERRAL_COUPON_AMOUNT,
+			array(
+				'type' => 'integer',
+				'default' => 10,
+				'sanitize_callback' => array(__CLASS__, 'sanitize_referral_coupon_amount'),
+			)
+		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS,
+			array(
+				'type' => 'integer',
+				'default' => 30,
+				'sanitize_callback' => array(__CLASS__, 'sanitize_referral_coupon_expiry_days'),
+			)
+		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_REFERRAL_COUPON_USAGE_LIMIT,
+			array(
+				'type' => 'integer',
+				'default' => 1,
+				'sanitize_callback' => array(__CLASS__, 'sanitize_referral_coupon_usage_limit'),
+			)
+		);
 	}
 
 	public static function sanitize_api_key($value) {
@@ -135,6 +203,43 @@ final class Lylrv_Connect_Plugin {
 		return $batch_size;
 	}
 
+	public static function sanitize_referral_param($value) {
+		$param = strtolower((string) $value);
+		$param = preg_replace('/[^a-z0-9_-]/', '', $param);
+
+		if (empty($param)) {
+			return 'ref';
+		}
+
+		return $param;
+	}
+
+	public static function sanitize_referral_coupon_type($value) {
+		$allowed = array('fixed_cart', 'percent', 'fixed_product');
+		$type = sanitize_key((string) $value);
+
+		if (!in_array($type, $allowed, true)) {
+			return 'fixed_cart';
+		}
+
+		return $type;
+	}
+
+	public static function sanitize_referral_coupon_amount($value) {
+		$amount = absint($value);
+		return $amount > 0 ? $amount : 10;
+	}
+
+	public static function sanitize_referral_coupon_expiry_days($value) {
+		$days = absint($value);
+		return $days > 3650 ? 3650 : $days;
+	}
+
+	public static function sanitize_referral_coupon_usage_limit($value) {
+		$limit = absint($value);
+		return $limit > 0 ? $limit : 1;
+	}
+
 	public static function ensure_sync_secret() {
 		$secret = get_option(self::OPTION_SYNC_SECRET);
 
@@ -158,15 +263,21 @@ final class Lylrv_Connect_Plugin {
 		$saas_url = get_option(self::OPTION_SAAS_URL, 'https://app.lylrv.com');
 		$sync_enabled = (int) get_option(self::OPTION_SYNC_ENABLED, 1);
 		$batch_size = (int) get_option(self::OPTION_SYNC_BATCH_SIZE, 25);
+		$referral_param = self::get_referral_param_name();
+		$coupon_type = self::get_referral_coupon_type();
+		$coupon_amount = self::get_referral_coupon_amount();
+		$coupon_expiry_days = self::get_referral_coupon_expiry_days();
+		$coupon_usage_limit = self::get_referral_coupon_usage_limit();
 		$woocommerce_ready = self::is_woocommerce_available();
 		$settings_ready = self::is_sync_ready();
+		$recent_referrals = self::get_recent_referral_orders();
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html__('Lylrv Connect Settings', 'lylrv-connect'); ?></h1>
 
 			<?php if (!$woocommerce_ready) : ?>
 				<div class="notice notice-warning inline">
-					<p><?php echo esc_html__('WooCommerce is not active. Widget injection still works, but order and customer sync requires WooCommerce.', 'lylrv-connect'); ?></p>
+					<p><?php echo esc_html__('WooCommerce is not active. Widget injection still works, but order sync and referral rewards require WooCommerce.', 'lylrv-connect'); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -179,13 +290,7 @@ final class Lylrv_Connect_Plugin {
 								<label for="<?php echo esc_attr(self::OPTION_API_KEY); ?>"><?php echo esc_html__('API Key', 'lylrv-connect'); ?></label>
 							</th>
 							<td>
-								<input
-									type="text"
-									id="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
-									name="<?php echo esc_attr(self::OPTION_API_KEY); ?>"
-									value="<?php echo esc_attr($api_key); ?>"
-									class="regular-text"
-								/>
+								<input type="text" id="<?php echo esc_attr(self::OPTION_API_KEY); ?>" name="<?php echo esc_attr(self::OPTION_API_KEY); ?>" value="<?php echo esc_attr($api_key); ?>" class="regular-text" />
 								<p class="description"><?php echo esc_html__('Enter the Lylrv API key for the client you want to sync.', 'lylrv-connect'); ?></p>
 							</td>
 						</tr>
@@ -194,13 +299,7 @@ final class Lylrv_Connect_Plugin {
 								<label for="<?php echo esc_attr(self::OPTION_SAAS_URL); ?>"><?php echo esc_html__('SaaS Application URL', 'lylrv-connect'); ?></label>
 							</th>
 							<td>
-								<input
-									type="url"
-									id="<?php echo esc_attr(self::OPTION_SAAS_URL); ?>"
-									name="<?php echo esc_attr(self::OPTION_SAAS_URL); ?>"
-									value="<?php echo esc_attr($saas_url); ?>"
-									class="regular-text"
-								/>
+								<input type="url" id="<?php echo esc_attr(self::OPTION_SAAS_URL); ?>" name="<?php echo esc_attr(self::OPTION_SAAS_URL); ?>" value="<?php echo esc_attr($saas_url); ?>" class="regular-text" />
 								<p class="description"><?php echo esc_html__('The URL where the Lylrv application is hosted, for example https://app.lylrv.com.', 'lylrv-connect'); ?></p>
 							</td>
 						</tr>
@@ -208,14 +307,8 @@ final class Lylrv_Connect_Plugin {
 							<th scope="row"><?php echo esc_html__('WooCommerce Sync', 'lylrv-connect'); ?></th>
 							<td>
 								<label for="<?php echo esc_attr(self::OPTION_SYNC_ENABLED); ?>">
-									<input
-										type="checkbox"
-										id="<?php echo esc_attr(self::OPTION_SYNC_ENABLED); ?>"
-										name="<?php echo esc_attr(self::OPTION_SYNC_ENABLED); ?>"
-										value="1"
-										<?php checked(1, $sync_enabled); ?>
-									/>
-									<?php echo esc_html__('Sync WooCommerce customers and orders to Lylrv automatically.', 'lylrv-connect'); ?>
+									<input type="checkbox" id="<?php echo esc_attr(self::OPTION_SYNC_ENABLED); ?>" name="<?php echo esc_attr(self::OPTION_SYNC_ENABLED); ?>" value="1" <?php checked(1, $sync_enabled); ?> />
+									<?php echo esc_html__('Sync WooCommerce customers, orders, and referral rewards to Lylrv automatically.', 'lylrv-connect'); ?>
 								</label>
 							</td>
 						</tr>
@@ -224,16 +317,61 @@ final class Lylrv_Connect_Plugin {
 								<label for="<?php echo esc_attr(self::OPTION_SYNC_BATCH_SIZE); ?>"><?php echo esc_html__('Sync Batch Size', 'lylrv-connect'); ?></label>
 							</th>
 							<td>
-								<input
-									type="number"
-									min="1"
-									max="100"
-									id="<?php echo esc_attr(self::OPTION_SYNC_BATCH_SIZE); ?>"
-									name="<?php echo esc_attr(self::OPTION_SYNC_BATCH_SIZE); ?>"
-									value="<?php echo esc_attr((string) $batch_size); ?>"
-									class="small-text"
-								/>
+								<input type="number" min="1" max="100" id="<?php echo esc_attr(self::OPTION_SYNC_BATCH_SIZE); ?>" name="<?php echo esc_attr(self::OPTION_SYNC_BATCH_SIZE); ?>" value="<?php echo esc_attr((string) $batch_size); ?>" class="small-text" />
 								<p class="description"><?php echo esc_html__('How many records to send in each sync request. Lower this if your host has strict request limits.', 'lylrv-connect'); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<h2><?php echo esc_html__('Referral Engine', 'lylrv-connect'); ?></h2>
+				<table class="form-table" role="presentation">
+					<tbody>
+						<tr>
+							<th scope="row">
+								<label for="<?php echo esc_attr(self::OPTION_REFERRAL_PARAM); ?>"><?php echo esc_html__('Referral Query Parameter', 'lylrv-connect'); ?></label>
+							</th>
+							<td>
+								<input type="text" id="<?php echo esc_attr(self::OPTION_REFERRAL_PARAM); ?>" name="<?php echo esc_attr(self::OPTION_REFERRAL_PARAM); ?>" value="<?php echo esc_attr($referral_param); ?>" class="regular-text" />
+								<p class="description"><?php echo esc_html__('Incoming referral links will be captured from this query string key. Example: ?ref=ABC123', 'lylrv-connect'); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_TYPE); ?>"><?php echo esc_html__('Reward Coupon Type', 'lylrv-connect'); ?></label>
+							</th>
+							<td>
+								<select id="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_TYPE); ?>" name="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_TYPE); ?>">
+									<option value="fixed_cart" <?php selected('fixed_cart', $coupon_type); ?>><?php echo esc_html__('Fixed cart discount', 'lylrv-connect'); ?></option>
+									<option value="percent" <?php selected('percent', $coupon_type); ?>><?php echo esc_html__('Percentage discount', 'lylrv-connect'); ?></option>
+									<option value="fixed_product" <?php selected('fixed_product', $coupon_type); ?>><?php echo esc_html__('Fixed product discount', 'lylrv-connect'); ?></option>
+								</select>
+								<p class="description"><?php echo esc_html__('The reward coupon that gets issued to the referrer after the first referred order reaches completed.', 'lylrv-connect'); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_AMOUNT); ?>"><?php echo esc_html__('Reward Coupon Amount', 'lylrv-connect'); ?></label>
+							</th>
+							<td>
+								<input type="number" min="1" id="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_AMOUNT); ?>" name="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_AMOUNT); ?>" value="<?php echo esc_attr((string) $coupon_amount); ?>" class="small-text" />
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS); ?>"><?php echo esc_html__('Reward Coupon Expiry (Days)', 'lylrv-connect'); ?></label>
+							</th>
+							<td>
+								<input type="number" min="0" max="3650" id="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS); ?>" name="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS); ?>" value="<?php echo esc_attr((string) $coupon_expiry_days); ?>" class="small-text" />
+								<p class="description"><?php echo esc_html__('Set to 0 for no expiry.', 'lylrv-connect'); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label for="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_USAGE_LIMIT); ?>"><?php echo esc_html__('Reward Coupon Usage Limit', 'lylrv-connect'); ?></label>
+							</th>
+							<td>
+								<input type="number" min="1" id="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_USAGE_LIMIT); ?>" name="<?php echo esc_attr(self::OPTION_REFERRAL_COUPON_USAGE_LIMIT); ?>" value="<?php echo esc_attr((string) $coupon_usage_limit); ?>" class="small-text" />
 							</td>
 						</tr>
 					</tbody>
@@ -276,6 +414,36 @@ final class Lylrv_Connect_Plugin {
 				<?php self::render_manual_sync_form('orders', __('Sync Orders', 'lylrv-connect'), !$settings_ready || !$woocommerce_ready); ?>
 				<?php self::render_manual_sync_form('all', __('Sync Everything', 'lylrv-connect'), !$settings_ready || !$woocommerce_ready); ?>
 			</div>
+
+			<?php if ($woocommerce_ready) : ?>
+				<h2 style="margin-top: 24px;"><?php echo esc_html__('Recent Referral Orders', 'lylrv-connect'); ?></h2>
+				<?php if (!empty($recent_referrals)) : ?>
+					<table class="widefat striped" style="max-width: 960px;">
+						<thead>
+							<tr>
+								<th><?php echo esc_html__('Order', 'lylrv-connect'); ?></th>
+								<th><?php echo esc_html__('Buyer', 'lylrv-connect'); ?></th>
+								<th><?php echo esc_html__('Code', 'lylrv-connect'); ?></th>
+								<th><?php echo esc_html__('Status', 'lylrv-connect'); ?></th>
+								<th><?php echo esc_html__('Coupon', 'lylrv-connect'); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($recent_referrals as $referral_order) : ?>
+								<tr>
+									<td>#<?php echo esc_html((string) $referral_order->get_id()); ?></td>
+									<td><?php echo esc_html(self::normalize_email($referral_order->get_billing_email()) ?: __('Unknown', 'lylrv-connect')); ?></td>
+									<td><?php echo esc_html((string) $referral_order->get_meta(self::ORDER_META_REFERRAL_CODE)); ?></td>
+									<td><?php echo esc_html(self::format_referral_status((string) $referral_order->get_meta(self::ORDER_META_REFERRAL_STATUS))); ?></td>
+									<td><?php echo esc_html((string) $referral_order->get_meta(self::ORDER_META_REWARD_COUPON_CODE) ?: '—'); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php else : ?>
+					<p><?php echo esc_html__('No referral orders have been captured yet.', 'lylrv-connect'); ?></p>
+				<?php endif; ?>
+			<?php endif; ?>
 		</div>
 		<?php
 	}
@@ -292,11 +460,7 @@ final class Lylrv_Connect_Plugin {
 	}
 
 	public static function render_admin_notice() {
-		if (!is_admin()) {
-			return;
-		}
-
-		if (!current_user_can('manage_options')) {
+		if (!is_admin() || !current_user_can('manage_options')) {
 			return;
 		}
 
@@ -434,6 +598,60 @@ final class Lylrv_Connect_Plugin {
 		self::sync_order_by_id((int) $order_id);
 	}
 
+	public static function maybe_capture_referral_code() {
+		if (is_admin() || (function_exists('wp_doing_ajax') && wp_doing_ajax())) {
+			return;
+		}
+
+		$param_name = self::get_referral_param_name();
+		if (empty($_GET[$param_name])) {
+			return;
+		}
+
+		$code = self::sanitize_referral_code(wp_unslash($_GET[$param_name]));
+		if (empty($code)) {
+			return;
+		}
+
+		if (!self::find_user_id_by_referral_code($code)) {
+			return;
+		}
+
+		self::set_active_referral_code($code);
+	}
+
+	public static function capture_referral_on_checkout($order) {
+		if (!self::is_woocommerce_available() || !is_object($order) || !method_exists($order, 'update_meta_data')) {
+			return;
+		}
+
+		$code = self::get_active_referral_code();
+		if (empty($code)) {
+			return;
+		}
+
+		$referrer_user_id = self::find_user_id_by_referral_code($code);
+		if ($referrer_user_id < 1) {
+			return;
+		}
+
+		$order->update_meta_data(self::ORDER_META_REFERRAL_CODE, $code);
+		$order->update_meta_data(self::ORDER_META_REFERRER_USER_ID, $referrer_user_id);
+
+		if (!$order->get_meta(self::ORDER_META_REFERRAL_STATUS)) {
+			$order->update_meta_data(self::ORDER_META_REFERRAL_STATUS, 'captured');
+			$order->update_meta_data(self::ORDER_META_REFERRAL_REASON, 'awaiting_completion');
+		}
+	}
+
+	public static function clear_referral_tracking_after_checkout($order_id) {
+		if (!$order_id) {
+			return;
+		}
+
+		self::clear_active_referral_code();
+	}
+
 	public static function enqueue_widget_script() {
 		$api_key = get_option(self::OPTION_API_KEY, '');
 		$saas_url = self::get_saas_url();
@@ -452,6 +670,7 @@ final class Lylrv_Connect_Plugin {
 				'isLoggedIn' => is_user_logged_in(),
 				'email' => null,
 				'name' => null,
+				'referralCode' => null,
 			),
 			'context' => array(
 				'product' => null,
@@ -462,6 +681,7 @@ final class Lylrv_Connect_Plugin {
 			$current_user = wp_get_current_user();
 			$data['user']['email'] = $current_user->user_email;
 			$data['user']['name'] = $current_user->display_name;
+			$data['user']['referralCode'] = self::get_or_create_referral_code_for_user((int) $current_user->ID);
 		}
 
 		if (self::is_woocommerce_available() && function_exists('is_product') && is_product()) {
@@ -528,6 +748,7 @@ final class Lylrv_Connect_Plugin {
 			return false;
 		}
 
+		self::get_or_create_referral_code_for_user($user->ID);
 		$customer = self::build_customer_payload_from_user($user);
 		if (empty($customer)) {
 			return false;
@@ -552,6 +773,8 @@ final class Lylrv_Connect_Plugin {
 		if (!$order) {
 			return false;
 		}
+
+		self::maybe_process_referral_for_order($order);
 
 		$order_payload = self::build_order_payload($order);
 		if (empty($order_payload)) {
@@ -602,6 +825,7 @@ final class Lylrv_Connect_Plugin {
 					continue;
 				}
 
+				self::get_or_create_referral_code_for_user($user->ID);
 				$payload = self::build_customer_payload_from_user($user);
 				if (!empty($payload)) {
 					$customers[] = $payload;
@@ -658,6 +882,8 @@ final class Lylrv_Connect_Plugin {
 				if (!$order) {
 					continue;
 				}
+
+				self::maybe_process_referral_for_order($order);
 
 				$order_payload = self::build_order_payload($order);
 				if (!empty($order_payload)) {
@@ -732,6 +958,7 @@ final class Lylrv_Connect_Plugin {
 				continue;
 			}
 
+			self::get_or_create_referral_code_for_user($user->ID);
 			$payload = self::build_customer_payload_from_user($user);
 			if (!empty($payload)) {
 				$customers[] = $payload;
@@ -790,6 +1017,8 @@ final class Lylrv_Connect_Plugin {
 			if (!$order) {
 				continue;
 			}
+
+			self::maybe_process_referral_for_order($order);
 
 			$order_payload = self::build_order_payload($order);
 			if (!empty($order_payload)) {
@@ -912,6 +1141,7 @@ final class Lylrv_Connect_Plugin {
 			'name' => $name,
 			'phone' => self::normalize_string(get_user_meta($user->ID, 'billing_phone', true)),
 			'externalUserId' => (string) $user->ID,
+			'referralCode' => self::get_or_create_referral_code_for_user((int) $user->ID),
 			'totalPoints' => 0,
 			'createdAt' => $registered_at,
 			'updatedAt' => current_time('c', true),
@@ -935,12 +1165,14 @@ final class Lylrv_Connect_Plugin {
 		$created = $order->get_date_created();
 		$updated = $order->get_date_modified();
 		$customer_id = $order->get_customer_id();
+		$referral_code = $customer_id ? self::get_or_create_referral_code_for_user((int) $customer_id) : null;
 
 		return array(
 			'email' => strtolower($email),
 			'name' => $name,
 			'phone' => self::normalize_string($order->get_billing_phone()),
 			'externalUserId' => $customer_id ? (string) $customer_id : null,
+			'referralCode' => $referral_code,
 			'totalPoints' => 0,
 			'createdAt' => $created ? $created->date('c') : current_time('c', true),
 			'updatedAt' => $updated ? $updated->date('c') : current_time('c', true),
@@ -982,6 +1214,7 @@ final class Lylrv_Connect_Plugin {
 			'orderId' => $order_id,
 			'email' => self::normalize_email($order->get_billing_email()),
 			'phone' => self::normalize_string($order->get_billing_phone()),
+			'externalUserId' => $order->get_customer_id() ? (string) $order->get_customer_id() : null,
 			'status' => self::normalize_string($order->get_status()),
 			'payment' => $order->is_paid() ? 'paid' : 'unpaid',
 			'total' => (string) $order->get_total(),
@@ -1008,6 +1241,15 @@ final class Lylrv_Connect_Plugin {
 				$order->get_shipping_country()
 			),
 			'slugs' => array_values(array_unique($slugs)),
+			'referralCode' => self::sanitize_referral_code($order->get_meta(self::ORDER_META_REFERRAL_CODE)),
+			'referralStatus' => self::normalize_string($order->get_meta(self::ORDER_META_REFERRAL_STATUS)),
+			'referralReason' => self::normalize_string($order->get_meta(self::ORDER_META_REFERRAL_REASON)),
+			'rewardCouponId' => self::normalize_string((string) $order->get_meta(self::ORDER_META_REWARD_COUPON_ID)),
+			'rewardCouponCode' => self::normalize_string($order->get_meta(self::ORDER_META_REWARD_COUPON_CODE)),
+			'rewardCouponType' => self::normalize_string($order->get_meta(self::ORDER_META_REWARD_COUPON_TYPE)),
+			'rewardCouponAmount' => absint($order->get_meta(self::ORDER_META_REWARD_COUPON_AMOUNT)),
+			'rewardIssuedAt' => self::normalize_string($order->get_meta(self::ORDER_META_REWARD_ISSUED_AT)),
+			'rewardRevokedAt' => self::normalize_string($order->get_meta(self::ORDER_META_REWARD_REVOKED_AT)),
 			'createdAt' => $created ? $created->date('c') : current_time('c', true),
 			'updatedAt' => $updated ? $updated->date('c') : current_time('c', true),
 		);
@@ -1025,6 +1267,397 @@ final class Lylrv_Connect_Plugin {
 			'postcode' => self::normalize_string($postcode),
 			'country' => self::normalize_string($country),
 		);
+	}
+
+	private static function maybe_process_referral_for_order($order) {
+		if (!self::is_woocommerce_available()) {
+			return;
+		}
+
+		$referral_code = self::sanitize_referral_code($order->get_meta(self::ORDER_META_REFERRAL_CODE));
+		if (empty($referral_code)) {
+			return;
+		}
+
+		$referrer_user_id = (int) $order->get_meta(self::ORDER_META_REFERRER_USER_ID);
+		if ($referrer_user_id < 1) {
+			$referrer_user_id = self::find_user_id_by_referral_code($referral_code);
+			if ($referrer_user_id > 0) {
+				$order->update_meta_data(self::ORDER_META_REFERRER_USER_ID, $referrer_user_id);
+			}
+		}
+
+		$status = (string) $order->get_status();
+		$current_referral_status = (string) $order->get_meta(self::ORDER_META_REFERRAL_STATUS);
+
+		if ('completed' === $status) {
+			self::maybe_issue_referral_reward($order, $referrer_user_id, $referral_code);
+		} elseif (in_array($status, array('cancelled', 'refunded'), true)) {
+			self::maybe_revoke_referral_reward($order);
+		} elseif (empty($current_referral_status)) {
+			self::set_order_referral_state($order, 'captured', 'awaiting_completion');
+			$order->save();
+		}
+	}
+
+	private static function maybe_issue_referral_reward($order, $referrer_user_id, $referral_code) {
+		$current_status = (string) $order->get_meta(self::ORDER_META_REFERRAL_STATUS);
+		if ('reward_issued' === $current_status) {
+			return;
+		}
+
+		if ($referrer_user_id < 1) {
+			self::set_order_referral_state($order, 'blocked', 'invalid_referral_code');
+			$order->save();
+			return;
+		}
+
+		if (!self::is_first_referred_order($order)) {
+			self::set_order_referral_state($order, 'blocked', 'not_first_referred_order');
+			$order->save();
+			return;
+		}
+
+		$self_referral_reason = self::detect_self_referral_reason($order, $referrer_user_id);
+		if (!empty($self_referral_reason)) {
+			self::set_order_referral_state($order, 'blocked', $self_referral_reason);
+			$order->save();
+			return;
+		}
+
+		$coupon_result = self::create_referral_coupon($order, $referrer_user_id, $referral_code);
+		if (is_wp_error($coupon_result)) {
+			self::set_order_referral_state($order, 'blocked', $coupon_result->get_error_code());
+			$order->save();
+			return;
+		}
+
+		$order->update_meta_data(self::ORDER_META_REWARD_COUPON_ID, (string) $coupon_result['couponId']);
+		$order->update_meta_data(self::ORDER_META_REWARD_COUPON_CODE, $coupon_result['couponCode']);
+		$order->update_meta_data(self::ORDER_META_REWARD_COUPON_TYPE, self::get_referral_coupon_type());
+		$order->update_meta_data(self::ORDER_META_REWARD_COUPON_AMOUNT, self::get_referral_coupon_amount());
+		$order->update_meta_data(self::ORDER_META_REWARD_ISSUED_AT, current_time('c', true));
+		$order->delete_meta_data(self::ORDER_META_REWARD_REVOKED_AT);
+		self::set_order_referral_state($order, 'reward_issued', 'reward_coupon_created');
+		$order->save();
+	}
+
+	private static function maybe_revoke_referral_reward($order) {
+		$current_status = (string) $order->get_meta(self::ORDER_META_REFERRAL_STATUS);
+		if ('reward_issued' !== $current_status) {
+			return;
+		}
+
+		$coupon_id = absint($order->get_meta(self::ORDER_META_REWARD_COUPON_ID));
+		$coupon_code = (string) $order->get_meta(self::ORDER_META_REWARD_COUPON_CODE);
+		if ($coupon_id < 1 && empty($coupon_code)) {
+			return;
+		}
+
+		if (self::is_coupon_used($coupon_id, $coupon_code)) {
+			$order->update_meta_data(self::ORDER_META_REFERRAL_REASON, 'reward_coupon_already_used');
+			$order->save();
+			return;
+		}
+
+		$revocation = self::revoke_coupon($coupon_id, $coupon_code);
+		if (is_wp_error($revocation)) {
+			$order->update_meta_data(self::ORDER_META_REFERRAL_REASON, $revocation->get_error_code());
+			$order->save();
+			return;
+		}
+
+		$order->update_meta_data(self::ORDER_META_REWARD_REVOKED_AT, current_time('c', true));
+		self::set_order_referral_state($order, 'reward_revoked', 'order_cancelled_or_refunded');
+		$order->save();
+	}
+
+	private static function create_referral_coupon($order, $referrer_user_id, $referral_code) {
+		if (!class_exists('WC_Coupon')) {
+			return new WP_Error('woocommerce_coupon_unavailable', __('WooCommerce coupons are unavailable on this site.', 'lylrv-connect'));
+		}
+
+		$amount = self::get_referral_coupon_amount();
+		if ($amount < 1) {
+			return new WP_Error('invalid_coupon_amount', __('Referral coupon amount must be greater than zero.', 'lylrv-connect'));
+		}
+
+		$coupon_code = self::generate_unique_coupon_code($referral_code, (int) $order->get_id());
+		$coupon = new WC_Coupon();
+		$coupon->set_code($coupon_code);
+		$coupon->set_discount_type(self::get_referral_coupon_type());
+		$coupon->set_amount((string) $amount);
+		$coupon->set_individual_use(true);
+		$coupon->set_usage_limit(self::get_referral_coupon_usage_limit());
+		$coupon->set_description(sprintf('Lylrv referral reward for order #%d', (int) $order->get_id()));
+
+		$referrer_emails = array_filter(
+			array(
+				self::normalize_email(get_userdata($referrer_user_id) ? get_userdata($referrer_user_id)->user_email : ''),
+				self::normalize_email(get_user_meta($referrer_user_id, 'billing_email', true)),
+			)
+		);
+
+		if (!empty($referrer_emails)) {
+			$coupon->set_email_restrictions(array_values(array_unique($referrer_emails)));
+		}
+
+		$expiry_days = self::get_referral_coupon_expiry_days();
+		if ($expiry_days > 0 && class_exists('WC_DateTime')) {
+			$expiry = new WC_DateTime();
+			$expiry->setTimestamp(time() + ($expiry_days * DAY_IN_SECONDS));
+			$coupon->set_date_expires($expiry);
+		}
+
+		$coupon->update_meta_data('_lylrv_referral_reward', '1');
+		$coupon->update_meta_data('_lylrv_source_order_id', (string) $order->get_id());
+		$coupon->update_meta_data('_lylrv_referrer_user_id', (string) $referrer_user_id);
+		$coupon->save();
+
+		if (!$coupon->get_id()) {
+			return new WP_Error('coupon_creation_failed', __('Unable to create the referral reward coupon.', 'lylrv-connect'));
+		}
+
+		return array(
+			'couponId' => $coupon->get_id(),
+			'couponCode' => $coupon_code,
+		);
+	}
+
+	private static function revoke_coupon($coupon_id, $coupon_code) {
+		$coupon = $coupon_id > 0 ? new WC_Coupon($coupon_id) : new WC_Coupon($coupon_code);
+		if (!$coupon || !$coupon->get_id()) {
+			return new WP_Error('coupon_not_found', __('The referral reward coupon could not be found.', 'lylrv-connect'));
+		}
+
+		if (class_exists('WC_DateTime')) {
+			$expired = new WC_DateTime();
+			$expired->setTimestamp(time() - DAY_IN_SECONDS);
+			$coupon->set_date_expires($expired);
+		}
+
+		$coupon->set_usage_limit(0);
+		$coupon->set_amount('0');
+		$coupon->save();
+		wp_update_post(
+			array(
+				'ID' => $coupon->get_id(),
+				'post_status' => 'draft',
+			)
+		);
+
+		return true;
+	}
+
+	private static function is_coupon_used($coupon_id, $coupon_code) {
+		$coupon = $coupon_id > 0 ? new WC_Coupon($coupon_id) : new WC_Coupon($coupon_code);
+		if (!$coupon || !$coupon->get_id()) {
+			return false;
+		}
+
+		return (int) $coupon->get_usage_count() > 0;
+	}
+
+	private static function is_first_referred_order($order) {
+		$args = array(
+			'limit' => 50,
+			'orderby' => 'date',
+			'order' => 'ASC',
+			'return' => 'ids',
+			'meta_query' => array(
+				array(
+					'key' => self::ORDER_META_REFERRAL_CODE,
+					'compare' => 'EXISTS',
+				),
+			),
+		);
+
+		$customer_id = (int) $order->get_customer_id();
+		$email = self::normalize_email($order->get_billing_email());
+
+		if ($customer_id > 0) {
+			$args['customer_id'] = $customer_id;
+		} elseif (!empty($email)) {
+			$args['billing_email'] = $email;
+		}
+
+		$matching_orders = wc_get_orders($args);
+		if (empty($matching_orders)) {
+			return true;
+		}
+
+		$first_order_id = (int) reset($matching_orders);
+		return $first_order_id === (int) $order->get_id();
+	}
+
+	private static function detect_self_referral_reason($order, $referrer_user_id) {
+		$buyer_user_id = (int) $order->get_customer_id();
+		if ($buyer_user_id > 0 && $buyer_user_id === $referrer_user_id) {
+			return 'self_referral_user_id';
+		}
+
+		$referrer = get_userdata($referrer_user_id);
+		if (!$referrer instanceof WP_User) {
+			return 'invalid_referrer_user';
+		}
+
+		$buyer_email = self::normalize_email($order->get_billing_email());
+		$referrer_email = self::normalize_email($referrer->user_email);
+		$referrer_billing_email = self::normalize_email(get_user_meta($referrer_user_id, 'billing_email', true));
+		if (!empty($buyer_email) && ($buyer_email === $referrer_email || $buyer_email === $referrer_billing_email)) {
+			return 'self_referral_email';
+		}
+
+		$buyer_phone = self::normalize_phone($order->get_billing_phone());
+		$referrer_phone = self::normalize_phone(get_user_meta($referrer_user_id, 'billing_phone', true));
+		if (!empty($buyer_phone) && !empty($referrer_phone) && $buyer_phone === $referrer_phone) {
+			return 'self_referral_phone';
+		}
+
+		return '';
+	}
+
+	private static function get_or_create_referral_code_for_user($user_id) {
+		$user_id = absint($user_id);
+		if ($user_id < 1) {
+			return null;
+		}
+
+		$existing = self::sanitize_referral_code(get_user_meta($user_id, self::USER_META_REFERRAL_CODE, true));
+		if (!empty($existing)) {
+			return $existing;
+		}
+
+		for ($attempt = 0; $attempt < 10; $attempt++) {
+			$code = strtoupper(wp_generate_password(8, false, false));
+			if (!self::find_user_id_by_referral_code($code)) {
+				update_user_meta($user_id, self::USER_META_REFERRAL_CODE, $code);
+				return $code;
+			}
+		}
+
+		$fallback = 'LY' . strtoupper(substr(md5((string) $user_id . wp_rand()), 0, 6));
+		update_user_meta($user_id, self::USER_META_REFERRAL_CODE, $fallback);
+		return $fallback;
+	}
+
+	private static function find_user_id_by_referral_code($code) {
+		$code = self::sanitize_referral_code($code);
+		if (empty($code)) {
+			return 0;
+		}
+
+		$users = get_users(
+			array(
+				'number' => 1,
+				'fields' => 'ids',
+				'meta_key' => self::USER_META_REFERRAL_CODE,
+				'meta_value' => $code,
+			)
+		);
+
+		if (empty($users)) {
+			return 0;
+		}
+
+		return (int) $users[0];
+	}
+
+	private static function set_active_referral_code($code) {
+		$code = self::sanitize_referral_code($code);
+		if (empty($code)) {
+			return;
+		}
+
+		if (self::is_woocommerce_available() && function_exists('WC') && WC()->session) {
+			WC()->session->set(self::COOKIE_REFERRAL_CODE, $code);
+		}
+
+		self::set_referral_cookie($code);
+	}
+
+	private static function get_active_referral_code() {
+		$code = null;
+
+		if (self::is_woocommerce_available() && function_exists('WC') && WC()->session) {
+			$code = WC()->session->get(self::COOKIE_REFERRAL_CODE);
+		}
+
+		if (empty($code) && isset($_COOKIE[self::COOKIE_REFERRAL_CODE])) {
+			$code = wp_unslash($_COOKIE[self::COOKIE_REFERRAL_CODE]);
+		}
+
+		return self::sanitize_referral_code($code);
+	}
+
+	private static function clear_active_referral_code() {
+		if (self::is_woocommerce_available() && function_exists('WC') && WC()->session) {
+			WC()->session->__unset(self::COOKIE_REFERRAL_CODE);
+		}
+
+		self::set_referral_cookie('', time() - DAY_IN_SECONDS);
+	}
+
+	private static function set_referral_cookie($value, $expires = null) {
+		$expires = null === $expires ? time() + MONTH_IN_SECONDS : (int) $expires;
+		if (function_exists('wc_setcookie')) {
+			wc_setcookie(self::COOKIE_REFERRAL_CODE, $value, $expires);
+			return;
+		}
+
+		setcookie(self::COOKIE_REFERRAL_CODE, $value, $expires, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, is_ssl(), true);
+	}
+
+	private static function set_order_referral_state($order, $status, $reason) {
+		$order->update_meta_data(self::ORDER_META_REFERRAL_STATUS, $status);
+		$order->update_meta_data(self::ORDER_META_REFERRAL_REASON, $reason);
+	}
+
+	private static function generate_unique_coupon_code($referral_code, $order_id) {
+		$prefix = substr(self::sanitize_referral_code($referral_code), 0, 4);
+		if (empty($prefix)) {
+			$prefix = 'LYRV';
+		}
+
+		do {
+			$code = sprintf('%s-%d-%s', $prefix, $order_id, strtoupper(wp_generate_password(4, false, false)));
+		} while (self::coupon_code_exists($code));
+
+		return $code;
+	}
+
+	private static function coupon_code_exists($code) {
+		$coupon = new WC_Coupon($code);
+		return $coupon && $coupon->get_id();
+	}
+
+	private static function get_recent_referral_orders() {
+		if (!self::is_woocommerce_available()) {
+			return array();
+		}
+
+		return wc_get_orders(
+			array(
+				'limit' => 10,
+				'orderby' => 'date',
+				'order' => 'DESC',
+				'meta_query' => array(
+					array(
+						'key' => self::ORDER_META_REFERRAL_CODE,
+						'compare' => 'EXISTS',
+					),
+				),
+			)
+		);
+	}
+
+	private static function format_referral_status($value) {
+		$value = trim((string) $value);
+		if ('' === $value) {
+			return __('Captured', 'lylrv-connect');
+		}
+
+		return ucwords(str_replace('_', ' ', $value));
 	}
 
 	private static function is_syncable_user($user) {
@@ -1056,6 +1689,26 @@ final class Lylrv_Connect_Plugin {
 		return (int) get_option(self::OPTION_SYNC_BATCH_SIZE, 25);
 	}
 
+	private static function get_referral_param_name() {
+		return (string) get_option(self::OPTION_REFERRAL_PARAM, 'ref');
+	}
+
+	private static function get_referral_coupon_type() {
+		return (string) get_option(self::OPTION_REFERRAL_COUPON_TYPE, 'fixed_cart');
+	}
+
+	private static function get_referral_coupon_amount() {
+		return (int) get_option(self::OPTION_REFERRAL_COUPON_AMOUNT, 10);
+	}
+
+	private static function get_referral_coupon_expiry_days() {
+		return (int) get_option(self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS, 30);
+	}
+
+	private static function get_referral_coupon_usage_limit() {
+		return (int) get_option(self::OPTION_REFERRAL_COUPON_USAGE_LIMIT, 1);
+	}
+
 	private static function is_woocommerce_available() {
 		return class_exists('WooCommerce') && function_exists('wc_get_order') && function_exists('wc_get_orders');
 	}
@@ -1068,6 +1721,16 @@ final class Lylrv_Connect_Plugin {
 	private static function normalize_email($email) {
 		$email = sanitize_email((string) $email);
 		return empty($email) ? null : strtolower($email);
+	}
+
+	private static function normalize_phone($phone) {
+		$phone = preg_replace('/[^0-9+]/', '', (string) $phone);
+		return empty($phone) ? null : $phone;
+	}
+
+	private static function sanitize_referral_code($code) {
+		$code = preg_replace('/[^A-Za-z0-9]/', '', strtoupper((string) $code));
+		return empty($code) ? null : substr($code, 0, 12);
 	}
 
 	private static function name_from_email($email) {

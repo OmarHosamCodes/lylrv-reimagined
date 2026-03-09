@@ -265,10 +265,21 @@ export const dashboardRouter = {
           });
 
       if (!client) {
-        return { client: null, rows: [] };
+        return {
+          client: null,
+          codes: [],
+          conversions: [],
+          summary: {
+            codeCount: 0,
+            activeCodeCount: 0,
+            conversionCount: 0,
+            issuedCount: 0,
+            revokedCount: 0,
+          },
+        };
       }
 
-      const rows = await ctx.db.query.referrals.findMany({
+      const codes = await ctx.db.query.referrals.findMany({
         where: eq(referrals.clientId, client.id),
         orderBy: [desc(referrals.createdAt)],
         limit: input.limit ?? 50,
@@ -283,7 +294,44 @@ export const dashboardRouter = {
         },
       });
 
-      return { client, rows };
+      const conversions = await ctx.db.query.orders.findMany({
+        where: sql`${orders.clientId} = ${client.id} and ${orders.referralCode} is not null`,
+        orderBy: [desc(orders.updatedAt), desc(orders.createdAt)],
+        limit: input.limit ?? 100,
+        columns: {
+          id: true,
+          orderId: true,
+          email: true,
+          phone: true,
+          externalUserId: true,
+          status: true,
+          total: true,
+          referralCode: true,
+          referralStatus: true,
+          referralReason: true,
+          rewardCouponCode: true,
+          rewardCouponType: true,
+          rewardCouponAmount: true,
+          rewardIssuedAt: true,
+          rewardRevokedAt: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      const summary = {
+        codeCount: codes.length,
+        activeCodeCount: codes.filter((row) => row.isActive).length,
+        conversionCount: conversions.length,
+        issuedCount: conversions.filter(
+          (row) => row.referralStatus === "reward_issued",
+        ).length,
+        revokedCount: conversions.filter(
+          (row) => row.referralStatus === "reward_revoked",
+        ).length,
+      };
+
+      return { client, codes, conversions, summary };
     }),
 
   orders: protectedProcedure

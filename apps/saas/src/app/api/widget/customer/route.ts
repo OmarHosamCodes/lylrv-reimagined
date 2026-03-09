@@ -111,6 +111,7 @@ export const GET = async (req: NextRequest) => {
       where: and(
         eq(coupons.customerId, customer.id),
         eq(coupons.isActive, true),
+        eq(coupons.isRevoked, false),
       ),
     });
 
@@ -131,7 +132,7 @@ export const GET = async (req: NextRequest) => {
         activeCoupons: activeCoupons.map((c) => ({
           id: c.id,
           code: c.code,
-          amount: c.amount,
+          amount: Number(c.amount ?? 0),
         })),
       },
     });
