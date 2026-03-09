@@ -3,16 +3,20 @@ Contributors: lylrv
 Tags: widgets, loyalty, reviews
 Requires at least: 5.0
 Tested up to: 6.7
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Connects your WordPress site to Lylrv to display loyalty and review widgets.
+Connects your WordPress site to Lylrv to display loyalty and review widgets and sync WooCommerce customers and orders.
 
 == Description ==
 
-This plugin allows you to easily inject Lylrv widgets into your WordPress site.
-Simply install the plugin, configure your API key and SaaS URL in the settings under **Settings > Lylrv Connect**, and the widgets will automatically appear based on your configuration in the Lylrv dashboard.
+This plugin allows you to inject Lylrv widgets into your WordPress site and keep WooCommerce orders and customers in sync with Lylrv.
+After installation, configure your API key and SaaS URL in **Settings > Lylrv Connect**. The plugin will:
+
+* load the Lylrv widget bundles on the storefront
+* sync WooCommerce orders and customer profiles automatically
+* provide manual backfill controls for historical WooCommerce data
 
 == Installation ==
 
@@ -26,6 +30,9 @@ Simply install the plugin, configure your API key and SaaS URL in the settings u
 You can find your API key in your Lylrv admin dashboard settings.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added WooCommerce customer and order sync with scheduled and manual backfill support.
 
 = 1.0.0 =
 * Initial release.

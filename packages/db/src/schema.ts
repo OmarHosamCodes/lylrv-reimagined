@@ -208,6 +208,7 @@ export const clientConfig = pgTable(
     clientId: uuid("client_id").notNull(),
     integrationType: text("integration_type").default("woocommerce").notNull(),
     storeUrl: text("store_url"),
+    syncSecret: text("sync_secret"),
     isActive: boolean("is_active").default(true),
     theme: jsonb().default({
       color: "#000000",

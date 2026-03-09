@@ -19,6 +19,24 @@ const optionalClientIdInput = z.object({
   limit: z.number().int().min(1).max(100).optional(),
 });
 
+const clientConfigReadColumns = {
+  id: true,
+  clientId: true,
+  integrationType: true,
+  storeUrl: true,
+  isActive: true,
+  theme: true,
+  language: true,
+  pageSections: true,
+  localizations: true,
+  conditions: true,
+  variables: true,
+  interactions: true,
+  earnSections: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 const createClientInput = z.object({
   name: z.string().trim().min(2).max(120),
   type: z.enum(["free", "hobby", "super", "agency", "pro"]).optional(),
@@ -317,6 +335,7 @@ export const dashboardRouter = {
 
       const config = await ctx.db.query.clientConfig.findFirst({
         where: eq(clientConfig.clientId, client.id),
+        columns: clientConfigReadColumns,
       });
 
       return { client, config };

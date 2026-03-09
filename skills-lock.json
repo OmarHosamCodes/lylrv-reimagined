@@ -5,6 +5,11 @@
       "source": "vudovn/antigravity-kit",
       "sourceType": "github",
       "computedHash": "cde819a3e6d2556ffb3255b0502db9090364427dec4a8d5f432206ac1fa93a44"
+    },
+    "wp-plugin-development": {
+      "source": "wordpress/agent-skills",
+      "sourceType": "github",
+      "computedHash": "3c13a9d2e6e346c9f933918fdf4d191cdba9f2cfe24f87cbcd763d090bbd8014"
     }
   }
 }

@@ -21,6 +21,24 @@ const setCorsHeaders = (res: Response) => {
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+const clientConfigReadColumns = {
+  id: true,
+  clientId: true,
+  integrationType: true,
+  storeUrl: true,
+  isActive: true,
+  theme: true,
+  language: true,
+  pageSections: true,
+  localizations: true,
+  conditions: true,
+  variables: true,
+  interactions: true,
+  earnSections: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 export const OPTIONS = () => {
   const response = new Response(null, { status: 204 });
   setCorsHeaders(response);
@@ -66,6 +84,7 @@ export const GET = async (req: NextRequest) => {
 
     const config = await db.query.clientConfig.findFirst({
       where: eq(clientConfig.clientId, client.id),
+      columns: clientConfigReadColumns,
     });
 
     // Build clientConfig for widgets
