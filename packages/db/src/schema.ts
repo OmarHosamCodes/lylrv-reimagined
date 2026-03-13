@@ -444,12 +444,23 @@ export const products = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     clientId: uuid("client_id").notNull(),
-    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
-    productId: bigint("product_id", { mode: "number" }).notNull(),
-    name: text(),
-    slug: text(),
+    // External product ID (e.g. from WooCommerce). Nullable for SaaS-native products.
+    productId: bigint("product_id", { mode: "number" }),
+    name: text().notNull(),
+    slug: text().notNull(),
     shortDescription: text("short_description"),
     description: text(),
+    price: numeric({ precision: 10, scale: 2 }),
+    comparePrice: numeric("compare_price", { precision: 10, scale: 2 }),
+    currency: text().default("USD"),
+    sku: text(),
+    images: jsonb()
+      .$type<Array<{ url: string; alt?: string; position?: number }>>()
+      .default([]),
+    status: text().default("draft"),
+    category: text(),
+    tags: jsonb().$type<string[]>().default([]),
+    metadata: jsonb().$type<Record<string, unknown>>().default({}),
     isVisible: boolean("is_visible").default(true),
     views: integer().default(0),
     createdAt: timestamp("created_at", {
@@ -466,16 +477,21 @@ export const products = pgTable(
       "btree",
       table.clientId.asc().nullsLast().op("uuid_ops"),
     ),
+    index("idx_products_status").using(
+      "btree",
+      table.clientId.asc().nullsLast().op("uuid_ops"),
+      table.status.asc().nullsLast().op("text_ops"),
+    ),
     foreignKey({
       columns: [table.clientId],
       foreignColumns: [clients.id],
       name: "products_client_id_fkey",
     }).onDelete("cascade"),
-    unique("products_client_id_product_id_key").on(
-      table.clientId,
-      table.productId,
-    ),
     unique("products_client_id_slug_key").on(table.clientId, table.slug),
+    check(
+      "products_status_check",
+      sql`status = ANY (ARRAY['draft'::text, 'active'::text, 'archived'::text])`,
+    ),
   ],
 );
 

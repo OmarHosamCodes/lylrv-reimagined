@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/product-display",
+  "version": "1.0.0",
+  "title": "Lylrv Product Display",
+  "category": "widgets",
+  "icon": "products",
+  "description": "Display a SaaS-managed product from your Lylrv dashboard.",
+  "keywords": ["product", "lylrv", "shop", "store"],
+  "textdomain": "lylrv-connect",
+  "attributes": {
+    "productSlug": {
+      "type": "string",
+      "default": ""
+    },
+    "productName": {
+      "type": "string",
+      "default": ""
+    },
+    "layout": {
+      "type": "string",
+      "default": "card",
+      "enum": ["card", "inline", "full"]
+    },
+    "showPrice": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDescription": {
+      "type": "boolean",
+      "default": true
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}

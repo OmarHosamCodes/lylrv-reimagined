@@ -92,6 +92,7 @@ function DashboardLayout() {
               Operations
             </p>
             <div className="space-y-1 flex flex-col">
+              <NavItem to="/dashboard/products" label="Products" />
               <NavItem to="/dashboard/referrals" label="Referrals" />
               <NavItem to="/dashboard/orders" label="Orders" />
               <NavItem to="/dashboard/settings" label="Settings" />

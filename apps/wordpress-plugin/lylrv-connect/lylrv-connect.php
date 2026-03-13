@@ -24,6 +24,7 @@ require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-sync.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-widgets.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-referral.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-coupon-bridge.php";
+require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-products.php";
 
 final class Lylrv_Connect_Plugin
 {
@@ -33,6 +34,7 @@ final class Lylrv_Connect_Plugin
     use Lylrv_Connect_Widgets;
     use Lylrv_Connect_Referral;
     use Lylrv_Connect_Coupon_Bridge;
+    use Lylrv_Connect_Products;
 
     private static $referral_coupon_error_messages = [];
 
@@ -73,6 +75,9 @@ final class Lylrv_Connect_Plugin
         add_action("init", [__CLASS__, "ensure_sync_secret"], 5);
         add_action("init", [__CLASS__, "maybe_schedule_cron"], 10);
         add_action("init", [__CLASS__, "maybe_capture_referral_code"], 20);
+
+        // SaaS-managed products module (WooCommerce-independent).
+        self::init_products();
         add_action("admin_init", [__CLASS__, "register_settings"]);
         add_action("admin_menu", [__CLASS__, "register_menu"]);
         add_action("admin_notices", [__CLASS__, "render_admin_notice"]);

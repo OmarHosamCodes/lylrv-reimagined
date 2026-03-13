@@ -15,9 +15,11 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardReviewsRouteImport } from './routes/dashboard.reviews'
 import { Route as DashboardReferralsRouteImport } from './routes/dashboard.referrals'
+import { Route as DashboardProductsRouteImport } from './routes/dashboard.products'
 import { Route as DashboardOrdersRouteImport } from './routes/dashboard.orders'
 import { Route as DashboardLoyaltyRouteImport } from './routes/dashboard.loyalty'
 import { Route as DashboardCustomersRouteImport } from './routes/dashboard.customers'
+import { Route as DashboardProductsProductIdRouteImport } from './routes/dashboard.products.$productId'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
@@ -51,6 +53,11 @@ const DashboardReferralsRoute = DashboardReferralsRouteImport.update({
   path: '/referrals',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardProductsRoute = DashboardProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardOrdersRoute = DashboardOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -66,6 +73,12 @@ const DashboardCustomersRoute = DashboardCustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardProductsProductIdRoute =
+  DashboardProductsProductIdRouteImport.update({
+    id: '/$productId',
+    path: '/$productId',
+    getParentRoute: () => DashboardProductsRoute,
+  } as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -83,24 +96,28 @@ export interface FileRoutesByFullPath {
   '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/loyalty': typeof DashboardLoyaltyRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/products': typeof DashboardProductsRouteWithChildren
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/products/$productId': typeof DashboardProductsProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/loyalty': typeof DashboardLoyaltyRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/products': typeof DashboardProductsRouteWithChildren
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/products/$productId': typeof DashboardProductsProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -109,12 +126,14 @@ export interface FileRoutesById {
   '/dashboard/customers': typeof DashboardCustomersRoute
   '/dashboard/loyalty': typeof DashboardLoyaltyRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/products': typeof DashboardProductsRouteWithChildren
   '/dashboard/referrals': typeof DashboardReferralsRoute
   '/dashboard/reviews': typeof DashboardReviewsRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/dashboard/products/$productId': typeof DashboardProductsProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -124,24 +143,28 @@ export interface FileRouteTypes {
     | '/dashboard/customers'
     | '/dashboard/loyalty'
     | '/dashboard/orders'
+    | '/dashboard/products'
     | '/dashboard/referrals'
     | '/dashboard/reviews'
     | '/dashboard/settings'
     | '/dashboard/'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/products/$productId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard/customers'
     | '/dashboard/loyalty'
     | '/dashboard/orders'
+    | '/dashboard/products'
     | '/dashboard/referrals'
     | '/dashboard/reviews'
     | '/dashboard/settings'
     | '/dashboard'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/products/$productId'
   id:
     | '__root__'
     | '/'
@@ -149,12 +172,14 @@ export interface FileRouteTypes {
     | '/dashboard/customers'
     | '/dashboard/loyalty'
     | '/dashboard/orders'
+    | '/dashboard/products'
     | '/dashboard/referrals'
     | '/dashboard/reviews'
     | '/dashboard/settings'
     | '/dashboard/'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/dashboard/products/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -208,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardReferralsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/products': {
+      id: '/dashboard/products'
+      path: '/products'
+      fullPath: '/dashboard/products'
+      preLoaderRoute: typeof DashboardProductsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/orders': {
       id: '/dashboard/orders'
       path: '/orders'
@@ -229,6 +261,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardCustomersRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/products/$productId': {
+      id: '/dashboard/products/$productId'
+      path: '/$productId'
+      fullPath: '/dashboard/products/$productId'
+      preLoaderRoute: typeof DashboardProductsProductIdRouteImport
+      parentRoute: typeof DashboardProductsRoute
+    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -246,10 +285,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardProductsRouteChildren {
+  DashboardProductsProductIdRoute: typeof DashboardProductsProductIdRoute
+}
+
+const DashboardProductsRouteChildren: DashboardProductsRouteChildren = {
+  DashboardProductsProductIdRoute: DashboardProductsProductIdRoute,
+}
+
+const DashboardProductsRouteWithChildren =
+  DashboardProductsRoute._addFileChildren(DashboardProductsRouteChildren)
+
 interface DashboardRouteChildren {
   DashboardCustomersRoute: typeof DashboardCustomersRoute
   DashboardLoyaltyRoute: typeof DashboardLoyaltyRoute
   DashboardOrdersRoute: typeof DashboardOrdersRoute
+  DashboardProductsRoute: typeof DashboardProductsRouteWithChildren
   DashboardReferralsRoute: typeof DashboardReferralsRoute
   DashboardReviewsRoute: typeof DashboardReviewsRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -260,6 +311,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardCustomersRoute: DashboardCustomersRoute,
   DashboardLoyaltyRoute: DashboardLoyaltyRoute,
   DashboardOrdersRoute: DashboardOrdersRoute,
+  DashboardProductsRoute: DashboardProductsRouteWithChildren,
   DashboardReferralsRoute: DashboardReferralsRoute,
   DashboardReviewsRoute: DashboardReviewsRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
