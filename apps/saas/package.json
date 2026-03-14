@@ -1,6 +1,7 @@
 {
   "name": "@lylrv/saas",
   "private": true,
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
