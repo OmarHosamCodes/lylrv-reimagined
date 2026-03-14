@@ -25,7 +25,8 @@
       "cache": false
     },
     "push": {
-      "cache": false
+      "cache": false,
+      "interactive": true
     },
     "studio": {
       "cache": false,
