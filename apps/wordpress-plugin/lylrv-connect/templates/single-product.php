@@ -17,16 +17,16 @@ if (!defined("ABSPATH")) {
 $product = isset($GLOBALS["lylrv_product"]) ? $GLOBALS["lylrv_product"] : null;
 
 if (!$product) {
-    get_header();
+    Lylrv_Connect_Plugin::render_theme_header();
     echo '<div class="lylrv-product-single" style="max-width:800px;margin:40px auto;padding:0 20px;">';
-    echo '<p>' . esc_html__("Product not found.", "lylrv-connect") . '</p>';
-    echo '</div>';
-    get_footer();
+    echo "<p>" . esc_html__("Product not found.", "lylrv-connect") . "</p>";
+    echo "</div>";
+    Lylrv_Connect_Plugin::render_theme_footer();
     return;
 }
 
 $name = esc_html($product["name"] ?? "");
-$description = $product["description"] ?? $product["shortDescription"] ?? "";
+$description = $product["description"] ?? ($product["shortDescription"] ?? "");
 $price = $product["price"] ?? null;
 $compare_price = $product["comparePrice"] ?? null;
 $currency = $product["currency"] ?? "USD";
@@ -35,7 +35,7 @@ $category = $product["category"] ?? "";
 $tags = $product["tags"] ?? [];
 $sku = $product["sku"] ?? "";
 
-get_header();
+Lylrv_Connect_Plugin::render_theme_header();
 ?>
 
 <div class="lylrv-product-single" style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
@@ -68,13 +68,26 @@ get_header();
 
             <?php if ($price !== null): ?>
             <div class="lylrv-product-single__price" style="margin-bottom: 16px; font-size: 22px;">
-                <?php if ($compare_price !== null && (float) $compare_price > (float) $price): ?>
+                <?php if (
+                    $compare_price !== null &&
+                    (float) $compare_price > (float) $price
+                ): ?>
                     <span style="text-decoration: line-through; color: #999; margin-right: 8px;">
-                        <?php echo esc_html(Lylrv_Connect_Plugin::format_product_price($compare_price, $currency)); ?>
+                        <?php echo esc_html(
+                            Lylrv_Connect_Plugin::format_product_price(
+                                $compare_price,
+                                $currency,
+                            ),
+                        ); ?>
                     </span>
                 <?php endif; ?>
                 <span style="font-weight: 700; color: #111;">
-                    <?php echo esc_html(Lylrv_Connect_Plugin::format_product_price($price, $currency)); ?>
+                    <?php echo esc_html(
+                        Lylrv_Connect_Plugin::format_product_price(
+                            $price,
+                            $currency,
+                        ),
+                    ); ?>
                 </span>
             </div>
             <?php endif; ?>
@@ -87,13 +100,19 @@ get_header();
 
             <?php if (!empty($sku)): ?>
             <p style="color: #888; font-size: 13px; margin: 4px 0;">
-                <?php echo esc_html__("SKU:", "lylrv-connect"); ?> <?php echo esc_html($sku); ?>
+                <?php echo esc_html__(
+                    "SKU:",
+                    "lylrv-connect",
+                ); ?> <?php echo esc_html($sku); ?>
             </p>
             <?php endif; ?>
 
             <?php if (!empty($category)): ?>
             <p style="color: #888; font-size: 13px; margin: 4px 0;">
-                <?php echo esc_html__("Category:", "lylrv-connect"); ?> <?php echo esc_html($category); ?>
+                <?php echo esc_html__(
+                    "Category:",
+                    "lylrv-connect",
+                ); ?> <?php echo esc_html($category); ?>
             </p>
             <?php endif; ?>
 
@@ -112,5 +131,4 @@ get_header();
 
 </div>
 
-<?php
-get_footer();
+<?php Lylrv_Connect_Plugin::render_theme_footer();

@@ -2,6 +2,7 @@ import { authRouter } from "./router/auth";
 import { dashboardRouter } from "./router/dashboard";
 import { postRouter } from "./router/post";
 import { productsRouter } from "./router/products";
+import { storefrontRouter } from "./router/storefront";
 import { widgetRouter } from "./router/widget";
 import { createTRPCRouter } from "./trpc";
 
@@ -10,6 +11,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardRouter,
   post: postRouter,
   products: productsRouter,
+  storefront: storefrontRouter,
   widget: widgetRouter,
 });
 

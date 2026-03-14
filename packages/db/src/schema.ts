@@ -495,6 +495,255 @@ export const products = pgTable(
   ],
 );
 
+export const storefrontCarts = pgTable(
+  "storefront_carts",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    clientId: uuid("client_id").notNull(),
+    token: varchar({ length: 64 }).notNull(),
+    status: text().default("active").notNull(),
+    currency: text().default("USD"),
+    email: text(),
+    metadata: jsonb().$type<Record<string, unknown>>().default({}),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+  },
+  (table) => [
+    index("idx_storefront_carts_client_status").using(
+      "btree",
+      table.clientId.asc().nullsLast().op("uuid_ops"),
+      table.status.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_storefront_carts_token").using(
+      "btree",
+      table.token.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.clientId],
+      foreignColumns: [clients.id],
+      name: "storefront_carts_client_id_fkey",
+    }).onDelete("cascade"),
+    unique("storefront_carts_token_key").on(table.token),
+    check(
+      "storefront_carts_status_check",
+      sql`status = ANY (ARRAY['active'::text, 'converted'::text, 'abandoned'::text])`,
+    ),
+  ],
+);
+
+export const storefrontCartItems = pgTable(
+  "storefront_cart_items",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    cartId: uuid("cart_id").notNull(),
+    productId: uuid("product_id"),
+    name: text().notNull(),
+    slug: text().notNull(),
+    sku: text(),
+    imageUrl: text("image_url"),
+    unitPrice: numeric("unit_price", { precision: 10, scale: 2 }).notNull(),
+    quantity: integer().default(1).notNull(),
+    currency: text().default("USD"),
+    snapshot: jsonb().$type<Record<string, unknown>>().default({}),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+  },
+  (table) => [
+    index("idx_storefront_cart_items_cart").using(
+      "btree",
+      table.cartId.asc().nullsLast().op("uuid_ops"),
+    ),
+    index("idx_storefront_cart_items_product").using(
+      "btree",
+      table.productId.asc().nullsLast().op("uuid_ops"),
+    ),
+    foreignKey({
+      columns: [table.cartId],
+      foreignColumns: [storefrontCarts.id],
+      name: "storefront_cart_items_cart_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.productId],
+      foreignColumns: [products.id],
+      name: "storefront_cart_items_product_id_fkey",
+    }).onDelete("set null"),
+    check("storefront_cart_items_quantity_check", sql`quantity > 0`),
+  ],
+);
+
+export const checkoutSessions = pgTable(
+  "checkout_sessions",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    clientId: uuid("client_id").notNull(),
+    cartId: uuid("cart_id").notNull(),
+    token: varchar({ length: 64 }).notNull(),
+    status: text().default("open").notNull(),
+    email: text(),
+    name: text(),
+    phone: text(),
+    billing: jsonb().$type<Record<string, unknown>>().default({}),
+    shipping: jsonb().$type<Record<string, unknown>>().default({}),
+    metadata: jsonb().$type<Record<string, unknown>>().default({}),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+  },
+  (table) => [
+    index("idx_checkout_sessions_client_status").using(
+      "btree",
+      table.clientId.asc().nullsLast().op("uuid_ops"),
+      table.status.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_checkout_sessions_cart").using(
+      "btree",
+      table.cartId.asc().nullsLast().op("uuid_ops"),
+    ),
+    foreignKey({
+      columns: [table.clientId],
+      foreignColumns: [clients.id],
+      name: "checkout_sessions_client_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.cartId],
+      foreignColumns: [storefrontCarts.id],
+      name: "checkout_sessions_cart_id_fkey",
+    }).onDelete("cascade"),
+    unique("checkout_sessions_token_key").on(table.token),
+    check(
+      "checkout_sessions_status_check",
+      sql`status = ANY (ARRAY['open'::text, 'submitted'::text, 'expired'::text])`,
+    ),
+  ],
+);
+
+export const storefrontOrders = pgTable(
+  "storefront_orders",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    clientId: uuid("client_id").notNull(),
+    checkoutSessionId: uuid("checkout_session_id"),
+    cartId: uuid("cart_id"),
+    publicId: varchar("public_id", { length: 24 }).notNull(),
+    email: text(),
+    name: text(),
+    phone: text(),
+    status: text().default("submitted").notNull(),
+    currency: text().default("USD"),
+    subtotal: numeric({ precision: 10, scale: 2 }).default("0"),
+    total: numeric({ precision: 10, scale: 2 }).default("0"),
+    billing: jsonb().$type<Record<string, unknown>>().default({}),
+    shipping: jsonb().$type<Record<string, unknown>>().default({}),
+    metadata: jsonb().$type<Record<string, unknown>>().default({}),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+  },
+  (table) => [
+    index("idx_storefront_orders_client_status").using(
+      "btree",
+      table.clientId.asc().nullsLast().op("uuid_ops"),
+      table.status.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_storefront_orders_public_id").using(
+      "btree",
+      table.publicId.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.clientId],
+      foreignColumns: [clients.id],
+      name: "storefront_orders_client_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.checkoutSessionId],
+      foreignColumns: [checkoutSessions.id],
+      name: "storefront_orders_checkout_session_id_fkey",
+    }).onDelete("set null"),
+    foreignKey({
+      columns: [table.cartId],
+      foreignColumns: [storefrontCarts.id],
+      name: "storefront_orders_cart_id_fkey",
+    }).onDelete("set null"),
+    unique("storefront_orders_public_id_key").on(table.publicId),
+    check(
+      "storefront_orders_status_check",
+      sql`status = ANY (ARRAY['pending'::text, 'submitted'::text, 'paid'::text, 'fulfilled'::text, 'cancelled'::text])`,
+    ),
+  ],
+);
+
+export const storefrontOrderItems = pgTable(
+  "storefront_order_items",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    orderId: uuid("order_id").notNull(),
+    productId: uuid("product_id"),
+    name: text().notNull(),
+    slug: text().notNull(),
+    sku: text(),
+    imageUrl: text("image_url"),
+    unitPrice: numeric("unit_price", { precision: 10, scale: 2 }).notNull(),
+    quantity: integer().default(1).notNull(),
+    lineTotal: numeric("line_total", { precision: 10, scale: 2 }).notNull(),
+    snapshot: jsonb().$type<Record<string, unknown>>().default({}),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    }).defaultNow(),
+  },
+  (table) => [
+    index("idx_storefront_order_items_order").using(
+      "btree",
+      table.orderId.asc().nullsLast().op("uuid_ops"),
+    ),
+    index("idx_storefront_order_items_product").using(
+      "btree",
+      table.productId.asc().nullsLast().op("uuid_ops"),
+    ),
+    foreignKey({
+      columns: [table.orderId],
+      foreignColumns: [storefrontOrders.id],
+      name: "storefront_order_items_order_id_fkey",
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.productId],
+      foreignColumns: [products.id],
+      name: "storefront_order_items_product_id_fkey",
+    }).onDelete("set null"),
+    check("storefront_order_items_quantity_check", sql`quantity > 0`),
+  ],
+);
+
 export const reviews = pgTable(
   "reviews",
   {
@@ -816,6 +1065,9 @@ export const clientsRelations = relations(clients, ({ one, many }) => ({
   orders: many(orders),
   coupons: many(coupons),
   products: many(products),
+  storefrontCarts: many(storefrontCarts),
+  checkoutSessions: many(checkoutSessions),
+  storefrontOrders: many(storefrontOrders),
   reviews: many(reviews),
   questions: many(questions),
   auditLogs: many(auditLogs),
@@ -875,9 +1127,86 @@ export const productsRelations = relations(products, ({ one, many }) => ({
     fields: [products.clientId],
     references: [clients.id],
   }),
+  storefrontCartItems: many(storefrontCartItems),
+  storefrontOrderItems: many(storefrontOrderItems),
   reviews: many(reviews),
   questions: many(questions),
 }));
+
+export const storefrontCartsRelations = relations(
+  storefrontCarts,
+  ({ one, many }) => ({
+    client: one(clients, {
+      fields: [storefrontCarts.clientId],
+      references: [clients.id],
+    }),
+    items: many(storefrontCartItems),
+    checkoutSessions: many(checkoutSessions),
+    orders: many(storefrontOrders),
+  }),
+);
+
+export const storefrontCartItemsRelations = relations(
+  storefrontCartItems,
+  ({ one }) => ({
+    cart: one(storefrontCarts, {
+      fields: [storefrontCartItems.cartId],
+      references: [storefrontCarts.id],
+    }),
+    product: one(products, {
+      fields: [storefrontCartItems.productId],
+      references: [products.id],
+    }),
+  }),
+);
+
+export const checkoutSessionsRelations = relations(
+  checkoutSessions,
+  ({ one, many }) => ({
+    client: one(clients, {
+      fields: [checkoutSessions.clientId],
+      references: [clients.id],
+    }),
+    cart: one(storefrontCarts, {
+      fields: [checkoutSessions.cartId],
+      references: [storefrontCarts.id],
+    }),
+    orders: many(storefrontOrders),
+  }),
+);
+
+export const storefrontOrdersRelations = relations(
+  storefrontOrders,
+  ({ one, many }) => ({
+    client: one(clients, {
+      fields: [storefrontOrders.clientId],
+      references: [clients.id],
+    }),
+    checkoutSession: one(checkoutSessions, {
+      fields: [storefrontOrders.checkoutSessionId],
+      references: [checkoutSessions.id],
+    }),
+    cart: one(storefrontCarts, {
+      fields: [storefrontOrders.cartId],
+      references: [storefrontCarts.id],
+    }),
+    items: many(storefrontOrderItems),
+  }),
+);
+
+export const storefrontOrderItemsRelations = relations(
+  storefrontOrderItems,
+  ({ one }) => ({
+    order: one(storefrontOrders, {
+      fields: [storefrontOrderItems.orderId],
+      references: [storefrontOrders.id],
+    }),
+    product: one(products, {
+      fields: [storefrontOrderItems.productId],
+      references: [products.id],
+    }),
+  }),
+);
 
 export const reviewsRelations = relations(reviews, ({ one }) => ({
   client: one(clients, {

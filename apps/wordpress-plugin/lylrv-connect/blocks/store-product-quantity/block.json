@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-product-quantity",
+  "version": "1.0.0",
+  "title": "Lylrv Product Quantity",
+  "category": "widgets",
+  "icon": "plus-alt2",
+  "description": "Displays the quantity control for the storefront product.",
+  "parent": ["lylrv-connect/store-product"],
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false
+  }
+}

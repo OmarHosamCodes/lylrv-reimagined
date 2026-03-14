@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-add-to-cart",
+  "version": "1.0.0",
+  "title": "Lylrv Add To Cart",
+  "category": "widgets",
+  "icon": "cart",
+  "description": "Adds the current storefront product to the SaaS cart.",
+  "parent": ["lylrv-connect/store-product"],
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false
+  }
+}

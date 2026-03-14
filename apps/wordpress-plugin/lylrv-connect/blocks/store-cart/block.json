@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-cart",
+  "version": "1.0.0",
+  "title": "Lylrv Store Cart",
+  "category": "widgets",
+  "icon": "cart",
+  "description": "Displays the SaaS-backed storefront cart.",
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}

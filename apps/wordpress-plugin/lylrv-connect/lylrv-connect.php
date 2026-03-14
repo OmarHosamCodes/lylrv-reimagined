@@ -25,6 +25,7 @@ require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-widgets.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-referral.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-coupon-bridge.php";
 require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-products.php";
+require_once LYLRV_CONNECT_PLUGIN_DIR . "includes/trait-storefront.php";
 
 final class Lylrv_Connect_Plugin
 {
@@ -35,6 +36,7 @@ final class Lylrv_Connect_Plugin
     use Lylrv_Connect_Referral;
     use Lylrv_Connect_Coupon_Bridge;
     use Lylrv_Connect_Products;
+    use Lylrv_Connect_Storefront;
 
     private static $referral_coupon_error_messages = [];
 
@@ -44,6 +46,11 @@ final class Lylrv_Connect_Plugin
     const OPTION_SYNC_ENABLED = "lylrv_sync_enabled";
     const OPTION_SYNC_BATCH_SIZE = "lylrv_sync_batch_size";
     const OPTION_SYNC_SECRET = "lylrv_sync_secret";
+    const OPTION_STOREFRONT_BASE = "lylrv_storefront_base";
+    const OPTION_STOREFRONT_PRODUCT_PAGE_ID = "lylrv_storefront_product_page_id";
+    const OPTION_STOREFRONT_CART_PAGE_ID = "lylrv_storefront_cart_page_id";
+    const OPTION_STOREFRONT_CHECKOUT_PAGE_ID = "lylrv_storefront_checkout_page_id";
+    const OPTION_STOREFRONT_THANK_YOU_PAGE_ID = "lylrv_storefront_thank_you_page_id";
     const OPTION_LAST_SYNC_ERROR = "lylrv_last_sync_error";
     const OPTION_LAST_CUSTOMERS_SYNC = "lylrv_last_customers_sync";
     const OPTION_LAST_ORDERS_SYNC = "lylrv_last_orders_sync";
@@ -58,6 +65,7 @@ final class Lylrv_Connect_Plugin
     const CRON_HOOK = "lylrv_connect_cron_sync";
     const MANUAL_SYNC_ACTION = "lylrv_connect_manual_sync";
     const COOKIE_REFERRAL_CODE = "lylrv_referral_code";
+    const COOKIE_STOREFRONT_CART = "lylrv_storefront_cart";
     const USER_META_REFERRAL_CODE = "lylrv_referral_code";
     const ORDER_META_REFERRAL_CODE = "_lylrv_referral_code";
     const ORDER_META_REFERRER_USER_ID = "_lylrv_referrer_user_id";
@@ -78,6 +86,7 @@ final class Lylrv_Connect_Plugin
 
         // SaaS-managed products module (WooCommerce-independent).
         self::init_products();
+        self::init_storefront();
         add_action("admin_init", [__CLASS__, "register_settings"]);
         add_action("admin_menu", [__CLASS__, "register_menu"]);
         add_action("admin_notices", [__CLASS__, "render_admin_notice"]);
@@ -159,12 +168,16 @@ final class Lylrv_Connect_Plugin
     public static function activate()
     {
         self::ensure_sync_secret();
+        self::register_product_post_type();
+        self::register_storefront_rewrites();
         self::maybe_schedule_cron();
+        flush_rewrite_rules();
     }
 
     public static function deactivate()
     {
         wp_clear_scheduled_hook(self::CRON_HOOK);
+        flush_rewrite_rules();
     }
 }
 

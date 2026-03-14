@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-product-title",
+  "version": "1.0.0",
+  "title": "Lylrv Product Title",
+  "category": "widgets",
+  "icon": "heading",
+  "description": "Displays the storefront product title.",
+  "parent": ["lylrv-connect/store-product"],
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false
+  }
+}

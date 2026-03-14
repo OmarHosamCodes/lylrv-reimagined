@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-thank-you",
+  "version": "1.0.0",
+  "title": "Lylrv Store Thank You",
+  "category": "widgets",
+  "icon": "yes-alt",
+  "description": "Displays the storefront thank-you summary.",
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}

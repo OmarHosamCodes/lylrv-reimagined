@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-checkout",
+  "version": "1.0.0",
+  "title": "Lylrv Store Checkout",
+  "category": "widgets",
+  "icon": "clipboard",
+  "description": "Displays the SaaS-backed storefront checkout.",
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}

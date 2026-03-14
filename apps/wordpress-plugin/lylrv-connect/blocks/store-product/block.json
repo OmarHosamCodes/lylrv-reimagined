@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lylrv-connect/store-product",
+  "version": "1.0.0",
+  "title": "Lylrv Store Product",
+  "category": "widgets",
+  "icon": "products",
+  "description": "Parent storefront product block with flexible child field blocks.",
+  "textdomain": "lylrv-connect",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  }
+}
