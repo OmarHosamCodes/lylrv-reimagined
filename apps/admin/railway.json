@@ -2,14 +2,13 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "buildCommand": "pnpm install --frozen-lockfile && pnpm build:widgets && pnpm turbo build --filter=@lylrv/admin",
+    "buildCommand": "pnpm install --frozen-lockfile && pnpm turbo build --filter=@lylrv/admin",
     "watchPatterns": ["apps/admin/**", "packages/**", "tooling/**"]
   },
   "deploy": {
     "runtime": "V2",
     "numReplicas": 1,
-    "startCommand": "cd apps/admin && pnpm start",
-    "preDeployCommand": "pnpm db:push",
+    "startCommand": "pnpm dotenv -e .env -- node apps/admin/.output/server/index.mjs",
     "limitOverride": {
       "containers": {
         "cpu": 3,
