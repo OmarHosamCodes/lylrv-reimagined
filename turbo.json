@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
+  "$schema": "https://turborepo.dev/schema.v2.json",
   "ui": "tui",
   "tasks": {
     "topo": {
@@ -25,8 +25,7 @@
       "cache": false
     },
     "push": {
-      "cache": false,
-      "interactive": true
+      "cache": false
     },
     "studio": {
       "cache": false,
