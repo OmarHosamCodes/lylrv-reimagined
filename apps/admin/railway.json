@@ -1,0 +1,28 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "pnpm install --frozen-lockfile && pnpm build:widgets && pnpm turbo build --filter=@lylrv/admin",
+    "watchPatterns": ["apps/admin/**", "packages/**", "tooling/**"]
+  },
+  "deploy": {
+    "runtime": "V2",
+    "numReplicas": 1,
+    "startCommand": "cd apps/admin && pnpm start",
+    "preDeployCommand": "pnpm db:push",
+    "limitOverride": {
+      "containers": {
+        "cpu": 3,
+        "memoryBytes": 3000000000
+      }
+    },
+    "sleepApplication": true,
+    "multiRegionConfig": {
+      "europe-west4-drams3a": {
+        "numReplicas": 3
+      }
+    },
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
