@@ -7,16 +7,16 @@ Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Connects your WordPress site to Lylrv to display loyalty and review widgets and sync WooCommerce customers and orders.
+Connects your WordPress site to Lylrv to display loyalty and review widgets and power the native storefront.
 
 == Description ==
 
-This plugin allows you to inject Lylrv widgets into your WordPress site and keep WooCommerce orders and customers in sync with Lylrv.
+This plugin allows you to inject Lylrv widgets into your WordPress site and configure the native Lylrv storefront experience.
 After installation, configure your API key and SaaS URL in **Settings > Lylrv Connect**. The plugin will:
 
 * load the Lylrv widget bundles on the storefront
-* sync WooCommerce orders and customer profiles automatically
-* provide manual backfill controls for historical WooCommerce data
+* expose native storefront routes for products, cart, checkout, and thank-you pages
+* let you assign WordPress pages to storefront routes or use built-in fallback layouts
 
 == Installation ==
 
@@ -32,7 +32,7 @@ You can find your API key in your Lylrv admin dashboard settings.
 == Changelog ==
 
 = 1.1.0 =
-* Added WooCommerce customer and order sync with scheduled and manual backfill support.
+* Added native storefront configuration and widget loading support.
 
 = 1.0.0 =
 * Initial release.

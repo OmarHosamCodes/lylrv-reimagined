@@ -70,7 +70,7 @@ function ReferralsPage() {
     <div className="flex flex-col gap-5">
       <DashboardPageHeader
         title="Referrals"
-        description="Referral code ownership, referred-order state, and issued WooCommerce reward coupons."
+        description="Referral code ownership, referred-order state, and issued reward coupons."
         meta={client?.name ?? client?.email ?? "No active client"}
       />
 
@@ -100,7 +100,7 @@ function ReferralsPage() {
       {conversions.length ? (
         <DashboardSection
           title="Referral conversions"
-          description="Latest referred WooCommerce orders"
+          description="Latest referred orders"
         >
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -119,7 +119,10 @@ function ReferralsPage() {
                   <tr key={row.id}>
                     <td className="px-4 py-3 font-medium">#{row.orderId}</td>
                     <td className="px-4 py-3">
-                      {row.email ?? row.phone ?? row.externalUserId ?? "Unknown"}
+                      {row.email ??
+                        row.phone ??
+                        row.externalUserId ??
+                        "Unknown"}
                     </td>
                     <td className="px-4 py-3">
                       <div className="font-mono text-xs uppercase">
@@ -127,7 +130,7 @@ function ReferralsPage() {
                       </div>
                       <div className="text-xs text-muted-foreground">
                         {row.referralCode
-                          ? codeLookup.get(row.referralCode) ?? "Unknown"
+                          ? (codeLookup.get(row.referralCode) ?? "Unknown")
                           : "—"}
                       </div>
                     </td>
@@ -160,7 +163,7 @@ function ReferralsPage() {
       ) : (
         <DashboardEmptyState
           title="No referral conversions found"
-          description="No referred WooCommerce orders have been synced for this client yet."
+          description="No referred orders have been synced for this client yet."
         />
       )}
 

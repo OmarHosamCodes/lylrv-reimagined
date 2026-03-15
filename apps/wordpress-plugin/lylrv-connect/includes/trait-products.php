@@ -6,7 +6,7 @@
  * from the SaaS API with transient caching, and registers the
  * Gutenberg product-display block.
  *
- * Zero WooCommerce dependencies — operates entirely via SaaS API.
+ * Operates entirely via the SaaS API.
  *
  * @package Lylrv_Connect
  */

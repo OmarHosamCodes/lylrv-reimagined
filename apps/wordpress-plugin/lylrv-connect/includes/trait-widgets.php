@@ -30,7 +30,6 @@ trait Lylrv_Connect_Widgets
                 "isLoggedIn" => is_user_logged_in(),
                 "email" => null,
                 "name" => null,
-                "referralCode" => null,
             ],
             "context" => [
                 "product" => null,
@@ -41,37 +40,6 @@ trait Lylrv_Connect_Widgets
             $current_user = wp_get_current_user();
             $data["user"]["email"] = $current_user->user_email;
             $data["user"]["name"] = $current_user->display_name;
-            $data["user"][
-                "referralCode"
-            ] = self::get_or_create_referral_code_for_user(
-                (int) $current_user->ID,
-            );
-        }
-
-        if (
-            self::is_woocommerce_available() &&
-            function_exists("is_product") &&
-            is_product()
-        ) {
-            global $post;
-
-            if ($post instanceof WP_Post) {
-                $product_id = (int) $post->ID;
-                $has_purchased = false;
-
-                if (is_user_logged_in()) {
-                    $has_purchased = wc_customer_bought_product(
-                        $data["user"]["email"],
-                        get_current_user_id(),
-                        $product_id,
-                    );
-                }
-
-                $data["context"]["product"] = [
-                    "id" => $product_id,
-                    "hasPurchased" => $has_purchased,
-                ];
-            }
         }
 
         wp_localize_script("lylrv-widget-loader", "LYLRV_WP_DATA", $data);
@@ -94,14 +62,6 @@ trait Lylrv_Connect_Widgets
 
         echo '<div id="lylrv-loyalty-container"></div>';
         echo '<div id="lylrv-reviews-container"></div>';
-
-        if (
-            self::is_woocommerce_available() &&
-            function_exists("is_product") &&
-            is_product()
-        ) {
-            echo '<div id="lylrv-productReviews-container"></div>';
-        }
     }
 
     public static function widget_shortcode($atts)

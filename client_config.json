@@ -2,7 +2,7 @@
   {
     "id": "6f5912cf-6686-4fe5-95a4-fb5d850e374f",
     "client_id": "899d501e-70d3-4f8a-98e4-23f1eeae994c",
-    "integration_type": "woocommerce",
+    "integration_type": "custom",
     "store_url": "https://pureness-shea.com/",
     "is_active": true,
     "theme": {

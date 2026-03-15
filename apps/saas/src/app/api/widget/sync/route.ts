@@ -23,7 +23,12 @@ const customerSchema = z.object({
   name: z.string().trim().min(1).max(255),
   phone: z.string().trim().max(50).nullable().optional(),
   externalUserId: z.string().trim().max(191).nullable().optional(),
-  referralCode: z.string().trim().max(REFERRAL_CODE_LENGTH).nullable().optional(),
+  referralCode: z
+    .string()
+    .trim()
+    .max(REFERRAL_CODE_LENGTH)
+    .nullable()
+    .optional(),
   totalPoints: z.number().int().min(0).max(100000000).optional(),
   createdAt: z.string().datetime({ offset: true, local: true }).optional(),
   updatedAt: z.string().datetime({ offset: true, local: true }).optional(),
@@ -40,15 +45,29 @@ const orderSchema = z.object({
   billing: z.record(z.string(), z.unknown()).nullable().optional(),
   shipping: z.record(z.string(), z.unknown()).nullable().optional(),
   slugs: z.array(z.string().trim().min(1).max(191)).max(100).optional(),
-  referralCode: z.string().trim().max(REFERRAL_CODE_LENGTH).nullable().optional(),
+  referralCode: z
+    .string()
+    .trim()
+    .max(REFERRAL_CODE_LENGTH)
+    .nullable()
+    .optional(),
   referralStatus: z.string().trim().max(80).nullable().optional(),
   referralReason: z.string().trim().max(255).nullable().optional(),
   rewardCouponId: z.string().trim().max(191).nullable().optional(),
   rewardCouponCode: z.string().trim().max(191).nullable().optional(),
   rewardCouponType: z.string().trim().max(80).nullable().optional(),
-  rewardCouponAmount: z.number().int().min(0).max(1000000).nullable().optional(),
+  rewardCouponAmount: z
+    .number()
+    .int()
+    .min(0)
+    .max(1000000)
+    .nullable()
+    .optional(),
   rewardIssuedAt: z.string().datetime({ offset: true, local: true }).optional(),
-  rewardRevokedAt: z.string().datetime({ offset: true, local: true }).optional(),
+  rewardRevokedAt: z
+    .string()
+    .datetime({ offset: true, local: true })
+    .optional(),
   createdAt: z.string().datetime({ offset: true, local: true }).optional(),
   updatedAt: z.string().datetime({ offset: true, local: true }).optional(),
 });
@@ -179,7 +198,10 @@ const isMissingSchemaColumnError = (error: unknown) => {
 
 const buildReferralSeed = (name: string, email: string) => {
   const fromName = name.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-  const fromEmail = email.split("@")[0]?.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  const fromEmail = email
+    .split("@")[0]
+    ?.replace(/[^A-Za-z0-9]/g, "")
+    .toUpperCase();
 
   return (fromName || fromEmail || "LYLRV").slice(0, 6);
 };
@@ -293,7 +315,8 @@ const syncReferralCoupon = async ({
     return false;
   }
 
-  const isRevoked = Boolean(order.rewardRevokedAt) || order.referralStatus === "reward_revoked";
+  const isRevoked =
+    Boolean(order.rewardRevokedAt) || order.referralStatus === "reward_revoked";
   const updatedAt = normalizeTimestamp(order.updatedAt);
 
   await tx
@@ -375,7 +398,7 @@ const ensureSyncAccess = async ({
   if (!existingConfig) {
     await db.insert(clientConfig).values({
       clientId: client.id,
-      integrationType: "woocommerce",
+      integrationType: "custom",
       storeUrl,
       syncSecret,
     });
@@ -387,7 +410,7 @@ const ensureSyncAccess = async ({
     await db
       .update(clientConfig)
       .set({
-        integrationType: "woocommerce",
+        integrationType: "custom",
         storeUrl,
         syncSecret,
         updatedAt: new Date().toISOString(),
@@ -503,8 +526,11 @@ export const POST = async (request: NextRequest) => {
       for (const order of parsedBody.data.orders) {
         const createdAt = normalizeTimestamp(order.createdAt);
         const updatedAt = normalizeTimestamp(order.updatedAt);
-        const normalizedEmail = normalizeText(order.email)?.toLowerCase() ?? null;
-        const normalizedReferralCode = normalizeReferralCode(order.referralCode);
+        const normalizedEmail =
+          normalizeText(order.email)?.toLowerCase() ?? null;
+        const normalizedReferralCode = normalizeReferralCode(
+          order.referralCode,
+        );
         const normalizedReferralStatus = normalizeText(order.referralStatus);
 
         await tx
@@ -609,7 +635,7 @@ export const POST = async (request: NextRequest) => {
       await tx
         .update(clientConfig)
         .set({
-          integrationType: "woocommerce",
+          integrationType: "custom",
           storeUrl: parsedBody.data.storeUrl,
           updatedAt: now,
         })
@@ -629,7 +655,7 @@ export const POST = async (request: NextRequest) => {
       return json(
         {
           error:
-            "Database schema is outdated. Push the latest Drizzle schema before using WooCommerce referral sync.",
+            "Database schema is outdated. Push the latest Drizzle schema before using referral sync.",
         },
         { status: 503 },
       );

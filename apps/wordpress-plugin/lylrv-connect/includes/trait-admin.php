@@ -2,9 +2,6 @@
 /**
  * Admin trait for Lylrv Connect Plugin.
  *
- * Handles settings registration, sanitization, admin menu,
- * options page rendering, manual sync, and admin notices.
- *
  * @package Lylrv_Connect
  */
 
@@ -23,18 +20,6 @@ trait Lylrv_Connect_Admin
         register_setting(self::OPTION_GROUP, self::OPTION_SAAS_URL, [
             "default" => "https://app.lylrv.com",
             "sanitize_callback" => [__CLASS__, "sanitize_saas_url"],
-        ]);
-
-        register_setting(self::OPTION_GROUP, self::OPTION_SYNC_ENABLED, [
-            "type" => "boolean",
-            "default" => 1,
-            "sanitize_callback" => [__CLASS__, "sanitize_sync_enabled"],
-        ]);
-
-        register_setting(self::OPTION_GROUP, self::OPTION_SYNC_BATCH_SIZE, [
-            "type" => "integer",
-            "default" => 25,
-            "sanitize_callback" => [__CLASS__, "sanitize_batch_size"],
         ]);
 
         register_setting(self::OPTION_GROUP, self::OPTION_STOREFRONT_BASE, [
@@ -81,62 +66,6 @@ trait Lylrv_Connect_Admin
                 "sanitize_callback" => [__CLASS__, "sanitize_page_id"],
             ],
         );
-
-        register_setting(self::OPTION_GROUP, self::OPTION_REFERRAL_PARAM, [
-            "default" => "ref",
-            "sanitize_callback" => [__CLASS__, "sanitize_referral_param"],
-        ]);
-
-        register_setting(
-            self::OPTION_GROUP,
-            self::OPTION_REFERRAL_COUPON_TYPE,
-            [
-                "default" => "fixed_cart",
-                "sanitize_callback" => [
-                    __CLASS__,
-                    "sanitize_referral_coupon_type",
-                ],
-            ],
-        );
-
-        register_setting(
-            self::OPTION_GROUP,
-            self::OPTION_REFERRAL_COUPON_AMOUNT,
-            [
-                "type" => "integer",
-                "default" => 10,
-                "sanitize_callback" => [
-                    __CLASS__,
-                    "sanitize_referral_coupon_amount",
-                ],
-            ],
-        );
-
-        register_setting(
-            self::OPTION_GROUP,
-            self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS,
-            [
-                "type" => "integer",
-                "default" => 30,
-                "sanitize_callback" => [
-                    __CLASS__,
-                    "sanitize_referral_coupon_expiry_days",
-                ],
-            ],
-        );
-
-        register_setting(
-            self::OPTION_GROUP,
-            self::OPTION_REFERRAL_COUPON_USAGE_LIMIT,
-            [
-                "type" => "integer",
-                "default" => 1,
-                "sanitize_callback" => [
-                    __CLASS__,
-                    "sanitize_referral_coupon_usage_limit",
-                ],
-            ],
-        );
     }
 
     public static function sanitize_api_key($value)
@@ -155,26 +84,6 @@ trait Lylrv_Connect_Admin
         return untrailingslashit($url);
     }
 
-    public static function sanitize_sync_enabled($value)
-    {
-        return empty($value) ? 0 : 1;
-    }
-
-    public static function sanitize_batch_size($value)
-    {
-        $batch_size = absint($value);
-
-        if ($batch_size < 1) {
-            $batch_size = 25;
-        }
-
-        if ($batch_size > 100) {
-            $batch_size = 100;
-        }
-
-        return $batch_size;
-    }
-
     public static function sanitize_storefront_base($value)
     {
         $base = sanitize_title((string) $value);
@@ -184,57 +93,6 @@ trait Lylrv_Connect_Admin
     public static function sanitize_page_id($value)
     {
         return absint($value);
-    }
-
-    public static function sanitize_referral_param($value)
-    {
-        $param = strtolower((string) $value);
-        $param = preg_replace("/[^a-z0-9_-]/", "", $param);
-
-        if (empty($param)) {
-            return "ref";
-        }
-
-        return $param;
-    }
-
-    public static function sanitize_referral_coupon_type($value)
-    {
-        $allowed = ["fixed_cart", "percent", "fixed_product"];
-        $type = sanitize_key((string) $value);
-
-        if (!in_array($type, $allowed, true)) {
-            return "fixed_cart";
-        }
-
-        return $type;
-    }
-
-    public static function sanitize_referral_coupon_amount($value)
-    {
-        $amount = absint($value);
-        return $amount > 0 ? $amount : 10;
-    }
-
-    public static function sanitize_referral_coupon_expiry_days($value)
-    {
-        $days = absint($value);
-        return $days > 3650 ? 3650 : $days;
-    }
-
-    public static function sanitize_referral_coupon_usage_limit($value)
-    {
-        $limit = absint($value);
-        return $limit > 0 ? $limit : 1;
-    }
-
-    public static function ensure_sync_secret()
-    {
-        $secret = get_option(self::OPTION_SYNC_SECRET);
-
-        if (empty($secret)) {
-            update_option(self::OPTION_SYNC_SECRET, wp_generate_uuid4(), false);
-        }
     }
 
     public static function register_menu()
@@ -252,8 +110,6 @@ trait Lylrv_Connect_Admin
     {
         $api_key = get_option(self::OPTION_API_KEY, "");
         $saas_url = get_option(self::OPTION_SAAS_URL, "https://app.lylrv.com");
-        $sync_enabled = (int) get_option(self::OPTION_SYNC_ENABLED, 1);
-        $batch_size = (int) get_option(self::OPTION_SYNC_BATCH_SIZE, 25);
         $storefront_base = (string) get_option(
             self::OPTION_STOREFRONT_BASE,
             "store",
@@ -270,24 +126,7 @@ trait Lylrv_Connect_Admin
         $storefront_thank_you_page_id = absint(
             get_option(self::OPTION_STOREFRONT_THANK_YOU_PAGE_ID, 0),
         );
-        $referral_param = self::get_referral_param_name();
-        $coupon_type = self::get_referral_coupon_type();
-        $coupon_amount = self::get_referral_coupon_amount();
-        $coupon_expiry_days = self::get_referral_coupon_expiry_days();
-        $coupon_usage_limit = self::get_referral_coupon_usage_limit();
-        $woocommerce_ready = self::is_woocommerce_available();
-        $settings_ready = self::is_sync_ready();
-        $recent_referrals = self::get_recent_referral_orders();
-        $last_customers_sync = self::format_sync_time(
-            get_option(self::OPTION_LAST_CUSTOMERS_SYNC),
-        );
-        $last_orders_sync = self::format_sync_time(
-            get_option(self::OPTION_LAST_ORDERS_SYNC),
-        );
-        $last_sync_error_raw = (string) get_option(
-            self::OPTION_LAST_SYNC_ERROR,
-        );
-        $last_sync_error = self::format_error($last_sync_error_raw);
+        $connection_ready = self::is_connection_ready();
         ?>
         <?php self::render_admin_styles(); ?>
         <div class="wrap lylrv-connect-admin-page">
@@ -303,37 +142,30 @@ trait Lylrv_Connect_Admin
                             "lylrv-connect",
                         ); ?></h1>
                         <p class="lylrv-connect-hero__description"><?php echo esc_html__(
-                            "Manage the storefront connection, automate WooCommerce sync, and control the local referral reward rules from a single branded control room.",
+                            "Connect WordPress to your Lylrv workspace, load embeddable widgets, and assign pages for the native storefront routes.",
                             "lylrv-connect",
                         ); ?></p>
                         <div class="lylrv-connect-hero__meta">
                             <?php self::render_status_badge(
-                                $settings_ready
-                                    ? __("Sync ready", "lylrv-connect")
+                                $connection_ready
+                                    ? __("Connected", "lylrv-connect")
                                     : __("Needs setup", "lylrv-connect"),
-                                $settings_ready ? "success" : "warning",
+                                $connection_ready ? "success" : "warning",
                             ); ?>
                             <?php self::render_status_badge(
-                                $woocommerce_ready
-                                    ? __("WooCommerce active", "lylrv-connect")
-                                    : __(
-                                        "WooCommerce unavailable",
-                                        "lylrv-connect",
-                                    ),
-                                $woocommerce_ready ? "success" : "warning",
-                            ); ?>
-                            <?php self::render_status_badge(
-                                $sync_enabled
-                                    ? __("Auto sync enabled", "lylrv-connect")
-                                    : __("Auto sync paused", "lylrv-connect"),
-                                $sync_enabled ? "primary" : "neutral",
+                                sprintf(
+                                    /* translators: %s: storefront base slug */
+                                    __("Base: /%s/", "lylrv-connect"),
+                                    $storefront_base,
+                                ),
+                                "primary",
                             ); ?>
                         </div>
                     </div>
                     <div class="lylrv-connect-hero__actions">
                         <div class="lylrv-connect-glass-card">
                             <span class="lylrv-connect-glass-card__label"><?php echo esc_html__(
-                                "Destination",
+                                "Application URL",
                                 "lylrv-connect",
                             ); ?></span>
                             <a class="lylrv-connect-link" href="<?php echo esc_url(
@@ -342,75 +174,43 @@ trait Lylrv_Connect_Admin
     $saas_url,
 ); ?></a>
                             <p><?php echo esc_html__(
-                                "The same warm, card-based UI language used across the Lylrv apps, adapted for WordPress admin.",
+                                "Widgets and storefront data are loaded from this Lylrv environment.",
                                 "lylrv-connect",
                             ); ?></p>
                         </div>
                     </div>
                 </section>
 
-                <?php if (!$woocommerce_ready): ?>
-                    <div class="lylrv-connect-inline-alert lylrv-connect-inline-alert--warning">
-                        <strong><?php echo esc_html__(
-                            "WooCommerce not detected.",
-                            "lylrv-connect",
-                        ); ?></strong>
-                        <span><?php echo esc_html__(
-                            "Widget injection still works, but order sync and referral rewards require WooCommerce.",
-                            "lylrv-connect",
-                        ); ?></span>
-                    </div>
-                <?php endif; ?>
-
                 <section class="lylrv-connect-metrics" aria-label="<?php echo esc_attr__(
                     "Overview",
                     "lylrv-connect",
                 ); ?>">
                     <?php self::render_metric_card(
-                        __("Configuration", "lylrv-connect"),
-                        $settings_ready
+                        __("Connection", "lylrv-connect"),
+                        $connection_ready
                             ? __("Ready", "lylrv-connect")
                             : __("Incomplete", "lylrv-connect"),
-                        $settings_ready
-                            ? __(
-                                "Credentials and sync settings are valid.",
-                                "lylrv-connect",
-                            )
-                            : __(
-                                "Add a valid API key and SaaS URL to sync.",
-                                "lylrv-connect",
-                            ),
-                        $settings_ready ? "success" : "warning",
+                        $connection_ready
+                            ? __("API key and SaaS URL are configured.", "lylrv-connect")
+                            : __("Add your workspace credentials to enable widgets and storefront requests.", "lylrv-connect"),
+                        $connection_ready ? "success" : "warning",
                     ); ?>
                     <?php self::render_metric_card(
-                        __("WooCommerce", "lylrv-connect"),
-                        $woocommerce_ready
-                            ? __("Connected", "lylrv-connect")
-                            : __("Optional", "lylrv-connect"),
-                        $woocommerce_ready
-                            ? __(
-                                "Orders and rewards can sync normally.",
-                                "lylrv-connect",
-                            )
-                            : __(
-                                "Required for order and referral reward flows.",
-                                "lylrv-connect",
-                            ),
-                        $woocommerce_ready ? "success" : "neutral",
-                    ); ?>
-                    <?php self::render_metric_card(
-                        __("Batch Size", "lylrv-connect"),
-                        (string) $batch_size,
-                        __("Records sent per sync request.", "lylrv-connect"),
+                        __("Storefront Base", "lylrv-connect"),
+                        "/" . $storefront_base . "/",
+                        __("Used for product, cart, checkout, and thank-you routes.", "lylrv-connect"),
                         "primary",
                     ); ?>
                     <?php self::render_metric_card(
-                        __("Referral Key", "lylrv-connect"),
-                        "?" . $referral_param,
-                        __(
-                            "Incoming referral links are captured from this parameter.",
-                            "lylrv-connect",
-                        ),
+                        __("Product Route", "lylrv-connect"),
+                        self::get_route_summary($storefront_product_page_id),
+                        __("Optional page assignment for storefront product rendering.", "lylrv-connect"),
+                        "neutral",
+                    ); ?>
+                    <?php self::render_metric_card(
+                        __("Checkout Route", "lylrv-connect"),
+                        self::get_route_summary($storefront_checkout_page_id),
+                        __("Optional page assignment for the checkout experience.", "lylrv-connect"),
                         "neutral",
                     ); ?>
                 </section>
@@ -426,15 +226,15 @@ trait Lylrv_Connect_Admin
                                     "lylrv-connect",
                                 ); ?></h2>
                                 <p><?php echo esc_html__(
-                                    "Point WordPress at the correct Lylrv workspace and control how sync jobs behave.",
+                                    "Point WordPress at the correct Lylrv workspace before loading widgets or storefront data.",
                                     "lylrv-connect",
                                 ); ?></p>
                             </div>
                             <?php self::render_status_badge(
-                                $sync_enabled
+                                $connection_ready
                                     ? __("Live", "lylrv-connect")
-                                    : __("Paused", "lylrv-connect"),
-                                $sync_enabled ? "success" : "warning",
+                                    : __("Not ready", "lylrv-connect"),
+                                $connection_ready ? "success" : "warning",
                             ); ?>
                         </div>
 
@@ -460,7 +260,7 @@ trait Lylrv_Connect_Admin
                                     autocomplete="off"
                                 />
                                 <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "Enter the Lylrv API key for the client you want to sync.",
+                                    "Enter the Lylrv API key for the workspace this site should use.",
                                     "lylrv-connect",
                                 ); ?></p>
                             </div>
@@ -484,7 +284,7 @@ trait Lylrv_Connect_Admin
                                     class="lylrv-connect-input"
                                 />
                                 <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "The URL where the Lylrv application is hosted, for example https://app.lylrv.com.",
+                                    "The base URL for your Lylrv app, for example https://app.lylrv.com.",
                                     "lylrv-connect",
                                 ); ?></p>
                             </div>
@@ -497,13 +297,13 @@ trait Lylrv_Connect_Admin
                                     "lylrv-connect",
                                 ); ?></h2>
                                 <p><?php echo esc_html__(
-                                    "Assign block-editor pages for the SaaS-backed storefront routes. These pages are rendered under a separate storefront URL base and stay independent from WooCommerce.",
+                                    "Assign block-editor pages for the product, cart, checkout, and thank-you routes, or let the plugin render its fallback templates.",
                                     "lylrv-connect",
                                 ); ?></p>
                             </div>
                         </div>
 
-                        <div class="lylrv-connect-field-grid">
+                        <div class="lylrv-connect-field-grid lylrv-connect-field-grid--single">
                             <div class="lylrv-connect-field-group">
                                 <label class="lylrv-connect-label" for="<?php echo esc_attr(
                                     self::OPTION_STOREFRONT_BASE,
@@ -525,318 +325,33 @@ trait Lylrv_Connect_Admin
                                     class="lylrv-connect-input lylrv-connect-input--mono"
                                 />
                                 <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "Default is store, producing routes like /store/product-slug/, /store/cart/, and /store/checkout/.",
+                                    "Default is store, which creates routes such as /store/product-slug/, /store/cart/, and /store/checkout/.",
                                     "lylrv-connect",
                                 ); ?></p>
                             </div>
                         </div>
 
                         <div class="lylrv-connect-field-grid">
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_STOREFRONT_PRODUCT_PAGE_ID,
-                                ); ?>"><?php echo esc_html__(
-    "Product Page",
-    "lylrv-connect",
-); ?></label>
-                                <?php wp_dropdown_pages([
-                                    "name" =>
-                                        self::OPTION_STOREFRONT_PRODUCT_PAGE_ID,
-                                    "id" =>
-                                        self::OPTION_STOREFRONT_PRODUCT_PAGE_ID,
-                                    "show_option_none" => __(
-                                        "Use plugin fallback layout",
-                                        "lylrv-connect",
-                                    ),
-                                    "option_none_value" => 0,
-                                    "selected" => $storefront_product_page_id,
-                                    "class" => "lylrv-connect-input",
-                                ]); ?>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_STOREFRONT_CART_PAGE_ID,
-                                ); ?>"><?php echo esc_html__(
-    "Cart Page",
-    "lylrv-connect",
-); ?></label>
-                                <?php wp_dropdown_pages([
-                                    "name" =>
-                                        self::OPTION_STOREFRONT_CART_PAGE_ID,
-                                    "id" =>
-                                        self::OPTION_STOREFRONT_CART_PAGE_ID,
-                                    "show_option_none" => __(
-                                        "Use plugin fallback layout",
-                                        "lylrv-connect",
-                                    ),
-                                    "option_none_value" => 0,
-                                    "selected" => $storefront_cart_page_id,
-                                    "class" => "lylrv-connect-input",
-                                ]); ?>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_STOREFRONT_CHECKOUT_PAGE_ID,
-                                ); ?>"><?php echo esc_html__(
-    "Checkout Page",
-    "lylrv-connect",
-); ?></label>
-                                <?php wp_dropdown_pages([
-                                    "name" =>
-                                        self::OPTION_STOREFRONT_CHECKOUT_PAGE_ID,
-                                    "id" =>
-                                        self::OPTION_STOREFRONT_CHECKOUT_PAGE_ID,
-                                    "show_option_none" => __(
-                                        "Use plugin fallback layout",
-                                        "lylrv-connect",
-                                    ),
-                                    "option_none_value" => 0,
-                                    "selected" => $storefront_checkout_page_id,
-                                    "class" => "lylrv-connect-input",
-                                ]); ?>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_STOREFRONT_THANK_YOU_PAGE_ID,
-                                ); ?>"><?php echo esc_html__(
-    "Thank-You Page",
-    "lylrv-connect",
-); ?></label>
-                                <?php wp_dropdown_pages([
-                                    "name" =>
-                                        self::OPTION_STOREFRONT_THANK_YOU_PAGE_ID,
-                                    "id" =>
-                                        self::OPTION_STOREFRONT_THANK_YOU_PAGE_ID,
-                                    "show_option_none" => __(
-                                        "Use plugin fallback layout",
-                                        "lylrv-connect",
-                                    ),
-                                    "option_none_value" => 0,
-                                    "selected" => $storefront_thank_you_page_id,
-                                    "class" => "lylrv-connect-input",
-                                ]); ?>
-                            </div>
-                        </div>
-
-                        <div class="lylrv-connect-toggle-card">
-                            <label class="lylrv-connect-toggle" for="<?php echo esc_attr(
-                                self::OPTION_SYNC_ENABLED,
-                            ); ?>">
-                                <input
-                                    type="checkbox"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_SYNC_ENABLED,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_SYNC_ENABLED,
-                                    ); ?>"
-                                    value="1"
-                                    <?php checked(1, $sync_enabled); ?>
-                                />
-                                <span class="lylrv-connect-toggle__track" aria-hidden="true"></span>
-                                <span class="lylrv-connect-toggle__content">
-                                    <span class="lylrv-connect-toggle__title"><?php echo esc_html__(
-                                        "WooCommerce Sync",
-                                        "lylrv-connect",
-                                    ); ?></span>
-                                    <span class="lylrv-connect-toggle__description"><?php echo esc_html__(
-                                        "Sync WooCommerce customers, orders, and referral rewards to Lylrv automatically.",
-                                        "lylrv-connect",
-                                    ); ?></span>
-                                </span>
-                            </label>
-                        </div>
-
-                        <div class="lylrv-connect-field-grid lylrv-connect-field-grid--single">
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_SYNC_BATCH_SIZE,
-                                ); ?>"><?php echo esc_html__(
-    "Sync Batch Size",
-    "lylrv-connect",
-); ?></label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="100"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_SYNC_BATCH_SIZE,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_SYNC_BATCH_SIZE,
-                                    ); ?>"
-                                    value="<?php echo esc_attr(
-                                        (string) $batch_size,
-                                    ); ?>"
-                                    class="lylrv-connect-input lylrv-connect-input--small"
-                                />
-                                <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "How many records to send in each sync request. Lower this if your host has strict request limits.",
-                                    "lylrv-connect",
-                                ); ?></p>
-                            </div>
-                        </div>
-
-                        <div class="lylrv-connect-panel__header lylrv-connect-panel__header--subsection">
-                            <div>
-                                <h2><?php echo esc_html__(
-                                    "Referral Engine",
-                                    "lylrv-connect",
-                                ); ?></h2>
-                                <p><?php echo esc_html__(
-                                    "Define how referral links are captured and how rewards are generated for successful referrals.",
-                                    "lylrv-connect",
-                                ); ?></p>
-                            </div>
-                        </div>
-
-                        <div class="lylrv-connect-field-grid">
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_REFERRAL_PARAM,
-                                ); ?>"><?php echo esc_html__(
-    "Referral Query Parameter",
-    "lylrv-connect",
-); ?></label>
-                                <input
-                                    type="text"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_PARAM,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_PARAM,
-                                    ); ?>"
-                                    value="<?php echo esc_attr(
-                                        $referral_param,
-                                    ); ?>"
-                                    class="lylrv-connect-input lylrv-connect-input--mono"
-                                />
-                                <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "Incoming referral links will be captured from this query string key. Example: ?ref=ABC123",
-                                    "lylrv-connect",
-                                ); ?></p>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_REFERRAL_COUPON_TYPE,
-                                ); ?>"><?php echo esc_html__(
-    "Reward Coupon Type",
-    "lylrv-connect",
-); ?></label>
-                                <select
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_TYPE,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_TYPE,
-                                    ); ?>"
-                                    class="lylrv-connect-input"
-                                >
-                                    <option value="fixed_cart" <?php selected(
-                                        "fixed_cart",
-                                        $coupon_type,
-                                    ); ?>><?php echo esc_html__(
-    "Fixed cart discount",
-    "lylrv-connect",
-); ?></option>
-                                    <option value="percent" <?php selected(
-                                        "percent",
-                                        $coupon_type,
-                                    ); ?>><?php echo esc_html__(
-    "Percentage discount",
-    "lylrv-connect",
-); ?></option>
-                                    <option value="fixed_product" <?php selected(
-                                        "fixed_product",
-                                        $coupon_type,
-                                    ); ?>><?php echo esc_html__(
-    "Fixed product discount",
-    "lylrv-connect",
-); ?></option>
-                                </select>
-                                <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "The reward coupon that gets issued to the referrer after the first referred order reaches completed.",
-                                    "lylrv-connect",
-                                ); ?></p>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_REFERRAL_COUPON_AMOUNT,
-                                ); ?>"><?php echo esc_html__(
-    "Reward Coupon Amount",
-    "lylrv-connect",
-); ?></label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_AMOUNT,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_AMOUNT,
-                                    ); ?>"
-                                    value="<?php echo esc_attr(
-                                        (string) $coupon_amount,
-                                    ); ?>"
-                                    class="lylrv-connect-input lylrv-connect-input--small"
-                                />
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS,
-                                ); ?>"><?php echo esc_html__(
-    "Reward Coupon Expiry (Days)",
-    "lylrv-connect",
-); ?></label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max="3650"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_EXPIRY_DAYS,
-                                    ); ?>"
-                                    value="<?php echo esc_attr(
-                                        (string) $coupon_expiry_days,
-                                    ); ?>"
-                                    class="lylrv-connect-input lylrv-connect-input--small"
-                                />
-                                <p class="lylrv-connect-help"><?php echo esc_html__(
-                                    "Set to 0 for no expiry.",
-                                    "lylrv-connect",
-                                ); ?></p>
-                            </div>
-
-                            <div class="lylrv-connect-field-group">
-                                <label class="lylrv-connect-label" for="<?php echo esc_attr(
-                                    self::OPTION_REFERRAL_COUPON_USAGE_LIMIT,
-                                ); ?>"><?php echo esc_html__(
-    "Reward Coupon Usage Limit",
-    "lylrv-connect",
-); ?></label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    id="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_USAGE_LIMIT,
-                                    ); ?>"
-                                    name="<?php echo esc_attr(
-                                        self::OPTION_REFERRAL_COUPON_USAGE_LIMIT,
-                                    ); ?>"
-                                    value="<?php echo esc_attr(
-                                        (string) $coupon_usage_limit,
-                                    ); ?>"
-                                    class="lylrv-connect-input lylrv-connect-input--small"
-                                />
-                            </div>
+                            <?php self::render_page_picker(
+                                self::OPTION_STOREFRONT_PRODUCT_PAGE_ID,
+                                __("Product Page", "lylrv-connect"),
+                                $storefront_product_page_id,
+                            ); ?>
+                            <?php self::render_page_picker(
+                                self::OPTION_STOREFRONT_CART_PAGE_ID,
+                                __("Cart Page", "lylrv-connect"),
+                                $storefront_cart_page_id,
+                            ); ?>
+                            <?php self::render_page_picker(
+                                self::OPTION_STOREFRONT_CHECKOUT_PAGE_ID,
+                                __("Checkout Page", "lylrv-connect"),
+                                $storefront_checkout_page_id,
+                            ); ?>
+                            <?php self::render_page_picker(
+                                self::OPTION_STOREFRONT_THANK_YOU_PAGE_ID,
+                                __("Thank-You Page", "lylrv-connect"),
+                                $storefront_thank_you_page_id,
+                            ); ?>
                         </div>
 
                         <div class="lylrv-connect-form-actions">
@@ -852,23 +367,14 @@ trait Lylrv_Connect_Admin
                             <div class="lylrv-connect-panel__header">
                                 <div>
                                     <h2><?php echo esc_html__(
-                                        "Sync Status",
+                                        "Connection Status",
                                         "lylrv-connect",
                                     ); ?></h2>
                                     <p><?php echo esc_html__(
-                                        "Current connection health and the latest sync activity.",
+                                        "Current workspace status and the URLs this plugin will use on the frontend.",
                                         "lylrv-connect",
                                     ); ?></p>
                                 </div>
-                                <?php self::render_status_badge(
-                                    $settings_ready
-                                        ? __("Healthy", "lylrv-connect")
-                                        : __(
-                                            "Attention needed",
-                                            "lylrv-connect",
-                                        ),
-                                    $settings_ready ? "success" : "warning",
-                                ); ?>
                             </div>
 
                             <dl class="lylrv-connect-status-list">
@@ -883,15 +389,15 @@ trait Lylrv_Connect_Admin
                                 </div>
                                 <div>
                                     <dt><?php echo esc_html__(
-                                        "Configuration Ready",
+                                        "Connection Ready",
                                         "lylrv-connect",
                                     ); ?></dt>
                                     <dd>
                                         <?php self::render_status_badge(
-                                            $settings_ready
+                                            $connection_ready
                                                 ? __("Yes", "lylrv-connect")
                                                 : __("No", "lylrv-connect"),
-                                            $settings_ready
+                                            $connection_ready
                                                 ? "success"
                                                 : "warning",
                                         ); ?>
@@ -899,34 +405,21 @@ trait Lylrv_Connect_Admin
                                 </div>
                                 <div>
                                     <dt><?php echo esc_html__(
-                                        "Last Customers Sync",
+                                        "Cart URL",
                                         "lylrv-connect",
                                     ); ?></dt>
                                     <dd><?php echo esc_html(
-                                        $last_customers_sync,
+                                        self::get_storefront_path("cart"),
                                     ); ?></dd>
                                 </div>
                                 <div>
                                     <dt><?php echo esc_html__(
-                                        "Last Orders Sync",
+                                        "Checkout URL",
                                         "lylrv-connect",
                                     ); ?></dt>
                                     <dd><?php echo esc_html(
-                                        $last_orders_sync,
+                                        self::get_storefront_path("checkout"),
                                     ); ?></dd>
-                                </div>
-                                <div class="lylrv-connect-status-list__error">
-                                    <dt><?php echo esc_html__(
-                                        "Last Error",
-                                        "lylrv-connect",
-                                    ); ?></dt>
-                                    <dd class="<?php echo esc_attr(
-                                        empty($last_sync_error_raw)
-                                            ? ""
-                                            : "lylrv-connect-status-list__error-text",
-                                    ); ?>"><?php echo esc_html(
-    $last_sync_error,
-); ?></dd>
                                 </div>
                             </dl>
                         </section>
@@ -935,178 +428,65 @@ trait Lylrv_Connect_Admin
                             <div class="lylrv-connect-panel__header">
                                 <div>
                                     <h2><?php echo esc_html__(
-                                        "Manual Sync",
+                                        "Widget Embeds",
                                         "lylrv-connect",
                                     ); ?></h2>
                                     <p><?php echo esc_html__(
-                                        "Use these controls to backfill historical data or force a resync after changing settings.",
+                                        "Use the shortcode below when you want to place a widget directly inside post or page content.",
                                         "lylrv-connect",
                                     ); ?></p>
                                 </div>
                             </div>
 
-                            <div class="lylrv-connect-sync-actions">
-                                <?php self::render_manual_sync_form(
-                                    "customers",
-                                    __("Sync Customers", "lylrv-connect"),
-                                    !$settings_ready,
-                                ); ?>
-                                <?php self::render_manual_sync_form(
-                                    "orders",
-                                    __("Sync Orders", "lylrv-connect"),
-                                    !$settings_ready || !$woocommerce_ready,
-                                ); ?>
-                                <?php self::render_manual_sync_form(
-                                    "all",
-                                    __("Sync Everything", "lylrv-connect"),
-                                    !$settings_ready || !$woocommerce_ready,
-                                ); ?>
+                            <div class="lylrv-connect-empty-state lylrv-connect-empty-state--left">
+                                <p class="lylrv-connect-empty-state__title"><code>[lylrv_widget name="reviews"]</code></p>
+                                <p><?php echo esc_html__(
+                                    "Replace the name with any supported widget container, such as loyalty or product-reviews.",
+                                    "lylrv-connect",
+                                ); ?></p>
                             </div>
                         </section>
                     </div>
                 </div>
-
-                <section class="lylrv-connect-panel lylrv-connect-panel--table">
-                    <div class="lylrv-connect-panel__header">
-                        <div>
-                            <h2><?php echo esc_html__(
-                                "Recent Referral Orders",
-                                "lylrv-connect",
-                            ); ?></h2>
-                            <p><?php echo esc_html__(
-                                "A quick look at recently captured referral orders and the reward state attached to each one.",
-                                "lylrv-connect",
-                            ); ?></p>
-                        </div>
-                        <?php if ($woocommerce_ready): ?>
-                            <?php self::render_status_badge(
-                                sprintf(
-                                    /* translators: %d: number of orders */
-                                    _n(
-                                        "%d order",
-                                        "%d orders",
-                                        count($recent_referrals),
-                                        "lylrv-connect",
-                                    ),
-                                    count($recent_referrals),
-                                ),
-                                "neutral",
-                            ); ?>
-                        <?php else: ?>
-                            <?php self::render_status_badge(
-                                __("WooCommerce required", "lylrv-connect"),
-                                "warning",
-                            ); ?>
-                        <?php endif; ?>
-                    </div>
-
-                    <?php if (!$woocommerce_ready): ?>
-                        <div class="lylrv-connect-empty-state">
-                            <p class="lylrv-connect-empty-state__title"><?php echo esc_html__(
-                                "Referral activity will appear here once WooCommerce is active.",
-                                "lylrv-connect",
-                            ); ?></p>
-                            <p><?php echo esc_html__(
-                                "Install and activate WooCommerce to enable order sync and referral reward issuance.",
-                                "lylrv-connect",
-                            ); ?></p>
-                        </div>
-                    <?php elseif (!empty($recent_referrals)): ?>
-                        <div class="lylrv-connect-table-wrap">
-                            <table class="lylrv-connect-table">
-                                <thead>
-                                    <tr>
-                                        <th><?php echo esc_html__(
-                                            "Order",
-                                            "lylrv-connect",
-                                        ); ?></th>
-                                        <th><?php echo esc_html__(
-                                            "Buyer",
-                                            "lylrv-connect",
-                                        ); ?></th>
-                                        <th><?php echo esc_html__(
-                                            "Code",
-                                            "lylrv-connect",
-                                        ); ?></th>
-                                        <th><?php echo esc_html__(
-                                            "Status",
-                                            "lylrv-connect",
-                                        ); ?></th>
-                                        <th><?php echo esc_html__(
-                                            "Coupon",
-                                            "lylrv-connect",
-                                        ); ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach (
-                                        $recent_referrals
-                                        as $referral_order
-                                    ): ?>
-                                        <?php
-                                        $status_value = (string) $referral_order->get_meta(
-                                            self::ORDER_META_REFERRAL_STATUS,
-                                        );
-                                        $status_label = self::format_referral_status(
-                                            $status_value,
-                                        );
-                                        $coupon_code =
-                                            (string) $referral_order->get_meta(
-                                                self::ORDER_META_REWARD_COUPON_CODE,
-                                            ) ?:
-                                            "—";
-                                        ?>
-                                        <tr>
-                                            <td>
-                                                <span class="lylrv-connect-table__primary">#<?php echo esc_html(
-                                                    (string) $referral_order->get_id(),
-                                                ); ?></span>
-                                            </td>
-                                            <td><?php echo esc_html(
-                                                self::normalize_email(
-                                                    $referral_order->get_billing_email(),
-                                                ) ?:
-                                                __("Unknown", "lylrv-connect"),
-                                            ); ?></td>
-                                            <td><code><?php echo esc_html(
-                                                (string) $referral_order->get_meta(
-                                                    self::ORDER_META_REFERRAL_CODE,
-                                                ),
-                                            ); ?></code></td>
-                                            <td>
-                                                <?php self::render_status_badge(
-                                                    $status_label,
-                                                    self::get_referral_status_tone(
-                                                        $status_value,
-                                                    ),
-                                                ); ?>
-                                            </td>
-                                            <td>
-                                                <span class="lylrv-connect-code-pill"><?php echo esc_html(
-                                                    $coupon_code,
-                                                ); ?></span>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <div class="lylrv-connect-empty-state">
-                            <p class="lylrv-connect-empty-state__title"><?php echo esc_html__(
-                                "No referral orders have been captured yet.",
-                                "lylrv-connect",
-                            ); ?></p>
-                            <p><?php echo esc_html__(
-                                "When customers arrive through referral links and place their first qualifying order, the activity will appear here.",
-                                "lylrv-connect",
-                            ); ?></p>
-                        </div>
-                    <?php endif; ?>
-                </section>
             </div>
         </div>
         <?php
+    }
+
+    private static function render_page_picker($option_name, $label, $selected)
+    {
+        ?>
+        <div class="lylrv-connect-field-group">
+            <label class="lylrv-connect-label" for="<?php echo esc_attr(
+                $option_name,
+            ); ?>"><?php echo esc_html($label); ?></label>
+            <?php wp_dropdown_pages([
+                "name" => $option_name,
+                "id" => $option_name,
+                "show_option_none" => __(
+                    "Use plugin fallback layout",
+                    "lylrv-connect",
+                ),
+                "option_none_value" => 0,
+                "selected" => $selected,
+                "class" => "lylrv-connect-input",
+            ]); ?>
+        </div>
+        <?php
+    }
+
+    private static function get_route_summary($page_id)
+    {
+        if ($page_id < 1) {
+            return __("Fallback", "lylrv-connect");
+        }
+
+        $page = get_post($page_id);
+        if (!$page instanceof WP_Post) {
+            return __("Fallback", "lylrv-connect");
+        }
+
+        return get_the_title($page);
     }
 
     private static function render_admin_styles()
@@ -1131,8 +511,6 @@ trait Lylrv_Connect_Admin
                 --lylrv-success-soft: rgba(31, 143, 99, 0.12);
                 --lylrv-warning: #a86a18;
                 --lylrv-warning-soft: rgba(168, 106, 24, 0.14);
-                --lylrv-danger: #b54e39;
-                --lylrv-danger-soft: rgba(181, 78, 57, 0.12);
                 color: var(--lylrv-text);
                 font-family: "Geist", "Segoe UI", sans-serif;
             }
@@ -1271,31 +649,6 @@ trait Lylrv_Connect_Admin
                 color: var(--lylrv-primary-strong);
             }
 
-            .lylrv-connect-inline-alert {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                align-items: center;
-                margin-top: 18px;
-                padding: 14px 16px;
-                border: 1px solid var(--lylrv-border);
-                border-radius: 16px;
-                background: var(--lylrv-surface);
-            }
-
-            .lylrv-connect-inline-alert--warning {
-                border-color: rgba(168, 106, 24, 0.22);
-                background: linear-gradient(135deg, #fff8eb, #fffdf9);
-            }
-
-            .lylrv-connect-inline-alert strong {
-                font-size: 13px;
-            }
-
-            .lylrv-connect-inline-alert span {
-                color: var(--lylrv-muted);
-            }
-
             .lylrv-connect-metrics {
                 display: grid;
                 grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1387,10 +740,6 @@ trait Lylrv_Connect_Admin
                 margin: 0;
             }
 
-            .lylrv-connect-panel--table {
-                margin-top: 20px;
-            }
-
             .lylrv-connect-panel__header {
                 display: flex;
                 gap: 16px;
@@ -1427,7 +776,7 @@ trait Lylrv_Connect_Admin
 
             .lylrv-connect-field-grid--single {
                 grid-template-columns: minmax(0, 1fr);
-                margin-top: 18px;
+                margin-bottom: 18px;
             }
 
             .lylrv-connect-field-group {
@@ -1474,87 +823,8 @@ trait Lylrv_Connect_Admin
                 outline: none;
             }
 
-            .lylrv-connect-input--small {
-                max-width: 140px;
-            }
-
             .lylrv-connect-input--mono {
                 font-family: "Geist Mono", "SFMono-Regular", Consolas, monospace;
-            }
-
-            .lylrv-connect-toggle-card {
-                margin-top: 18px;
-                padding: 16px;
-                border: 1px solid rgba(88, 62, 39, 0.1);
-                border-radius: 18px;
-                background: linear-gradient(135deg, rgba(197, 111, 38, 0.06), rgba(255, 255, 255, 0.92));
-            }
-
-            .lylrv-connect-toggle {
-                position: relative;
-                display: grid;
-                grid-template-columns: 56px minmax(0, 1fr);
-                gap: 14px;
-                align-items: center;
-                cursor: pointer;
-            }
-
-            .lylrv-connect-toggle input {
-                position: absolute;
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .lylrv-connect-toggle__track {
-                position: relative;
-                display: block;
-                width: 56px;
-                height: 32px;
-                border-radius: 999px;
-                background: rgba(35, 26, 19, 0.15);
-                transition: background-color 0.2s ease;
-            }
-
-            .lylrv-connect-toggle__track::after {
-                content: "";
-                position: absolute;
-                top: 4px;
-                left: 4px;
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                background: #fff;
-                box-shadow: 0 3px 10px rgba(35, 26, 19, 0.2);
-                transition: transform 0.2s ease;
-            }
-
-            .lylrv-connect-toggle input:checked + .lylrv-connect-toggle__track {
-                background: linear-gradient(135deg, var(--lylrv-primary), #d88943);
-            }
-
-            .lylrv-connect-toggle input:checked + .lylrv-connect-toggle__track::after {
-                transform: translateX(24px);
-            }
-
-            .lylrv-connect-toggle input:focus + .lylrv-connect-toggle__track {
-                box-shadow: 0 0 0 4px rgba(197, 111, 38, 0.15);
-            }
-
-            .lylrv-connect-toggle__content {
-                display: grid;
-                gap: 6px;
-            }
-
-            .lylrv-connect-toggle__title {
-                display: block;
-                font-size: 14px;
-                font-weight: 700;
-            }
-
-            .lylrv-connect-toggle__description {
-                display: block;
-                color: var(--lylrv-muted);
-                line-height: 1.6;
             }
 
             .lylrv-connect-form-actions {
@@ -1591,32 +861,10 @@ trait Lylrv_Connect_Admin
                 outline: none;
             }
 
-            .lylrv-connect-button:disabled,
-            .lylrv-connect-button[disabled] {
-                transform: none;
-                opacity: 0.48;
-                cursor: not-allowed;
-                box-shadow: none;
-            }
-
             .lylrv-connect-button--primary {
                 background: linear-gradient(135deg, var(--lylrv-primary), #dd8c45);
                 color: #fff;
                 box-shadow: 0 18px 36px -24px rgba(197, 111, 38, 0.9);
-            }
-
-            .lylrv-connect-button--secondary {
-                width: 100%;
-                border-color: rgba(88, 62, 39, 0.12);
-                background: #fffdfa;
-                color: var(--lylrv-text);
-                box-shadow: 0 10px 22px -20px rgba(35, 26, 19, 0.35);
-            }
-
-            .lylrv-connect-button--secondary:hover,
-            .lylrv-connect-button--secondary:focus {
-                border-color: rgba(197, 111, 38, 0.28);
-                background: #fff8f1;
             }
 
             .lylrv-connect-badge {
@@ -1656,11 +904,6 @@ trait Lylrv_Connect_Admin
                 color: var(--lylrv-warning);
             }
 
-            .lylrv-connect-badge--danger {
-                background: var(--lylrv-danger-soft);
-                color: var(--lylrv-danger);
-            }
-
             .lylrv-connect-badge--neutral {
                 background: rgba(35, 26, 19, 0.06);
                 color: var(--lylrv-muted);
@@ -1697,96 +940,16 @@ trait Lylrv_Connect_Admin
                 word-break: break-word;
             }
 
-            .lylrv-connect-status-list__error {
-                border-color: rgba(181, 78, 57, 0.18);
-                background: linear-gradient(180deg, rgba(253, 233, 229, 0.45), rgba(255, 253, 249, 0.94));
-            }
-
-            .lylrv-connect-status-list__error-text {
-                color: var(--lylrv-danger);
-                font-family: "Geist Mono", "SFMono-Regular", Consolas, monospace;
-                font-size: 12px;
-            }
-
-            .lylrv-connect-sync-actions {
-                display: grid;
-                gap: 14px;
-            }
-
-            .lylrv-connect-sync-form {
-                display: grid;
-                gap: 12px;
-                padding: 16px;
-                border: 1px solid rgba(88, 62, 39, 0.1);
-                border-radius: 18px;
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 248, 245, 0.92));
-            }
-
-            .lylrv-connect-sync-form__title {
-                font-size: 14px;
-                font-weight: 700;
-            }
-
-            .lylrv-connect-sync-form__description {
-                color: var(--lylrv-muted);
-                font-size: 12px;
-                line-height: 1.6;
-            }
-
-            .lylrv-connect-table-wrap {
-                overflow-x: auto;
-                margin-top: 4px;
-            }
-
-            .lylrv-connect-table {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 0;
-                min-width: 720px;
-            }
-
-            .lylrv-connect-table thead th {
-                padding: 0 14px 12px;
-                color: var(--lylrv-muted);
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 0.12em;
-                text-align: left;
-                text-transform: uppercase;
-            }
-
-            .lylrv-connect-table tbody td {
-                padding: 14px;
-                border-top: 1px solid rgba(88, 62, 39, 0.08);
-                font-size: 13px;
-                vertical-align: middle;
-            }
-
-            .lylrv-connect-table tbody tr:hover {
-                background: rgba(197, 111, 38, 0.04);
-            }
-
-            .lylrv-connect-table__primary {
-                font-weight: 700;
-            }
-
-            .lylrv-connect-code-pill {
-                display: inline-flex;
-                align-items: center;
-                min-height: 30px;
-                padding: 0 10px;
-                border-radius: 999px;
-                background: rgba(35, 26, 19, 0.06);
-                font-family: "Geist Mono", "SFMono-Regular", Consolas, monospace;
-                font-size: 12px;
-            }
-
             .lylrv-connect-empty-state {
                 padding: 28px;
                 border: 1px dashed rgba(88, 62, 39, 0.18);
                 border-radius: 18px;
                 background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(250, 248, 245, 0.9));
                 text-align: center;
+            }
+
+            .lylrv-connect-empty-state--left {
+                text-align: left;
             }
 
             .lylrv-connect-empty-state__title {
@@ -1799,33 +962,6 @@ trait Lylrv_Connect_Admin
                 margin: 0;
                 color: var(--lylrv-muted);
                 line-height: 1.6;
-            }
-
-            .notice.lylrv-connect-notice {
-                border: 0;
-                border-radius: 16px;
-                box-shadow: 0 18px 32px -24px rgba(35, 26, 19, 0.34);
-                margin: 16px 20px 0 0;
-                overflow: hidden;
-            }
-
-            .notice.lylrv-connect-notice p {
-                margin: 0;
-                padding: 14px 18px;
-                font-size: 13px;
-                line-height: 1.6;
-            }
-
-            .notice.lylrv-connect-notice.notice-success {
-                background: linear-gradient(135deg, rgba(31, 143, 99, 0.12), #fffdf9 64%);
-            }
-
-            .notice.lylrv-connect-notice.notice-warning {
-                background: linear-gradient(135deg, rgba(168, 106, 24, 0.14), #fffdf9 64%);
-            }
-
-            .notice.lylrv-connect-notice.notice-error {
-                background: linear-gradient(135deg, rgba(181, 78, 57, 0.14), #fffdf9 64%);
             }
 
             @media (max-width: 1280px) {
@@ -1861,10 +997,6 @@ trait Lylrv_Connect_Admin
                     flex-direction: column;
                     align-items: flex-start;
                 }
-
-                .lylrv-connect-toggle {
-                    grid-template-columns: minmax(0, 1fr);
-                }
             }
         </style>
         <?php
@@ -1896,200 +1028,5 @@ trait Lylrv_Connect_Admin
             $tone,
         ); ?>"><?php echo esc_html($label); ?></span>
         <?php
-    }
-
-    private static function get_referral_status_tone($status)
-    {
-        $status = sanitize_key((string) $status);
-
-        if ("" === $status || "captured" === $status || "pending" === $status) {
-            return "primary";
-        }
-
-        if (
-            false !== strpos($status, "complete") ||
-            false !== strpos($status, "reward") ||
-            false !== strpos($status, "issued") ||
-            false !== strpos($status, "approved")
-        ) {
-            return "success";
-        }
-
-        if (
-            false !== strpos($status, "reject") ||
-            false !== strpos($status, "fail") ||
-            false !== strpos($status, "revoke") ||
-            false !== strpos($status, "cancel")
-        ) {
-            return "danger";
-        }
-
-        return "neutral";
-    }
-
-    private static function render_manual_sync_form(
-        $resource,
-        $label,
-        $disabled,
-    ) {
-        $description = __(
-            "Force a complete sync for all supported records.",
-            "lylrv-connect",
-        );
-
-        if ("customers" === $resource) {
-            $description = __(
-                "Backfill customer identities, profiles, and synced customer data.",
-                "lylrv-connect",
-            );
-        } elseif ("orders" === $resource) {
-            $description = __(
-                "Push WooCommerce orders and referral reward events to Lylrv.",
-                "lylrv-connect",
-            );
-        }
-        ?>
-        <form method="post" action="<?php echo esc_url(
-            admin_url("admin-post.php"),
-        ); ?>" class="lylrv-connect-sync-form">
-            <?php wp_nonce_field(self::MANUAL_SYNC_ACTION); ?>
-            <input type="hidden" name="action" value="<?php echo esc_attr(
-                self::MANUAL_SYNC_ACTION,
-            ); ?>" />
-            <input type="hidden" name="resource" value="<?php echo esc_attr(
-                $resource,
-            ); ?>" />
-            <div>
-                <div class="lylrv-connect-sync-form__title"><?php echo esc_html(
-                    $label,
-                ); ?></div>
-                <div class="lylrv-connect-sync-form__description"><?php echo esc_html(
-                    $description,
-                ); ?></div>
-            </div>
-            <button
-                type="submit"
-                class="lylrv-connect-button lylrv-connect-button--secondary"
-                <?php disabled($disabled); ?>
-            ><?php echo esc_html($label); ?></button>
-        </form>
-        <?php
-    }
-
-    public static function render_admin_notice()
-    {
-        if (!is_admin() || !current_user_can("manage_options")) {
-            return;
-        }
-
-        $screen = get_current_screen();
-        if (!$screen || "settings_page_lylrv-connect" !== $screen->id) {
-            return;
-        }
-
-        $notice = get_transient(self::get_notice_key());
-        if (empty($notice) || !is_array($notice)) {
-            return;
-        }
-
-        delete_transient(self::get_notice_key());
-        $type = !empty($notice["type"]) ? $notice["type"] : "success";
-        $message = !empty($notice["message"]) ? $notice["message"] : "";
-
-        if (empty($message)) {
-            return;
-        }
-        ?>
-        <div class="notice notice-<?php echo esc_attr(
-            $type,
-        ); ?> is-dismissible lylrv-connect-notice">
-            <p><?php echo esc_html($message); ?></p>
-        </div>
-        <?php
-    }
-
-    public static function handle_manual_sync()
-    {
-        if (!current_user_can("manage_options")) {
-            wp_die(
-                esc_html__("You are not allowed to do that.", "lylrv-connect"),
-            );
-        }
-
-        check_admin_referer(self::MANUAL_SYNC_ACTION);
-
-        $resource = "all";
-        if (isset($_POST["resource"])) {
-            $resource = sanitize_key(wp_unslash($_POST["resource"]));
-        }
-
-        $notice = [
-            "type" => "success",
-            "message" => __("Sync completed.", "lylrv-connect"),
-        ];
-
-        if (!self::is_sync_ready()) {
-            $notice = [
-                "type" => "error",
-                "message" => __(
-                    "Add a valid API key and SaaS URL before syncing.",
-                    "lylrv-connect",
-                ),
-            ];
-        } else {
-            if (function_exists("set_time_limit")) {
-                @set_time_limit(0);
-            }
-
-            if ("customers" === $resource) {
-                $result = self::full_sync_users();
-            } elseif ("orders" === $resource) {
-                $result = self::full_sync_orders();
-            } else {
-                $user_result = self::full_sync_users();
-                $order_result = self::full_sync_orders();
-
-                if (is_wp_error($user_result)) {
-                    $result = $user_result;
-                } elseif (is_wp_error($order_result)) {
-                    $result = $order_result;
-                } else {
-                    $result = [
-                        "customers" =>
-                            $user_result["customers"] +
-                            $order_result["customers"],
-                        "orders" => $order_result["orders"],
-                    ];
-                }
-            }
-
-            if (is_wp_error($result)) {
-                $notice = [
-                    "type" => "error",
-                    "message" => $result->get_error_message(),
-                ];
-            } else {
-                $message = sprintf(
-                    /* translators: 1: customer count, 2: order count */
-                    __(
-                        'Sync finished. Customers sent: %1$d. Orders sent: %2$d.',
-                        "lylrv-connect",
-                    ),
-                    isset($result["customers"])
-                        ? (int) $result["customers"]
-                        : 0,
-                    isset($result["orders"]) ? (int) $result["orders"] : 0,
-                );
-
-                $notice = [
-                    "type" => "success",
-                    "message" => $message,
-                ];
-            }
-        }
-
-        set_transient(self::get_notice_key(), $notice, MINUTE_IN_SECONDS);
-        wp_safe_redirect(admin_url("options-general.php?page=lylrv-connect"));
-        exit();
     }
 }

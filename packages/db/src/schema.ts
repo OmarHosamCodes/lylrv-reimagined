@@ -206,7 +206,7 @@ export const clientConfig = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     clientId: uuid("client_id").notNull(),
-    integrationType: text("integration_type").default("woocommerce").notNull(),
+    integrationType: text("integration_type").default("custom").notNull(),
     storeUrl: text("store_url"),
     syncSecret: text("sync_secret"),
     isActive: boolean("is_active").default(true),
@@ -444,7 +444,7 @@ export const products = pgTable(
   {
     id: uuid().defaultRandom().primaryKey().notNull(),
     clientId: uuid("client_id").notNull(),
-    // External product ID (e.g. from WooCommerce). Nullable for SaaS-native products.
+    // External product ID from a connected commerce platform. Nullable for SaaS-native products.
     productId: bigint("product_id", { mode: "number" }),
     name: text().notNull(),
     slug: text().notNull(),

@@ -2,13 +2,13 @@
 
 ## Objective
 
-Ship a SaaS-backed storefront that is rendered with native WordPress Gutenberg blocks in any block-based theme, without touching WooCommerce flows and without using `apps/widgets` for the storefront UI.
+Ship a SaaS-backed storefront that is rendered with native WordPress Gutenberg blocks in any block-based theme, without touching third-party ecommerce flows and without using `apps/widgets` for the storefront UI.
 
 ## Key Rules
 
 - WordPress renders the UI.
 - SaaS stores the data and processes the workflow.
-- WooCommerce stays separate.
+- The storefront stays separate from external commerce platforms.
 - The storefront lives under its own route base, default `/store`.
 
 ## Routes

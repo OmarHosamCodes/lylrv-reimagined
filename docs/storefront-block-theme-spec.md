@@ -2,14 +2,14 @@
 
 ## Goal
 
-Build a SaaS-backed storefront that is fully composed with native WordPress blocks inside any block-based theme. The plugin must not extend or override WooCommerce product, cart, checkout, or thank-you flows. WooCommerce may continue to exist on the site, but the storefront introduced here is a separate system.
+Build a SaaS-backed storefront that is fully composed with native WordPress blocks inside any block-based theme. The plugin must not extend or override third-party ecommerce product, cart, checkout, or thank-you flows. The storefront introduced here is a separate system.
 
 ## Core Principles
 
 - WordPress owns the storefront UI layer.
 - SaaS owns product data, cart state, checkout sessions, orders, and business rules.
 - The storefront must work in any block theme through standard Gutenberg blocks, pages, and global styles.
-- The storefront must remain WooCommerce-independent.
+- The storefront must remain platform-independent.
 - The storefront must be dynamic and server-rendered where possible so themes, SEO, and content rendering behave like native WordPress.
 
 ## Scope
@@ -27,8 +27,8 @@ The system includes:
 
 The system excludes:
 
-- WooCommerce checkout integration
-- WooCommerce order creation
+- Third-party checkout integration
+- Third-party order creation
 - Widget-based storefront UI from `apps/widgets`
 - Payment-provider-specific capture beyond a manual or pending payment mode in the first implementation slice
 
@@ -69,7 +69,7 @@ The database stores:
 - Storefront orders
 - Storefront order items
 
-The existing WooCommerce sync `orders` table remains separate and unchanged in role.
+The existing customer and order sync tables remain separate and unchanged in role.
 
 ## Route Model
 
@@ -82,7 +82,7 @@ Routes:
 - `/store/checkout`
 - `/store/thank-you/{order-public-id}`
 
-These routes are intentionally separate from WooCommerce routes and from the existing `/product/{slug}` SaaS product display path.
+These routes are intentionally separate from third-party storefront routes and from the existing `/product/{slug}` SaaS product display path.
 
 ## WordPress Page Assignment Model
 

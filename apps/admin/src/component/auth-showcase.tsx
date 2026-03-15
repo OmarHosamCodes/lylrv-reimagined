@@ -18,7 +18,7 @@ export function AuthShowcase() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clientName, setClientName] = useState("");
-  const [clientSource, setClientSource] = useState("woocommerce");
+  const [clientSource, setClientSource] = useState("custom");
   const [isPending, setIsPending] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -173,9 +173,9 @@ export function AuthShowcase() {
                   onChange={(event) => setClientSource(event.target.value)}
                   className="w-full rounded-lg border border-border bg-background/80 px-3 py-2 text-sm outline-none ring-primary/30 transition focus:ring-2"
                 >
-                  <option value="woocommerce">WooCommerce</option>
                   <option value="shopify">Shopify</option>
                   <option value="custom">Custom</option>
+                  <option value="wordpress">WordPress</option>
                 </select>
               </div>
             </>

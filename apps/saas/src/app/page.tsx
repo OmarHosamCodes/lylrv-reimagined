@@ -302,13 +302,11 @@ export default function LandingPage() {
             {[...Array(2)].map((_, setIdx) =>
               [
                 "Shopify",
-                "WooCommerce",
                 "BigCommerce",
                 "Magento",
                 "WordPress",
                 "Custom Stores",
                 "Shopify",
-                "WooCommerce",
                 "BigCommerce",
                 "Magento",
                 "WordPress",
@@ -447,7 +445,7 @@ export default function LandingPage() {
               ),
               title: "Embeddable Widgets",
               description:
-                "Drop a single script tag and get beautiful, customizable widgets that match your brand. Works with any platform — Shopify, WooCommerce, or custom.",
+                "Drop a single script tag and get beautiful, customizable widgets that match your brand. Works with Shopify, WordPress, and custom storefronts.",
             },
             {
               icon: (
@@ -513,7 +511,7 @@ export default function LandingPage() {
                 step: "01",
                 title: "Connect Your Store",
                 description:
-                  "Install our plugin or paste a single script tag. Supports Shopify, WooCommerce, and any custom storefront.",
+                  "Install our plugin or paste a single script tag. Supports Shopify, WordPress, and any custom storefront.",
               },
               {
                 step: "02",
